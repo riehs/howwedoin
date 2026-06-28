@@ -179,12 +179,9 @@
 
                             <!-- PM Response Entry Box -->
                             <div class="bg-[#e8f5e9] sketch-border p-4 shadow-neo">
-                                <label class="block text-xs font-bold uppercase text-emerald-800 mb-2">✍️ Log response for team notes (Project Manager input):</label>
+                                <label class="block text-xs font-bold uppercase text-emerald-800 mb-2">✍️ Log response for team notes (saves automatically on Spin Next):</label>
                                 <div class="flex gap-2">
-                                    <input id="pm-input-answer" type="text" placeholder="Type quick summary here..." class="flex-1 px-3 py-2 sketch-border font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm">
-                                    <button onclick="saveCheckinAnswer()" class="bg-black hover:bg-stone-800 text-white px-4 py-2 font-display font-bold text-sm sketch-border shadow-neo active:translate-y-0.5">
-                                        Save
-                                    </button>
+                                    <input id="pm-input-answer" type="text" placeholder="Type quick summary here (saves automatically on spin/restart)..." class="w-full px-3 py-2 sketch-border font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm">
                                 </div>
                             </div>
 
@@ -675,11 +672,41 @@
         // ====================================================================
         let availableDeck = [];
 
-        function spinCarousel() {
+        async function autoSaveCurrentIfAny() {
+            const answerInput = document.getElementById("pm-input-answer");
+            if (!answerInput) return;
+            const answerText = answerInput.value.trim();
+            
+            if (activeMember && answerText) {
+                const payload = {
+                    member_id: activeMember.id,
+                    member_name: activeMember.name,
+                    prompt: currentPrompt,
+                    answer: answerText,
+                    logged_by: currentUser ? currentUser.email : 'Project Manager',
+                    created_at: new Date().toISOString()
+                };
+
+                try {
+                    const { error } = await supabaseClient.from('checkins').insert(payload);
+                    if (error) throw error;
+                    showToast("Answer Logged", `${activeMember.name}'s response saved.`, "✅");
+                    answerInput.value = "";
+                    await refreshUI();
+                } catch (err) {
+                    showToast("Error auto-saving", err.message, "⚠️");
+                }
+            }
+        }
+
+        async function spinCarousel() {
             if (state.teamMembers.length === 0) {
                 showToast("Empty Roster", "Please add at least one member to your team roster below first!", "👥");
                 return;
             }
+
+            // Automatically save any typed response first before spinning
+            await autoSaveCurrentIfAny();
 
             // Initialize or replenish pool of members
             if (availableDeck.length === 0) {
@@ -708,68 +735,34 @@
             showToast(`Drawn: ${activeMember.name}!`, "It is your turn to check-in with the team.", "✨");
         }
 
-        function skipMember() {
+        async function skipMember() {
             if (!activeMember) {
                 showToast("Whoops!", "There is no currently drawn team member to skip.", "⚠️");
                 return;
             }
             
-            // To exclude them permanently from the remaining active selection pool,
-            // we do NOT push them back to availableDeck. They will remain out of the deck
-            // until the user clicks "Restart Deck" (which resets availableDeck) or the deck finishes.
+            // Note: Since skipped responses don't get saved, we bypass autoSaveCurrentIfAny() here.
             showToast(`${activeMember.name} Skipped`, "Removed from pool until next restart.", "⏭️");
             
             // Spin again for the next remaining person
             if (availableDeck.length === 0) {
-                // If skipping the last person emptied the pool, we show the completion state
                 activeMember = null;
                 document.getElementById("carousel-empty").classList.remove("hidden");
                 document.getElementById("carousel-active").classList.add("hidden");
                 showToast("End of Deck", "All team members checked in or skipped! Hit Start to cycle again.", "🎉");
             } else {
-                spinCarousel();
+                await spinCarousel();
             }
         }
 
-        function resetCarousel() {
+        async function resetCarousel() {
+            // Save any last typed entry before closing the carousel
+            await autoSaveCurrentIfAny();
             availableDeck = [];
             activeMember = null;
             document.getElementById("carousel-empty").classList.remove("hidden");
             document.getElementById("carousel-active").classList.add("hidden");
             showToast("Deck Replenished", "Roster wheel selection pool restarted.", "🔄");
-        }
-
-        async function saveCheckinAnswer() {
-            const answerText = document.getElementById("pm-input-answer").value.trim();
-            if (!activeMember) {
-                showToast("Whoops!", "There is no currently selected checking member to save.", "⚠️");
-                return;
-            }
-            if (!answerText) {
-                showToast("Empty Entry", "Please write a small summary of their response to record.", "✏️");
-                return;
-            }
-
-            const payload = {
-                member_id: activeMember.id,
-                member_name: activeMember.name,
-                prompt: currentPrompt,
-                answer: answerText,
-                logged_by: currentUser ? currentUser.email : 'Project Manager',
-                created_at: new Date().toISOString()
-            };
-
-            try {
-                const { error } = await supabaseClient.from('checkins').insert(payload);
-                if (error) throw error;
-                showToast("Answer Logged", "Saved directly to server database.", "✅");
-                await refreshUI();
-            } catch (err) {
-                showToast("Error writing to DB", err.message, "⚠️");
-            }
-
-            // Prepare next action
-            document.getElementById("pm-input-answer").value = "";
         }
 
         // TEAM ROSTER LOGIC

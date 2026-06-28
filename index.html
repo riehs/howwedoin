@@ -246,34 +246,6 @@
                                 <!-- Chips loaded programmatically -->
                             </div>
                         </div>
-
-                        <!-- Section B: Access Control (Authorized Emails List) -->
-                        <div class="border-t border-dashed border-black/20 pt-4">
-                            <h3 class="font-display font-bold text-base mb-3 flex items-center justify-between">
-                                <span>🔐 Workspace Access Whitelist (<span id="auth-users-count">0</span>)</span>
-                                <button onclick="toggleAuthUsersView()" class="text-xs bg-white text-stone-800 px-2 py-1 sketch-border shadow-neo font-bold">Edit Access</button>
-                            </h3>
-
-                            <p class="text-[11px] text-stone-600 mb-2 font-medium">
-                                💡 If empty, <strong>any</strong> Google account can login. Once you add at least one email, access is locked strictly to listed users.
-                            </p>
-
-                            <!-- Access Editor panel -->
-                            <div id="auth-users-editor" class="hidden mb-4 p-3 bg-white sketch-border">
-                                <h4 class="text-xs font-bold mb-2">Authorize Email Address:</h4>
-                                <div class="flex gap-2">
-                                    <input id="new-auth-email" type="email" placeholder="student@bc.edu" class="flex-1 px-3 py-1 sketch-border text-sm focus:outline-none">
-                                    <button onclick="addAuthorizedUser()" class="bg-emerald-500 text-white px-3 py-1 font-display font-bold text-xs sketch-border shadow-neo">
-                                        Add Email
-                                    </button>
-                                </div>
-                            </div>
-
-                            <!-- Whitelisted emails container -->
-                            <div id="auth-users-chips" class="flex flex-wrap gap-2 max-h-24 overflow-y-auto">
-                                <!-- Loaded dynamically -->
-                            </div>
-                        </div>
                     </div>
                 </section>
 
@@ -398,6 +370,36 @@
                     </button>
                 </div>
             </section>
+
+            <!-- MODULE 5: WORKSPACE ACCESS CONTROL WHITELIST (Moved from Roster panel to bottom of page) -->
+            <section class="bg-yellow-50 sketch-border-thick p-6 shadow-neo-lg space-y-4">
+                <div class="flex items-center justify-between border-b-2 border-black pb-2">
+                    <h2 class="font-display font-bold text-xl text-stone-900 flex items-center gap-2">
+                        🔐 Workspace Access Whitelist (<span id="auth-users-count">0</span>)
+                    </h2>
+                    <button onclick="toggleAuthUsersView()" class="text-xs bg-white text-stone-800 px-3 py-1.5 sketch-border shadow-neo font-bold">Edit Whitelist</button>
+                </div>
+
+                <p class="text-xs text-stone-600 font-medium">
+                    💡 If empty, <strong>any</strong> Google account can login. Once you add at least one email, access is locked strictly to listed users.
+                </p>
+
+                <!-- Access Editor panel -->
+                <div id="auth-users-editor" class="hidden mb-4 p-4 bg-white sketch-border max-w-xl">
+                    <h4 class="text-xs font-bold mb-2">Authorize Email Address:</h4>
+                    <div class="flex gap-2">
+                        <input id="new-auth-email" type="email" placeholder="student@bc.edu" class="flex-1 px-3 py-2 sketch-border text-sm focus:outline-none">
+                        <button onclick="addAuthorizedUser()" class="bg-emerald-500 text-white px-4 py-2 font-display font-bold text-xs sketch-border shadow-neo active:translate-y-0.5">
+                            Add Email
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Whitelisted emails container -->
+                <div id="auth-users-chips" class="flex flex-wrap gap-2 max-h-36 overflow-y-auto">
+                    <!-- Loaded dynamically -->
+                </div>
+            </section>
         </div>
 
     </main>
@@ -405,7 +407,6 @@
     <!-- FOOTER -->
     <footer class="bg-black text-white p-6 border-t-4 border-black text-center text-xs mt-auto">
         <p class="font-semibold">Designed for university labs, high-energy startups, & agile design crews.</p>
-        <p class="text-stone-400 mt-1">💡 Double click any text in sticky notes to write. Drag to move anywhere on canvas!</p>
     </footer>
 
     <!-- STICKY DRAGGING CONTROL & MAIN APPLICATION LOGIC -->

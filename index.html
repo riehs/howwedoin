@@ -98,6 +98,23 @@
         </div>
     </div>
 
+    <!-- CUSTOM CONFIRM MODAL (Iframe Safe alternative to confirm()) -->
+    <div id="confirm-modal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+        <div class="bg-white sketch-border-thick p-6 max-w-sm w-full shadow-neo text-center space-y-4">
+            <span class="text-4xl block">❓</span>
+            <h3 class="font-display font-bold text-lg" id="confirm-title">Are you sure?</h3>
+            <p class="text-xs text-stone-600" id="confirm-msg">This action cannot be undone.</p>
+            <div class="flex justify-center gap-3">
+                <button id="confirm-yes-btn" class="bg-red-500 hover:bg-red-600 text-white font-display font-bold px-4 py-2 sketch-border shadow-neo text-xs transition-all active:translate-y-0.5">
+                    Yes, Delete
+                </button>
+                <button onclick="closeConfirmModal()" class="bg-stone-200 hover:bg-stone-300 text-stone-800 font-display font-semibold px-4 py-2 sketch-border text-xs">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- MAIN BODY SECTION -->
     <main id="main-content" class="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6 space-y-8 pb-20">
 
@@ -433,6 +450,7 @@
         // Dragging state tracking variables
         let draggingElement = null;
         let dragOffset = { x: 0, y: 0 };
+        let confirmCallback = null;
 
         // ====================================================================
         // 3. INITIALIZATION & CONNECTION DETECTOR
@@ -705,10 +723,18 @@
                 return;
             }
 
-            // Automatically save any typed response first before spinning
+            // Automatically save any typed response first
             await autoSaveCurrentIfAny();
 
-            // Initialize or replenish pool of members
+            // If we are currently displaying the last person and user clicks "Spin Next",
+            // we automatically restart (clear) the carousel, since the deck is complete.
+            if (activeMember && availableDeck.length === 0) {
+                resetCarousel();
+                showToast("Round Complete", "All team members have been checked in!", "🎉");
+                return;
+            }
+
+            // Initialize or replenish pool of members (at absolute start)
             if (availableDeck.length === 0) {
                 availableDeck = [...state.teamMembers];
             }
@@ -741,15 +767,12 @@
                 return;
             }
             
-            // Note: Since skipped responses don't get saved, we bypass autoSaveCurrentIfAny() here.
             showToast(`${activeMember.name} Skipped`, "Removed from pool until next restart.", "⏭️");
             
-            // Spin again for the next remaining person
+            // If skipping the last person emptied the pool, we automatically restart & clear the area
             if (availableDeck.length === 0) {
-                activeMember = null;
-                document.getElementById("carousel-empty").classList.remove("hidden");
-                document.getElementById("carousel-active").classList.add("hidden");
-                showToast("End of Deck", "All team members checked in or skipped! Hit Start to cycle again.", "🎉");
+                resetCarousel();
+                showToast("Round Complete", "All team members checked in or skipped!", "🎉");
             } else {
                 await spinCarousel();
             }
@@ -1252,18 +1275,40 @@
             renderCheckinHistory();
         }
 
+        // Custom Confirm modal callbacks
+        function showConfirm(title, msg, onConfirm) {
+            document.getElementById("confirm-title").textContent = title;
+            document.getElementById("confirm-msg").textContent = msg;
+            confirmCallback = onConfirm;
+            document.getElementById("confirm-modal").classList.remove("hidden");
+        }
+
+        function closeConfirmModal() {
+            document.getElementById("confirm-modal").classList.add("hidden");
+            confirmCallback = null;
+        }
+
+        // Bind Custom Yes action inside initializer
+        document.getElementById("confirm-yes-btn").onclick = () => {
+            if (confirmCallback) confirmCallback();
+            closeConfirmModal();
+        };
+
         async function deleteCheckin(id) {
-            if (!confirm("Are you sure you want to permanently delete this logged check-in response?")) {
-                return;
-            }
-            try {
-                const { error } = await supabaseClient.from('checkins').delete().eq('id', id);
-                if (error) throw error;
-                showToast("Check-in Deleted", "The entry was removed from the log history.", "🗑️");
-                await refreshUI();
-            } catch (err) {
-                showToast("Deletion Error", err.message, "❌");
-            }
+            showConfirm(
+                "Delete Response?",
+                "Are you sure you want to permanently delete this logged check-in response?",
+                async () => {
+                    try {
+                        const { error } = await supabaseClient.from('checkins').delete().eq('id', id);
+                        if (error) throw error;
+                        showToast("Check-in Deleted", "The entry was removed from the log history.", "🗑️");
+                        await refreshUI();
+                    } catch (err) {
+                        showToast("Deletion Error", err.message, "❌");
+                    }
+                }
+            );
         }
 
         function renderCheckinHistory() {

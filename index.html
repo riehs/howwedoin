@@ -101,19 +101,32 @@
     <!-- MAIN BODY SECTION -->
     <main id="main-content" class="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6 space-y-8 pb-20">
 
-        <!-- LOG IN REQUIRED OVERLAY (Shown if not signed in) -->
-        <div id="auth-gate-overlay" class="bg-yellow-100 border-4 border-black p-8 shadow-neo text-center space-y-4 max-w-xl mx-auto my-12">
+        <!-- INITIAL ASYNC SESSION LOADING OVERLAY (Shown on page load) -->
+        <div id="loading-overlay" class="bg-indigo-100 border-4 border-black p-8 shadow-neo text-center space-y-4 max-w-xl mx-auto my-12">
+            <div class="flex items-center justify-center gap-2">
+                <span class="w-4 h-4 rounded-full bg-indigo-600 animate-bounce" style="animation-delay: 0.1s"></span>
+                <span class="w-4 h-4 rounded-full bg-indigo-600 animate-bounce" style="animation-delay: 0.2s"></span>
+                <span class="w-4 h-4 rounded-full bg-indigo-600 animate-bounce" style="animation-delay: 0.3s"></span>
+            </div>
+            <h2 class="font-display font-bold text-xl text-stone-900">Verifying Session...</h2>
+            <p class="text-xs text-stone-600 max-w-md mx-auto">
+                Checking login status and verifying workspace whitelist access. Please hold on.
+            </p>
+        </div>
+
+        <!-- LOG IN REQUIRED OVERLAY (Hidden by default, shown if unauthenticated) -->
+        <div id="auth-gate-overlay" class="hidden bg-yellow-100 border-4 border-black p-8 shadow-neo text-center space-y-4 max-w-xl mx-auto my-12">
             <span class="text-6xl block">🔒</span>
             <h2 class="font-display font-bold text-2xl text-stone-900">Sign-In Required</h2>
             <p id="auth-gate-msg" class="text-sm text-stone-600 max-w-md mx-auto">
-                This office board is configured to sync directly with your team's live Supabase database. Please log in with Google to view and update the board.
+                Please log in with your Boston College Google account to view and update the board.
             </p>
             <button onclick="handleLogin()" class="bg-[#f06292] hover:bg-[#e91e63] text-white px-6 py-3 font-display font-bold text-lg sketch-border shadow-neo transition-all active:translate-x-0.5">
                 🔑 Sign in with Google
             </button>
         </div>
 
-        <!-- APP CONTENT SUITE (Hidden until authenticated) -->
+        <!-- APP CONTENT SUITE (Hidden by default until authenticated) -->
         <div id="app-workspace" class="hidden space-y-8">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
                 
@@ -176,12 +189,15 @@
                             </div>
 
                             <!-- Carousel Controls -->
-                            <div class="flex items-center justify-between gap-4 pt-2">
-                                <button onclick="spinCarousel()" class="flex-1 bg-amber-400 hover:bg-amber-500 text-black font-display font-bold py-3 px-4 sketch-border shadow-neo text-center transition-all active:translate-y-0.5">
-                                    🎲 Spin Random Next!
+                            <div class="flex items-center justify-between gap-2 pt-2">
+                                <button onclick="spinCarousel()" class="flex-1 bg-amber-400 hover:bg-amber-500 text-black font-display font-bold py-3 px-3 sketch-border shadow-neo text-center transition-all active:translate-y-0.5 text-sm">
+                                    🎲 Spin Next
                                 </button>
-                                <button onclick="resetCarousel()" class="bg-stone-200 hover:bg-stone-300 text-stone-800 font-display font-semibold py-3 px-4 sketch-border text-xs">
-                                    Restart Deck
+                                <button onclick="skipMember()" class="bg-[#f06292] hover:bg-[#e91e63] text-white font-display font-bold py-3 px-4 sketch-border shadow-neo text-center transition-all active:translate-y-0.5 text-sm" title="Skip this person for this meeting session">
+                                    ⏭️ Skip
+                                </button>
+                                <button onclick="resetCarousel()" class="bg-stone-200 hover:bg-stone-300 text-stone-800 font-display font-semibold py-3 px-3 sketch-border text-xs">
+                                    Restart
                                 </button>
                             </div>
                         </div>
@@ -232,7 +248,7 @@
                             <div id="auth-users-editor" class="hidden mb-4 p-3 bg-white sketch-border">
                                 <h4 class="text-xs font-bold mb-2">Authorize Email Address:</h4>
                                 <div class="flex gap-2">
-                                    <input id="new-auth-email" type="email" placeholder="student@university.edu" class="flex-1 px-3 py-1 sketch-border text-sm focus:outline-none">
+                                    <input id="new-auth-email" type="email" placeholder="student@bc.edu" class="flex-1 px-3 py-1 sketch-border text-sm focus:outline-none">
                                     <button onclick="addAuthorizedUser()" class="bg-emerald-500 text-white px-3 py-1 font-display font-bold text-xs sketch-border shadow-neo">
                                         Add Email
                                     </button>
@@ -437,31 +453,73 @@
                 console.error("⚠️ Supabase Credentials Missing.");
                 showStatusBadge("Config Error", "bg-red-100", "text-red-800", "bg-red-500");
                 showToast("Setup Required", "Please configure your live Supabase credentials inside the code.", "⚠️");
+                
+                // Show Config error immediately
+                document.getElementById("loading-overlay").classList.add("hidden");
+                document.getElementById("auth-gate-overlay").classList.remove("hidden");
+                document.getElementById("auth-gate-msg").textContent = "Please configure your live Supabase credentials inside the code to connect.";
                 return;
             }
 
             try {
-                // Initialize Supabase Client
-                supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                // Initialize Supabase Client with persistent configuration enabled
+                supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+                    auth: {
+                        persistSession: true,
+                        autoRefreshToken: true,
+                        detectSessionInUrl: true
+                    }
+                });
                 showStatusBadge("Database Connected", "bg-emerald-100", "text-emerald-800", "bg-emerald-500");
                 
-                // Track auth state changes
-                supabaseClient.auth.onAuthStateChange(async (event, session) => {
-                    if (session) {
-                        await verifyAndSetSession(session.user);
-                    } else {
+                // Instantly try to fetch session from local storage before establishing state listener (reduces flickering)
+                const { data: { session }, error: sessionErr } = await supabaseClient.auth.getSession();
+                
+                if (sessionErr) throw sessionErr;
+
+                if (session) {
+                    await verifyAndSetSession(session.user);
+                } else {
+                    // No session retrieved, show standard login screen
+                    showLoginGate();
+                }
+
+                // Track and react to real-time auth changes seamlessly
+                supabaseClient.auth.onAuthStateChange(async (event, newSession) => {
+                    if (event === 'SIGNED_IN' && newSession) {
+                        await verifyAndSetSession(newSession.user);
+                    } else if (event === 'SIGNED_OUT') {
                         currentUser = null;
-                        document.getElementById("btn-login").classList.remove("hidden");
-                        document.getElementById("user-profile").classList.add("hidden");
-                        document.getElementById("auth-gate-overlay").classList.remove("hidden");
-                        document.getElementById("app-workspace").classList.add("hidden");
+                        showLoginGate();
                     }
                 });
 
             } catch (err) {
-                console.error("Supabase Database connection failed.", err);
+                console.error("Supabase Database connection or recovery failed.", err);
                 showStatusBadge("Connection Lost", "bg-red-100", "text-red-800", "bg-red-500");
                 showToast("Connection Fail", err.message, "❌");
+                showLoginGate(err.message);
+            }
+        }
+
+        // Show Sign-In overlay and clear active workspace states elegantly
+        function showLoginGate(errorMessage = null) {
+            document.getElementById("loading-overlay").classList.add("hidden");
+            document.getElementById("app-workspace").classList.add("hidden");
+            document.getElementById("auth-gate-overlay").classList.remove("hidden");
+            
+            document.getElementById("btn-login").classList.remove("hidden");
+            document.getElementById("user-profile").classList.add("hidden");
+            
+            if (errorMessage) {
+                document.getElementById("auth-gate-msg").innerHTML = `
+                    <span class="text-red-600 font-bold block mb-2">⚠️ Connection/Authentication Error</span>
+                    ${errorMessage}
+                `;
+            } else {
+                document.getElementById("auth-gate-msg").innerHTML = `
+                    Please log in with your Boston College Google account to view and update the board.
+                `;
             }
         }
 
@@ -487,6 +545,7 @@
                         await supabaseClient.auth.signOut();
                         currentUser = null;
                         
+                        document.getElementById("loading-overlay").classList.add("hidden");
                         document.getElementById("btn-login").classList.remove("hidden");
                         document.getElementById("user-profile").classList.add("hidden");
                         document.getElementById("auth-gate-overlay").classList.remove("hidden");
@@ -502,10 +561,10 @@
                     }
                 }
 
-                // Authorized
+                // Authorized & verified
                 setUserSession(user);
+                document.getElementById("loading-overlay").classList.add("hidden");
                 document.getElementById("auth-gate-overlay").classList.add("hidden");
-                document.getElementById("auth-gate-msg").innerHTML = "This office board is configured to sync directly with your team's live Supabase database. Please log in with Google to view and update the board.";
                 document.getElementById("app-workspace").classList.remove("hidden");
                 
                 setupCanvasMouseListeners();
@@ -514,6 +573,7 @@
             } catch (err) {
                 console.error("Failed to verify user whitelist status:", err);
                 showToast("Verification Error", err.message, "❌");
+                showLoginGate("Whitelist verification failed: " + err.message);
             }
         }
 
@@ -628,7 +688,7 @@
 
             // Draw a random index
             const randomIndex = Math.floor(Math.random() * availableDeck.length);
-            activeMember = availableDeck.splice(randomIndex, 1)[0]; // Pull it out
+            activeMember = availableDeck.splice(randomIndex, 1)[0]; // Pull it out and keep it out
             
             // Draw a random question prompt
             const randomPromptIdx = Math.floor(Math.random() * randomPrompts.length);
@@ -646,6 +706,29 @@
             document.getElementById("pm-input-answer").focus();
 
             showToast(`Drawn: ${activeMember.name}!`, "It is your turn to check-in with the team.", "✨");
+        }
+
+        function skipMember() {
+            if (!activeMember) {
+                showToast("Whoops!", "There is no currently drawn team member to skip.", "⚠️");
+                return;
+            }
+            
+            // To exclude them permanently from the remaining active selection pool,
+            // we do NOT push them back to availableDeck. They will remain out of the deck
+            // until the user clicks "Restart Deck" (which resets availableDeck) or the deck finishes.
+            showToast(`${activeMember.name} Skipped`, "Removed from pool until next restart.", "⏭️");
+            
+            // Spin again for the next remaining person
+            if (availableDeck.length === 0) {
+                // If skipping the last person emptied the pool, we show the completion state
+                activeMember = null;
+                document.getElementById("carousel-empty").classList.remove("hidden");
+                document.getElementById("carousel-active").classList.add("hidden");
+                showToast("End of Deck", "All team members checked in or skipped! Hit Start to cycle again.", "🎉");
+            } else {
+                spinCarousel();
+            }
         }
 
         function resetCarousel() {
@@ -1199,7 +1282,7 @@
             if (state.checkins.length === 0) {
                 tbody.innerHTML = `
                     <tr>
-                        <td colspan="5" class="p-4 text-center text-stone-500">No meeting updates logged today. Complete a spin to start.</td>
+                        <td colspan="5" class="p-4 text-center text-stone-500">No responses logged for this meeting session yet.</td>
                     </tr>
                 `;
                 filterIndicator.textContent = "No logged entries yet";

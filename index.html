@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-[#f4f1ea]">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How We Doin? | Creative Office Workspace</title>
+    <!-- Tailwind CSS for utility styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Font for that retro college look -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <!-- Supabase JS Client CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        display: ['Space Grotesk', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'neo': '4px 4px 0px 0px #000000',
+                        'neo-lg': '8px 8px 0px 0px #000000',
+                        'neo-sm': '2px 2px 0px 0px #000000',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom aesthetics for Neo-Brutalist campus look */
+        .sketch-border {
+            border: 3px solid #000000;
+        }
+        .sketch-border-thick {
+            border: 4px solid #000000;
+        }
+        .bg-grid-pattern {
+            background-size: 20px 20px;
+            background-image: radial-gradient(circle, #cbc6ba 1px, transparent 1px);
+        }
+        /* Sticky Note colors */
+        .sticky-yellow { background-color: #fef08a; } /* yellow-200 */
+        .sticky-pink { background-color: #fbcfe8; }   /* pink-200 */
+        .sticky-blue { background-color: #bfdbfe; }   /* blue-200 */
+        .sticky-green { background-color: #bbf7d0; }  /* green-200 */
+        .sticky-purple { background-color: #e9d5ff; } /* purple-200 */
+    </style>
+</head>
+<body class="h-full font-sans text-stone-900 bg-[#f4f1ea] bg-grid-pattern overflow-x-hidden flex flex-col">
+
+    <!-- TOP HEADER BAR -->
+    <header class="w-full bg-[#fbfbf9] border-b-4 border-black p-4 sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+            <!-- Brand -->
+            <div class="flex items-center gap-3">
+                <div class="bg-amber-400 text-black font-display font-bold text-2xl px-4 py-2 sketch-border shadow-neo transform -rotate-1">
+                    ✏️ How We Doin?
+                </div>
+                <div class="hidden sm:block text-xs font-semibold bg-violet-200 text-violet-800 px-2 py-1 sketch-border rounded-full transform rotate-2">
+                    Staff & Student Collab v2.5
+                </div>
+            </div>
+
+            <!-- Supabase Status Indicator -->
+            <div id="status-indicator" class="flex items-center gap-2 text-xs font-bold px-3 py-1.5 sketch-border bg-stone-100 text-stone-600 rounded">
+                <span class="w-2.5 h-2.5 rounded-full bg-stone-400 animate-pulse"></span>
+                <span>Connecting...</span>
+            </div>
+
+            <!-- Navigation & Auth Controls -->
+            <div class="flex items-center gap-3 flex-wrap">
+                <!-- User Profile / Login -->
+                <div id="auth-controls" class="flex items-center gap-2">
+                    <button id="btn-login" onclick="handleLogin()" class="bg-[#f06292] hover:bg-[#e91e63] text-white px-4 py-2 font-display font-bold sketch-border shadow-neo text-sm transition-all active:translate-x-0.5 active:translate-y-0.5 active:shadow-neo-sm">
+                        🔑 Sign in with Google
+                    </button>
+                    <div id="user-profile" class="hidden flex items-center gap-3 bg-white p-1.5 pr-3 sketch-border rounded-full">
+                        <span id="user-avatar" class="w-8 h-8 rounded-full bg-indigo-200 text-black flex items-center justify-center font-bold text-sm border-2 border-black">U</span>
+                        <span id="user-email" class="text-xs font-bold max-w-[120px] truncate">user@school.edu</span>
+                        <button onclick="handleLogout()" class="text-xs text-red-600 hover:underline font-bold">Logout</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- CUSTOM TOAST NOTIFICATION WINDOW -->
+    <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none max-w-sm">
+        <div class="bg-amber-100 border-4 border-black p-4 shadow-neo flex items-start gap-3">
+            <span id="toast-icon" class="text-2xl">💡</span>
+            <div>
+                <h4 id="toast-title" class="font-display font-bold text-sm">Notification</h4>
+                <p id="toast-msg" class="text-xs text-stone-700 mt-1">Hello, welcome to workspace!</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN BODY SECTION -->
+    <main id="main-content" class="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6 space-y-8 pb-20">
+
+        <!-- LOG IN REQUIRED OVERLAY (Shown if not signed in) -->
+        <div id="auth-gate-overlay" class="bg-yellow-100 border-4 border-black p-8 shadow-neo text-center space-y-4 max-w-xl mx-auto my-12">
+            <span class="text-6xl block">🔒</span>
+            <h2 class="font-display font-bold text-2xl text-stone-900">Sign-In Required</h2>
+            <p class="text-sm text-stone-600 max-w-md mx-auto">
+                This office board is configured to sync directly with your team's live Supabase database. Please log in with Google to view and update the board.
+            </p>
+            <button onclick="handleLogin()" class="bg-[#f06292] hover:bg-[#e91e63] text-white px-6 py-3 font-display font-bold text-lg sketch-border shadow-neo transition-all active:translate-x-0.5">
+                🔑 Sign in with Google
+            </button>
+        </div>
+
+        <!-- APP CONTENT SUITE (Hidden until authenticated) -->
+        <div id="app-workspace" class="hidden space-y-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                
+                <!-- MODULE 1: WHO'S NEXT? ROUND-ROBIN CHECK-IN (7 cols) -->
+                <section class="lg:col-span-7 bg-[#ffebd6] sketch-border-thick p-6 shadow-neo-lg relative overflow-hidden flex flex-col h-full min-h-[580px]">
+                    <!-- Background decor -->
+                    <div class="absolute right-3 top-3 text-7xl opacity-10 font-bold select-none rotate-12">❓</div>
+                    
+                    <h2 class="font-display font-bold text-2xl text-stone-900 border-b-4 border-black pb-3 mb-6 flex items-center gap-2">
+                        🎲 Who's Next? Check-In Carousel
+                    </h2>
+
+                    <!-- Main Active Checkin Deck -->
+                    <div class="flex-1 flex flex-col justify-between">
+                        <!-- Carousel Display Box -->
+                        <div id="carousel-empty" class="bg-white p-8 sketch-border shadow-neo rounded text-center my-auto">
+                            <p class="text-4xl mb-4">✨</p>
+                            <h3 class="font-display font-bold text-xl mb-2">Ready to run a check-in?</h3>
+                            <p class="text-sm text-stone-600 mb-6 max-w-md mx-auto">
+                                Load your office team roster or type some names below, then spin the selector wheel!
+                            </p>
+                            <button onclick="spinCarousel()" class="bg-[#4caf50] hover:bg-[#43a047] text-white px-6 py-3 font-display font-bold text-lg sketch-border shadow-neo transition-all active:translate-x-0.5">
+                                🚀 Start Round Robin
+                            </button>
+                        </div>
+
+                        <div id="carousel-active" class="hidden space-y-6">
+                            <!-- Active Team Member Card -->
+                            <div class="bg-white sketch-border shadow-neo p-6 relative transform rotate-1">
+                                <span class="absolute -top-4 -right-2 bg-indigo-500 text-white font-mono text-xs px-2.5 py-1 sketch-border rounded shadow-neo">
+                                    UP NEXT!
+                                </span>
+                                
+                                <div class="flex items-center gap-4 mb-4">
+                                    <div id="active-member-emoji" class="text-5xl p-2 bg-[#ffecb3] sketch-border rounded-full shadow-neo">🧑‍💻</div>
+                                    <div>
+                                        <h3 id="active-member-name" class="font-display font-bold text-2xl text-stone-900">Name Loading...</h3>
+                                        <p class="text-xs text-stone-500 font-semibold uppercase tracking-wider">Presenting to the room</p>
+                                    </div>
+                                </div>
+
+                                <!-- Randomly selected question bubble -->
+                                <div class="bg-amber-100 p-4 sketch-border border-dashed rounded relative">
+                                    <div class="absolute -top-3 left-6 bg-amber-400 text-black text-xs font-bold px-2 py-0.5 sketch-border">
+                                        THE PROMPT:
+                                    </div>
+                                    <p id="active-prompt" class="font-display text-lg font-bold mt-1 text-stone-800">"What do you need from the team this week?"</p>
+                                </div>
+                            </div>
+
+                            <!-- PM Response Entry Box -->
+                            <div class="bg-[#e8f5e9] sketch-border p-4 shadow-neo">
+                                <label class="block text-xs font-bold uppercase text-emerald-800 mb-2">✍️ Log response for team notes (Project Manager input):</label>
+                                <div class="flex gap-2">
+                                    <input id="pm-input-answer" type="text" placeholder="Type quick summary here..." class="flex-1 px-3 py-2 sketch-border font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm">
+                                    <button onclick="saveCheckinAnswer()" class="bg-black hover:bg-stone-800 text-white px-4 py-2 font-display font-bold text-sm sketch-border shadow-neo active:translate-y-0.5">
+                                        Save
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Carousel Controls -->
+                            <div class="flex items-center justify-between gap-4 pt-2">
+                                <button onclick="spinCarousel()" class="flex-1 bg-amber-400 hover:bg-amber-500 text-black font-display font-bold py-3 px-4 sketch-border shadow-neo text-center transition-all active:translate-y-0.5">
+                                    🎲 Spin Random Next!
+                                </button>
+                                <button onclick="resetCarousel()" class="bg-stone-200 hover:bg-stone-300 text-stone-800 font-display font-semibold py-3 px-4 sketch-border text-xs">
+                                    Restart Deck
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Team Management Drawer inside Check-In Module -->
+                    <div class="mt-8 border-t-2 border-dashed border-black/40 pt-6">
+                        <h3 class="font-display font-bold text-base mb-3 flex items-center justify-between">
+                            <span>👥 Team Roster (<span id="roster-count">0</span> members)</span>
+                            <button onclick="toggleRosterView()" class="text-xs bg-white text-stone-800 px-2 py-1 sketch-border shadow-neo font-bold">Edit Roster</button>
+                        </h3>
+
+                        <!-- Quick Add Member Form -->
+                        <div id="roster-editor" class="hidden mb-4 p-3 bg-white sketch-border">
+                            <h4 class="text-xs font-bold mb-2">Add New Team Member:</h4>
+                            <div class="flex gap-2">
+                                <select id="new-member-emoji" class="bg-stone-100 p-2 sketch-border text-lg focus:outline-none">
+                                    <option>🧑‍💻</option><option>👩‍🎨</option><option>🧙‍♂️</option><option>🚀</option><option>👽</option>
+                                    <option>🦊</option><option>🤖</option><option>🍕</option><option>🎨</option><option>🦖</option>
+                                </select>
+                                <input id="new-member-name" type="text" placeholder="Member's Name..." class="flex-1 px-3 py-1 sketch-border text-sm focus:outline-none">
+                                <button onclick="addTeamMember()" class="bg-indigo-500 text-white px-3 py-1 font-display font-bold text-xs sketch-border shadow-neo">
+                                    Add
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Tiny Chips Container -->
+                        <div id="roster-chips" class="flex flex-wrap gap-2 max-h-24 overflow-y-auto">
+                            <!-- Chips loaded programmatically -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- MODULE 2: SMALL PROJECTS & BUG FIXES BOARD (5 cols) -->
+                <section class="lg:col-span-5 bg-[#e3f2fd] sketch-border-thick p-6 shadow-neo-lg flex flex-col h-full min-h-[580px]">
+                    <h2 class="font-display font-bold text-2xl text-stone-900 border-b-4 border-black pb-3 mb-6 flex items-center gap-2">
+                        📋 Task & Bug Tracker
+                    </h2>
+
+                    <!-- Project Quick Add Form -->
+                    <div class="bg-white p-4 sketch-border shadow-neo mb-6">
+                        <h3 class="text-xs font-bold uppercase tracking-wide text-blue-800 mb-3">📍 Add Task / Report</h3>
+                        <div class="space-y-3">
+                            <input id="new-project-title" type="text" placeholder="Fix UI spacing, Draft monthly report..." class="w-full px-3 py-2 sketch-border text-sm focus:outline-none">
+                            
+                            <div class="flex gap-2">
+                                <select id="new-project-cat" class="flex-1 px-3 py-2 sketch-border text-xs bg-stone-50 font-bold focus:outline-none">
+                                    <option value="Bug Fix">🐛 Bug Fix</option>
+                                    <option value="New Report">📊 New Report</option>
+                                    <option value="Small Project">🚀 Small Project</option>
+                                    <option value="Other">💡 Other Idea</option>
+                                </select>
+                                <button onclick="addProjectItem()" class="bg-[#29b6f6] hover:bg-[#039be5] text-black font-display font-bold px-4 py-2 text-xs sketch-border shadow-neo">
+                                    Add to List
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Filters & Counters -->
+                    <div class="flex items-center justify-between text-xs font-bold mb-3 px-1">
+                        <div class="flex gap-2">
+                            <button onclick="filterProjects('all')" id="btn-filter-all" class="bg-black text-white px-2.5 py-1 sketch-border">All</button>
+                            <button onclick="filterProjects('pending')" id="btn-filter-pending" class="bg-white text-stone-800 px-2.5 py-1 sketch-border shadow-neo">Active</button>
+                            <button onclick="filterProjects('completed')" id="btn-filter-completed" class="bg-white text-stone-800 px-2.5 py-1 sketch-border shadow-neo">Done</button>
+                        </div>
+                        <span id="project-stats" class="text-stone-600">0 Items</span>
+                    </div>
+
+                    <!-- Projects List Container -->
+                    <div class="flex-1 overflow-y-auto space-y-3 pr-1 max-h-[350px]" id="projects-list-container">
+                        <!-- Project rows inject here -->
+                    </div>
+                </section>
+            </div>
+
+            <!-- MODULE 3: BRAINSTORMING CANVAS AREA (Full Width) -->
+            <section class="bg-[#f3e5f5] sketch-border-thick p-6 shadow-neo-lg">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b-4 border-black pb-3 mb-6">
+                    <div>
+                        <h2 class="font-display font-bold text-2xl text-stone-900 flex items-center gap-2">
+                            🎨 The Creative Canvas
+                        </h2>
+                        <p class="text-xs text-indigo-900 font-semibold mt-0.5">Drag, double-click to edit, and add sticky notes to brainstorm your wildest concepts!</p>
+                    </div>
+                    
+                    <!-- Quick Controls -->
+                    <div class="flex gap-2 items-center flex-wrap">
+                        <span class="text-xs font-bold">Pick Note Color:</span>
+                        <div class="flex gap-1.5 mr-2">
+                            <button onclick="setStickyColorChoice('yellow')" class="w-6 h-6 rounded-full bg-yellow-200 border-2 border-black focus:ring-2 focus:ring-black" title="Yellow"></button>
+                            <button onclick="setStickyColorChoice('pink')" class="w-6 h-6 rounded-full bg-pink-200 border-2 border-black focus:ring-2 focus:ring-black" title="Pink"></button>
+                            <button onclick="setStickyColorChoice('blue')" class="w-6 h-6 rounded-full bg-blue-200 border-2 border-black focus:ring-2 focus:ring-black" title="Blue"></button>
+                            <button onclick="setStickyColorChoice('green')" class="w-6 h-6 rounded-full bg-green-200 border-2 border-black focus:ring-2 focus:ring-black" title="Green"></button>
+                            <button onclick="setStickyColorChoice('purple')" class="w-6 h-6 rounded-full bg-purple-200 border-2 border-black focus:ring-2 focus:ring-black" title="Purple"></button>
+                        </div>
+
+                        <button onclick="spawnStickyNote()" class="bg-[#ab47bc] hover:bg-[#8e24aa] text-white px-4 py-2 font-display font-bold text-sm sketch-border shadow-neo">
+                            📌 Sticky Note!
+                        </button>
+                        <button onclick="clearCanvas()" class="text-xs bg-white text-red-600 hover:bg-red-50 sketch-border font-bold px-3 py-2">
+                            Wipe Canvas
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Canvas Grid Workspace -->
+                <div id="canvas-workspace" class="relative bg-white sketch-border h-[450px] overflow-hidden rounded shadow-inner bg-grid-pattern cursor-crosshair">
+                    <!-- Helper prompt -->
+                    <div class="absolute inset-0 flex items-center justify-center pointer-events-none select-none opacity-20">
+                        <div class="text-center">
+                            <span class="text-6xl block">⚡</span>
+                            <p class="font-display font-bold text-lg text-black mt-2">Workspace Canvas Board</p>
+                        </div>
+                    </div>
+
+                    <!-- Sticky notes spawned programmatically -->
+                </div>
+            </section>
+
+            <!-- MODULE 4: ARCHIVED / RECENT CHECKINS -->
+            <section class="bg-white sketch-border-thick p-6 shadow-neo-lg">
+                <h2 class="font-display font-bold text-xl text-stone-900 border-b-2 border-black pb-2 mb-4 flex items-center gap-2">
+                    📋 Logged Responses History
+                </h2>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm font-medium">
+                        <thead class="bg-stone-100 sketch-border border-l-0 border-r-0 border-t-0">
+                            <tr>
+                                <th class="p-3 font-display font-bold">Team Member</th>
+                                <th class="p-3 font-display font-bold">Prompt Logged</th>
+                                <th class="p-3 font-display font-bold">Logged Response</th>
+                                <th class="p-3 font-display font-bold text-right">Time</th>
+                            </tr>
+                        </thead>
+                        <tbody id="checkins-table-body" class="divide-y divide-stone-200">
+                            <tr>
+                                <td colspan="4" class="p-4 text-center text-stone-500">No responses logged for this meeting session yet.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-black text-white p-6 border-t-4 border-black text-center text-xs mt-auto">
+        <p class="font-semibold">Designed for university labs, high-energy startups, & agile design crews.</p>
+        <p class="text-stone-400 mt-1">💡 Double click any text in sticky notes to write. Drag to move anywhere on canvas!</p>
+    </footer>
+
+    <!-- STICKY DRAGGING CONTROL & MAIN APPLICATION LOGIC -->
+    <script>
+        // ====================================================================
+        // 1. SUPABASE CONFIGURATION (Placeholders to switch out)
+        // ====================================================================
+        const SUPABASE_URL = "https://uqblyogrcsrbgxsncncu.supabase.co"; // Replace with your URL
+        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVxYmx5b2dyY3NyYmd4c25jbmN1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIzMDEyNTMsImV4cCI6MjA5Nzg3NzI1M30.AKjE2io4qebY_jLHO5HakU6yZh1TdMne71F-muJGpLM";         // Replace with your Service Key
+
+        let supabaseClient = null;
+
+        // ====================================================================
+        // 2. LIVE SYNCHRONIZED STATE
+        // ====================================================================
+        let state = {
+            teamMembers: [],
+            checkins: [],
+            projects: [],
+            brainstormNotes: []
+        };
+
+        const randomPrompts = [
+            "What do you need from the team this week?",
+            "What is your #1 focus today?",
+            "Got any micro-wins or positive developments?",
+            "What's blocking your momentum right now?",
+            "What skill/asset do you wish we had access to?",
+            "If you had to change one priority, what would it be?",
+            "How can we help make your tasks easier today?"
+        ];
+
+        // Active State variables
+        let currentUser = null;
+        let activeMember = null;
+        let currentPrompt = "";
+        let selectedStickyColor = 'yellow';
+        let projectFilter = 'all';
+
+        // Dragging state tracking variables
+        let draggingElement = null;
+        let dragOffset = { x: 0, y: 0 };
+
+        // ====================================================================
+        // 3. INITIALIZATION & CONNECTION DETECTOR
+        // ====================================================================
+        window.addEventListener('DOMContentLoaded', async () => {
+            initApp();
+        });
+
+        async function initApp() {
+            // Check if placeholders are modified or unconfigured
+            const isPlaceholderUrl = SUPABASE_URL.includes("YOUR_PROJECT_ID") || !SUPABASE_URL.startsWith("http");
+            const isPlaceholderKey = SUPABASE_ANON_KEY.includes("YOUR_SUPABASE_ANON_KEY") || SUPABASE_ANON_KEY.length < 30;
+
+            if (isPlaceholderUrl || isPlaceholderKey) {
+                console.error("⚠️ Supabase Credentials Missing.");
+                showStatusBadge("Config Error", "bg-red-100", "text-red-800", "bg-red-500");
+                showToast("Setup Required", "Please configure your live Supabase credentials inside the code.", "⚠️");
+                return;
+            }
+
+            try {
+                // Initialize Supabase Client
+                supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                showStatusBadge("Database Connected", "bg-emerald-100", "text-emerald-800", "bg-emerald-500");
+                
+                // Verify Auth Session State
+                const { data: { session } } = await supabaseClient.auth.getSession();
+                if (session) {
+                    setUserSession(session.user);
+                    // Open view gates
+                    document.getElementById("auth-gate-overlay").classList.add("hidden");
+                    document.getElementById("app-workspace").classList.remove("hidden");
+                    // Bind workspace mouse drag listeners & Sync database
+                    setupCanvasMouseListeners();
+                    await refreshUI();
+                } else {
+                    // Show Sign In overlay requirement
+                    document.getElementById("auth-gate-overlay").classList.remove("hidden");
+                    document.getElementById("app-workspace").classList.add("hidden");
+                    showToast("Supabase Online!", "Please log in using Google authentication to continue.", "🔐");
+                }
+            } catch (err) {
+                console.error("Supabase Database connection failed.", err);
+                showStatusBadge("Connection Lost", "bg-red-100", "text-red-800", "bg-red-500");
+                showToast("Connection Fail", err.message, "❌");
+            }
+        }
+
+        // Update indicators
+        function showStatusBadge(msg, bgClass, textClass, indicatorClass) {
+            const parent = document.getElementById("status-indicator");
+            parent.className = `flex items-center gap-2 text-xs font-bold px-3 py-1.5 sketch-border ${bgClass} ${textClass} rounded`;
+            parent.innerHTML = `<span class="w-2.5 h-2.5 rounded-full ${indicatorClass} animate-pulse"></span><span>${msg}</span>`;
+        }
+
+        // ====================================================================
+        // 4. AUTHENTICATION OPERATIONS (GOOGLE OAUTH)
+        // ====================================================================
+        async function handleLogin() {
+            try {
+                // Standard Google Auth via Supabase URL scheme
+                const { error } = await supabaseClient.auth.signInWithOAuth({
+                    provider: 'google',
+                    options: {
+                        redirectTo: window.location.origin
+                    }
+                });
+                if (error) throw error;
+            } catch (err) {
+                showToast("Auth Error", err.message, "❌");
+            }
+        }
+
+        async function handleLogout() {
+            try {
+                const { error } = await supabaseClient.auth.signOut();
+                if (error) throw error;
+                currentUser = null;
+                document.getElementById("btn-login").classList.remove("hidden");
+                document.getElementById("user-profile").classList.add("hidden");
+                document.getElementById("auth-gate-overlay").classList.remove("hidden");
+                document.getElementById("app-workspace").classList.add("hidden");
+                showToast("Logged out", "Successfully signed out of Supabase.", "👋");
+            } catch (err) {
+                showToast("Signout error", err.message, "❌");
+            }
+        }
+
+        function setUserSession(user) {
+            currentUser = user;
+            document.getElementById("btn-login").classList.add("hidden");
+            const profile = document.getElementById("user-profile");
+            profile.classList.remove("hidden");
+            
+            document.getElementById("user-email").textContent = user.email || "Team Account";
+            document.getElementById("user-avatar").textContent = (user.email || "U")[0].toUpperCase();
+        }
+
+        // ====================================================================
+        // 5. RENDERING PIPELINE & DATABASE SYNC
+        // ====================================================================
+        async function refreshUI() {
+            if (supabaseClient) {
+                await fetchSupabaseUpdates();
+            }
+
+            renderTeamRoster();
+            renderProjectsList();
+            renderBrainstormCanvas();
+            renderCheckinHistory();
+        }
+
+        // Read all values from Supabase tables
+        async function fetchSupabaseUpdates() {
+            try {
+                // Team members fetch
+                let { data: members, error: mErr } = await supabaseClient.from('team_members').select('*');
+                if (!mErr && members) state.teamMembers = members;
+
+                // Projects fetch
+                let { data: projects, error: pErr } = await supabaseClient.from('projects').select('*').order('created_at', { ascending: false });
+                if (!pErr && projects) state.projects = projects;
+
+                // Brainstorm notes fetch
+                let { data: notes, error: nErr } = await supabaseClient.from('brainstorm_notes').select('*');
+                if (!nErr && notes) state.brainstormNotes = notes;
+
+                // Checkins history fetch
+                let { data: checkins, error: cErr } = await supabaseClient.from('checkins').select('*').order('created_at', { ascending: false });
+                if (!cErr && checkins) state.checkins = checkins;
+
+            } catch (err) {
+                console.warn("Could not sync with live Supabase database:", err);
+            }
+        }
+
+        // ====================================================================
+        // 6. MODULE: ROUND-ROBIN CAROUSEL
+        // ====================================================================
+        let availableDeck = [];
+
+        function spinCarousel() {
+            if (state.teamMembers.length === 0) {
+                showToast("Empty Roster", "Please add at least one member to your team roster below first!", "👥");
+                return;
+            }
+
+            // Initialize or replenish pool of members
+            if (availableDeck.length === 0) {
+                availableDeck = [...state.teamMembers];
+            }
+
+            // Draw a random index
+            const randomIndex = Math.floor(Math.random() * availableDeck.length);
+            activeMember = availableDeck.splice(randomIndex, 1)[0]; // Pull it out
+            
+            // Draw a random question prompt
+            const randomPromptIdx = Math.floor(Math.random() * randomPrompts.length);
+            currentPrompt = randomPrompts[randomPromptIdx];
+
+            // Render view state
+            document.getElementById("carousel-empty").classList.add("hidden");
+            document.getElementById("carousel-active").classList.remove("hidden");
+
+            // Update DOM node details
+            document.getElementById("active-member-emoji").textContent = activeMember.avatar_emoji || "🧑‍💻";
+            document.getElementById("active-member-name").textContent = activeMember.name;
+            document.getElementById("active-prompt").textContent = `"${currentPrompt}"`;
+            document.getElementById("pm-input-answer").value = ""; // clear last PM text input
+            document.getElementById("pm-input-answer").focus();
+
+            showToast(`Drawn: ${activeMember.name}!`, "It is your turn to check-in with the team.", "✨");
+        }
+
+        function resetCarousel() {
+            availableDeck = [];
+            activeMember = null;
+            document.getElementById("carousel-empty").classList.remove("hidden");
+            document.getElementById("carousel-active").classList.add("hidden");
+            showToast("Deck Replenished", "Roster wheel selection pool restarted.", "🔄");
+        }
+
+        async function saveCheckinAnswer() {
+            const answerText = document.getElementById("pm-input-answer").value.trim();
+            if (!activeMember) {
+                showToast("Whoops!", "There is no currently selected checking member to save.", "⚠️");
+                return;
+            }
+            if (!answerText) {
+                showToast("Empty Entry", "Please write a small summary of their response to record.", "✏️");
+                return;
+            }
+
+            const payload = {
+                member_id: activeMember.id,
+                member_name: activeMember.name,
+                prompt: currentPrompt,
+                answer: answerText,
+                logged_by: currentUser ? currentUser.email : 'Project Manager',
+                created_at: new Date().toISOString()
+            };
+
+            try {
+                const { error } = await supabaseClient.from('checkins').insert(payload);
+                if (error) throw error;
+                showToast("Answer Logged", "Saved directly to server database.", "✅");
+                await refreshUI();
+            } catch (err) {
+                showToast("Error writing to DB", err.message, "⚠️");
+            }
+
+            // Prepare next action
+            document.getElementById("pm-input-answer").value = "";
+        }
+
+        // TEAM ROSTER LOGIC
+        function toggleRosterView() {
+            const panel = document.getElementById("roster-editor");
+            panel.classList.toggle("hidden");
+        }
+
+        async function addTeamMember() {
+            const name = document.getElementById("new-member-name").value.trim();
+            const emoji = document.getElementById("new-member-emoji").value;
+            
+            if (!name) {
+                showToast("Missing Fields", "Please enter a name for the member", "🧩");
+                return;
+            }
+
+            const payload = { name, avatar_emoji: emoji };
+
+            try {
+                const { error } = await supabaseClient.from('team_members').insert(payload);
+                if (error) throw error;
+                showToast("Success", `${name} has been added to Supabase.`, "✅");
+                await refreshUI();
+            } catch (err) {
+                showToast("Failed to write member", err.message, "⚠️");
+            }
+
+            document.getElementById("new-member-name").value = "";
+        }
+
+        function renderTeamRoster() {
+            const container = document.getElementById("roster-chips");
+            const counter = document.getElementById("roster-count");
+            container.innerHTML = "";
+
+            counter.textContent = state.teamMembers.length;
+
+            if (state.teamMembers.length === 0) {
+                container.innerHTML = `<span class="text-xs text-stone-500 italic">No members yet. Hit 'Edit Roster' to populate!</span>`;
+                return;
+            }
+
+            state.teamMembers.forEach(m => {
+                const chip = document.createElement("div");
+                chip.className = "flex items-center gap-1.5 bg-white text-xs font-bold py-1 px-2.5 sketch-border shadow-neo-sm";
+                chip.innerHTML = `
+                    <span>${m.avatar_emoji || '🧑‍💻'}</span>
+                    <span>${m.name}</span>
+                    <button onclick="removeTeamMember('${m.id}')" class="text-red-500 hover:text-red-700 ml-1 font-extrabold" title="Remove Member">&times;</button>
+                `;
+                container.appendChild(chip);
+            });
+        }
+
+        async function removeTeamMember(id) {
+            try {
+                const { error } = await supabaseClient.from('team_members').delete().eq('id', id);
+                if (error) throw error;
+                showToast("Success", "Team member removed from DB.", "🗑️");
+                // Clear active carousel if the active member is deleted
+                if (activeMember && activeMember.id === id) {
+                    resetCarousel();
+                }
+                await refreshUI();
+            } catch (err) {
+                showToast("Removal failed", err.message, "⚠️");
+            }
+        }
+
+        // ====================================================================
+        // 7. MODULE: PROJECTS AND BUGS TRACKER
+        // ====================================================================
+        function filterProjects(filterVal) {
+            projectFilter = filterVal;
+            
+            // Set styles of buttons
+            const buttons = ['all', 'pending', 'completed'];
+            buttons.forEach(b => {
+                const btn = document.getElementById(`btn-filter-${b}`);
+                if (b === filterVal) {
+                    btn.className = "bg-black text-white px-2.5 py-1 sketch-border";
+                } else {
+                    btn.className = "bg-white text-stone-800 px-2.5 py-1 sketch-border shadow-neo";
+                }
+            });
+
+            renderProjectsList();
+        }
+
+        async function addProjectItem() {
+            const title = document.getElementById("new-project-title").value.trim();
+            const category = document.getElementById("new-project-cat").value;
+
+            if (!title) {
+                showToast("Missing Title", "Please detail the bug or task to create", "🧩");
+                return;
+            }
+
+            const payload = {
+                title,
+                category,
+                status: 'pending',
+                created_at: new Date().toISOString()
+            };
+
+            try {
+                const { error } = await supabaseClient.from('projects').insert(payload);
+                if (error) throw error;
+                showToast("Task Saved", "Project listed in Supabase database.", "✅");
+                await refreshUI();
+            } catch (err) {
+                showToast("Insert Error", err.message, "⚠️");
+            }
+
+            document.getElementById("new-project-title").value = "";
+        }
+
+        function renderProjectsList() {
+            const container = document.getElementById("projects-list-container");
+            container.innerHTML = "";
+
+            let list = [...state.projects];
+            
+            // Apply current active visual filter
+            if (projectFilter === 'pending') {
+                list = list.filter(p => p.status === 'pending');
+            } else if (projectFilter === 'completed') {
+                list = list.filter(p => p.status === 'completed');
+            }
+
+            document.getElementById("project-stats").textContent = `${list.length} Item(s)`;
+
+            if (list.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center p-6 text-stone-400 bg-white sketch-border border-dashed">
+                        😴 Empty list for selection!
+                    </div>
+                `;
+                return;
+            }
+
+            list.forEach(p => {
+                const card = document.createElement("div");
+                const isDone = p.status === 'completed';
+                
+                // Set tag styling
+                let catBadge = "bg-[#ffcc80] text-amber-900"; // default
+                if (p.category === "Bug Fix") catBadge = "bg-rose-200 text-rose-800";
+                else if (p.category === "New Report") catBadge = "bg-violet-200 text-violet-800";
+                else if (p.category === "Small Project") catBadge = "bg-[#80deea] text-cyan-950";
+
+                card.className = `flex items-center justify-between p-3 transition-all ${
+                    isDone ? 'bg-stone-50 border-stone-300 opacity-60' : 'bg-white shadow-neo border-black'
+                } sketch-border`;
+
+                card.innerHTML = `
+                    <div class="flex items-start gap-2.5 flex-1 min-w-0 pr-2">
+                        <button onclick="toggleProjectStatus('${p.id}', '${p.status}')" class="mt-0.5 focus:outline-none flex-shrink-0">
+                            ${isDone ? '✅' : '⬜'}
+                        </button>
+                        <div class="min-w-0">
+                            <span class="text-xs font-bold uppercase ${catBadge} px-1.5 py-0.5 sketch-border-sm rounded-sm mr-2 inline-block">
+                                ${p.category}
+                            </span>
+                            <span class="text-xs font-semibold ${isDone ? 'line-through text-stone-500' : 'text-stone-900'} font-medium break-words">
+                                ${p.title}
+                            </span>
+                        </div>
+                    </div>
+                    <button onclick="deleteProject('${p.id}')" class="text-stone-400 hover:text-red-500 text-sm font-bold flex-shrink-0 ml-1">
+                        🗑️
+                    </button>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        async function toggleProjectStatus(id, currentStatus) {
+            const nextStatus = currentStatus === 'pending' ? 'completed' : 'pending';
+
+            try {
+                const { error } = await supabaseClient.from('projects').update({ status: nextStatus }).eq('id', id);
+                if (error) throw error;
+                await refreshUI();
+            } catch (err) {
+                showToast("Update error", err.message, "⚠️");
+            }
+        }
+
+        async function deleteProject(id) {
+            try {
+                const { error } = await supabaseClient.from('projects').delete().eq('id', id);
+                if (error) throw error;
+                await refreshUI();
+            } catch (err) {
+                showToast("Delete error", err.message, "⚠️");
+            }
+        }
+
+        // ====================================================================
+        // 8. MODULE: THE CREATIVE CANVAS / BRAINSTORM BOARD
+        // ====================================================================
+        function setStickyColorChoice(color) {
+            selectedStickyColor = color;
+            showToast("Color Picker", `Next sticky note will spawn in ${color}!`, "🎨");
+        }
+
+        async function spawnStickyNote() {
+            // Find a dynamic random center location
+            const board = document.getElementById("canvas-workspace");
+            const maxX = board.clientWidth - 160;
+            const maxY = board.clientHeight - 130;
+            const x = Math.floor(Math.random() * Math.max(maxX, 50)) + 15;
+            const y = Math.floor(Math.random() * Math.max(maxY, 50)) + 15;
+
+            const payload = {
+                text: "Double-click me to edit note!",
+                color: selectedStickyColor,
+                x_pos: x,
+                y_pos: y,
+                created_at: new Date().toISOString()
+            };
+
+            try {
+                const { error } = await supabaseClient.from('brainstorm_notes').insert(payload);
+                if (error) throw error;
+                await refreshUI();
+            } catch (err) {
+                showToast("Error spawning sticky", err.message, "⚠️");
+            }
+        }
+
+        // Global lock mechanism to prevent dragging while editing text
+        let isEditingSticky = false;
+
+        function renderBrainstormCanvas() {
+            const workspace = document.getElementById("canvas-workspace");
+            
+            // Keep user elements only, clear old stickies
+            const stickies = workspace.querySelectorAll('.sticky-note-element');
+            stickies.forEach(s => s.remove());
+
+            state.brainstormNotes.forEach(note => {
+                const element = document.createElement("div");
+                element.id = `note-${note.id}`;
+                element.className = `absolute sticky-note-element w-40 h-40 sketch-border shadow-neo p-3 select-none flex flex-col justify-between sticky-${note.color} transition-shadow cursor-grab active:cursor-grabbing`;
+                
+                // Adjust for drag offsets
+                element.style.left = `${note.x_pos}px`;
+                element.style.top = `${note.y_pos}px`;
+
+                // Render inner components (Title area with trash icon & text body)
+                element.innerHTML = `
+                    <div class="flex items-center justify-between border-b border-black/20 pb-1 mb-1 pointer-events-none">
+                        <span class="text-[10px] uppercase font-bold tracking-wider text-black/50">📌 Idea</span>
+                        <button onclick="deleteStickyNote('${note.id}')" class="text-stone-500 hover:text-red-500 pointer-events-auto text-xs font-bold px-1">&times;</button>
+                    </div>
+                    <div class="flex-1 text-xs font-bold text-stone-800 break-words overflow-hidden leading-tight font-display pr-1" 
+                         ondblclick="makeStickyEditable(this, '${note.id}')">
+                        ${note.text || 'Empty Idea...'}
+                    </div>
+                    <div class="text-[9px] text-right text-stone-500 pointer-events-none font-mono">
+                        ${new Date(note.created_at || Date.now()).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                    </div>
+                `;
+
+                // Hook up dragging events to dynamic canvas elements
+                element.addEventListener('mousedown', (e) => startStickyDrag(e, note, element));
+                element.addEventListener('touchstart', (e) => startStickyDrag(e, note, element), { passive: true });
+
+                workspace.appendChild(element);
+            });
+        }
+
+        // Inline double-click sticky editing
+        function makeStickyEditable(domElement, id) {
+            isEditingSticky = true;
+            const prevText = domElement.innerText;
+            const container = domElement.parentElement;
+            
+            // Create mini editor area
+            const textarea = document.createElement("textarea");
+            textarea.className = "w-full h-24 p-1 text-xs font-bold bg-white/70 outline-none resize-none sketch-border-sm pointer-events-auto";
+            textarea.value = prevText === 'Double-click me to edit note!' ? '' : prevText;
+            
+            domElement.replaceWith(textarea);
+            textarea.focus();
+
+            // Finish edit event handler
+            const finishEdit = async () => {
+                isEditingSticky = false;
+                const cleanVal = textarea.value.trim() || 'Empty concept';
+                
+                // Recover UI element
+                const newBody = document.createElement("div");
+                newBody.className = "flex-1 text-xs font-bold text-stone-800 break-words overflow-hidden leading-tight font-display pr-1";
+                newBody.setAttribute('ondblclick', `makeStickyEditable(this, '${id}')`);
+                newBody.innerText = cleanVal;
+                textarea.replaceWith(newBody);
+
+                try {
+                    const { error } = await supabaseClient.from('brainstorm_notes').update({ text: cleanVal }).eq('id', id);
+                    if (error) throw error;
+                    await refreshUI();
+                } catch (err) {
+                    showToast("DB error", err.message, "⚠️");
+                }
+            };
+
+            textarea.addEventListener('blur', finishEdit);
+            textarea.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    textarea.blur();
+                }
+            });
+        }
+
+        // Mouse Drag Mechanics
+        function startStickyDrag(e, note, element) {
+            // Prevent dragging from internal trash button trigger, or during active editing
+            if (e.target.tagName === 'BUTTON' || e.target.tagName === 'TEXTAREA' || isEditingSticky) return;
+
+            draggingElement = { note, element };
+
+            // Handle touch vs mouse coordination points
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+            const rect = element.getBoundingClientRect();
+            dragOffset.x = clientX - rect.left;
+            dragOffset.y = clientY - rect.top;
+
+            element.style.zIndex = 30; // Bring card to foreground
+        }
+
+        function setupCanvasMouseListeners() {
+            const workspace = document.getElementById("canvas-workspace");
+
+            const onMove = (e) => {
+                if (!draggingElement) return;
+
+                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+                // Workspace positioning bounds calculation
+                const workspaceRect = workspace.getBoundingClientRect();
+                
+                let targetX = clientX - workspaceRect.left - dragOffset.x;
+                let targetY = clientY - workspaceRect.top - dragOffset.y;
+
+                // Contain element inside bounding box boundaries
+                const maxAllowedX = workspaceRect.width - draggingElement.element.clientWidth - 5;
+                const maxAllowedY = workspaceRect.height - draggingElement.element.clientHeight - 5;
+
+                targetX = Math.max(5, Math.min(targetX, maxAllowedX));
+                targetY = Math.max(5, Math.min(targetY, maxAllowedY));
+
+                // Instantly update UI element
+                draggingElement.element.style.left = `${targetX}px`;
+                draggingElement.element.style.top = `${targetY}px`;
+
+                // Write positions instantly to cache objects
+                draggingElement.note.x_pos = Math.round(targetX);
+                draggingElement.note.y_pos = Math.round(targetY);
+            };
+
+            const onEnd = async () => {
+                if (!draggingElement) return;
+
+                const note = draggingElement.note;
+                draggingElement.element.style.zIndex = 'auto'; // restore regular depth
+
+                try {
+                    await supabaseClient.from('brainstorm_notes').update({
+                        x_pos: note.x_pos,
+                        y_pos: note.y_pos
+                    }).eq('id', note.id);
+                } catch (err) {
+                    console.error("Position write failed", err);
+                }
+
+                draggingElement = null;
+            };
+
+            // Global move coordinates mapping
+            document.addEventListener('mousemove', onMove);
+            document.addEventListener('touchmove', onMove, { passive: false });
+            
+            document.addEventListener('mouseup', onEnd);
+            document.addEventListener('touchend', onEnd);
+        }
+
+        async function deleteStickyNote(id) {
+            // Stop immediate drag triggers
+            draggingElement = null;
+
+            try {
+                const { error } = await supabaseClient.from('brainstorm_notes').delete().eq('id', id);
+                if (error) throw error;
+                await refreshUI();
+            } catch (err) {
+                showToast("DB error", err.message, "⚠️");
+            }
+        }
+
+        async function clearCanvas() {
+            try {
+                // Clear brainstorm notes table completely
+                const { error } = await supabaseClient.from('brainstorm_notes').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+                if (error) throw error;
+                await refreshUI();
+                showToast("Canvas Wiped", "Clean workspace slate initialized.", "🎨");
+            } catch (err) {
+                showToast("Clear error", err.message, "⚠️");
+            }
+        }
+
+        // ====================================================================
+        // 9. MODULE: CHECK-IN HISTORY LOGGER
+        // ====================================================================
+        function renderCheckinHistory() {
+            const tbody = document.getElementById("checkins-table-body");
+            tbody.innerHTML = "";
+
+            if (state.checkins.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="4" class="p-4 text-center text-stone-500">No meeting updates logged today. Complete a spin to start.</td>
+                    </tr>
+                `;
+                return;
+            }
+
+            state.checkins.forEach(log => {
+                const tr = document.createElement("tr");
+                tr.className = "hover:bg-amber-50/50 transition-colors";
+                
+                const recordTime = new Date(log.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+                tr.innerHTML = `
+                    <td class="p-3 font-display font-bold text-stone-900">${log.member_name}</td>
+                    <td class="p-3 text-xs italic text-stone-600 max-w-xs truncate" title="${log.prompt}">"${log.prompt}"</td>
+                    <td class="p-3 font-medium text-stone-800 break-words">${log.answer}</td>
+                    <td class="p-3 text-xs text-right text-stone-500 font-mono">${recordTime}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // ====================================================================
+        // 10. HELPER NOTIFICATIONS UTILITY
+        // ====================================================================
+        let toastTimeout = null;
+        function showToast(title, msg, icon = "💡") {
+            const toast = document.getElementById("toast");
+            const tTitle = document.getElementById("toast-title");
+            const tMsg = document.getElementById("toast-msg");
+            const tIcon = document.getElementById("toast-icon");
+
+            tTitle.textContent = title;
+            tMsg.textContent = msg;
+            tIcon.textContent = icon;
+
+            // Trigger animation classes
+            toast.className = "fixed bottom-6 right-6 z-50 transition-all duration-300 pointer-events-auto max-w-sm transform translate-y-0 opacity-100";
+
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.className = "fixed bottom-6 right-6 z-50 transition-all duration-300 pointer-events-none max-w-sm transform translate-y-20 opacity-0";
+            }, 5500);
+        }
+    </script>
+</body>
+</html>

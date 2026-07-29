@@ -29,7 +29,7 @@
           },
           fontFamily: {
             sans: ['Space Grotesk', 'Plus Jakarta Sans', 'sans-serif'],
-            serif: ['Playfair Display', 'serif'],
+            serif: ['Space Grotesk', 'Plus Jakarta Sans', 'sans-serif'],
             hand: ['Caveat', 'cursive']
           }
         }
@@ -37,10 +37,10 @@
     }
   </script>
 
-  <!-- Google Fonts: Space Grotesk, Playfair Display & Caveat for hand-drawn artistic accents -->
+  <!-- Google Fonts: Space Grotesk, Plus Jakarta Sans & Caveat for hand-drawn artistic accents -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
@@ -139,6 +139,9 @@
 </head>
 <body class="min-h-screen flex flex-col selection:bg-studio-coral selection:text-white relative overflow-x-hidden">
 
+  <!-- Floating Toast Notification Container -->
+  <div id="toast-notification" class="fixed bottom-6 right-6 z-50 transition-all duration-300 transform translate-y-10 opacity-0 pointer-events-none"></div>
+
   <!-- Floating Artistic Background Blobs -->
   <div class="fixed top-10 left-[-60px] w-72 h-72 bg-studio-coral/15 rounded-full blur-3xl pointer-events-none animate-blob-1"></div>
   <div class="fixed bottom-10 right-[-60px] w-96 h-96 bg-studio-lavender/15 rounded-full blur-3xl pointer-events-none animate-blob-2"></div>
@@ -150,12 +153,12 @@
         
         <!-- Logo & Office Branding -->
         <div class="flex items-center space-x-3 cursor-pointer group" onclick="switchSection('checkins')">
-          <div class="w-12 h-12 rounded-2xl art-gradient-1 border-2 border-studio-ink flex items-center justify-center font-serif text-2xl font-black text-studio-ink shadow-md group-hover:rotate-6 transition-transform">
+          <div class="w-12 h-12 rounded-2xl art-gradient-1 border-2 border-studio-ink flex items-center justify-center font-sans text-2xl font-black text-studio-ink shadow-md group-hover:rotate-6 transition-transform">
             ✨
           </div>
           <div>
             <div class="flex items-center space-x-2">
-              <span class="font-serif font-bold text-2xl tracking-tight text-white">How We Doin?</span>
+              <span class="font-sans font-bold text-2xl tracking-tight text-white">How We Doin?</span>
               <span class="text-xs bg-studio-coral/30 text-amber-200 border border-studio-coral/50 px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider">BC IR&P</span>
             </div>
             <p class="text-xs text-stone-300 font-medium tracking-wide">Institutional Research & Planning Studio</p>
@@ -210,11 +213,11 @@
   <!-- AUTH SHIELD / ACCESS GATEWAY (Only visible if not logged in or not authorized) -->
   <div id="auth-shield" class="fixed inset-0 bg-studio-plum/95 backdrop-blur-md z-50 flex items-center justify-center p-4 text-white">
     <div class="art-card bg-white text-studio-ink rounded-3xl p-8 sm:p-12 max-w-md w-full text-center space-y-6 shadow-2xl relative">
-      <div class="w-16 h-16 rounded-2xl art-gradient-1 border-2 border-studio-ink flex items-center justify-center font-serif text-3xl mx-auto shadow-md">
+      <div class="w-16 h-16 rounded-2xl art-gradient-1 border-2 border-studio-ink flex items-center justify-center font-sans text-3xl mx-auto shadow-md">
         🔒
       </div>
       <div class="space-y-2">
-        <h2 id="auth-shield-title" class="text-2xl font-serif font-bold text-studio-ink">Authentication Required</h2>
+        <h2 id="auth-shield-title" class="text-2xl font-sans font-bold text-studio-ink">Authentication Required</h2>
         <p id="auth-shield-msg" class="text-xs text-stone-600 font-medium leading-relaxed">
           Please sign in with your Google account to access the BC IR&P Check-in & Innovation Studio.
         </p>
@@ -244,7 +247,7 @@
           </div>
           <div>
             <span class="text-xs font-bold uppercase tracking-wider text-studio-terracotta">Check-in Command Center</span>
-            <h1 class="text-2xl font-bold font-serif text-studio-ink flex items-center space-x-3">
+            <h1 class="text-2xl font-bold font-sans text-studio-ink flex items-center space-x-3">
               <span id="current-team-title">Select or Create a Team</span>
             </h1>
           </div>
@@ -281,7 +284,7 @@
             <div class="flex items-center justify-between mb-6">
               <div class="flex items-center space-x-2">
                 <span class="w-3.5 h-3.5 rounded-full bg-studio-mint border border-studio-ink animate-pulse"></span>
-                <h2 class="font-serif font-bold text-studio-ink text-xl">Meeting Stage</h2>
+                <h2 class="font-sans font-bold text-studio-ink text-xl">Meeting Stage</h2>
               </div>
               <span id="carousel-counter" class="text-xs font-bold px-3 py-1 bg-studio-sun/20 border-2 border-studio-ink rounded-full text-studio-ink">
                 0 / 0 Members
@@ -304,12 +307,12 @@
                 <!-- Member Polaroid Card -->
                 <div class="flex items-center space-x-5">
                   <div class="polaroid-frame flex-shrink-0">
-                    <div id="carousel-avatar" class="w-16 h-16 art-gradient-2 text-white font-serif font-bold text-2xl flex items-center justify-center border border-studio-ink">
+                    <div id="carousel-avatar" class="w-16 h-16 art-gradient-2 text-white font-sans font-bold text-2xl flex items-center justify-center border border-studio-ink">
                       --
                     </div>
                   </div>
                   <div>
-                    <h3 id="carousel-member-name" class="text-2xl sm:text-3xl font-serif font-bold text-studio-ink">Member Name</h3>
+                    <h3 id="carousel-member-name" class="text-2xl sm:text-3xl font-sans font-bold text-studio-ink">Member Name</h3>
                     <span id="carousel-member-role" class="inline-block mt-1 text-xs font-bold uppercase tracking-wider text-white bg-studio-lavender border border-studio-ink px-2.5 py-0.5 rounded-full">Role Title</span>
                   </div>
                 </div>
@@ -326,7 +329,7 @@
                       <span>New Prompt</span>
                     </button>
                   </div>
-                  <p id="carousel-question" class="text-xl sm:text-2xl font-serif italic font-medium text-studio-ink leading-relaxed">
+                  <p id="carousel-question" class="text-xl sm:text-2xl font-sans font-medium text-studio-ink leading-relaxed">
                     "What do you need from us today?"
                   </p>
                 </div>
@@ -360,7 +363,7 @@
             <div class="flex items-center justify-between mb-4">
               <div class="flex items-center space-x-2">
                 <i data-lucide="pen-tool" class="w-5 h-5 text-studio-coral"></i>
-                <h2 class="font-serif font-bold text-studio-ink text-xl">Whiteboard Canvas</h2>
+                <h2 class="font-sans font-bold text-studio-ink text-xl">Whiteboard Canvas</h2>
               </div>
               <span id="whiteboard-count" class="text-xs bg-studio-lavender/20 text-studio-plum font-bold px-3 py-1 rounded-full border border-studio-plum/30">
                 0 Topics
@@ -416,7 +419,7 @@
             <i data-lucide="lightbulb" class="w-3.5 h-3.5"></i>
             <span>Continuous Innovation Engine</span>
           </div>
-          <h1 class="text-3xl sm:text-4xl font-serif font-bold tracking-tight text-white">
+          <h1 class="text-3xl sm:text-4xl font-sans font-bold tracking-tight text-white">
             Better Office Studio
           </h1>
           <p class="text-stone-200 text-sm sm:text-base leading-relaxed font-medium">
@@ -492,7 +495,7 @@
 
       <div class="space-y-1 mb-6">
         <span class="text-xs font-bold text-studio-terracotta uppercase tracking-wider">Better Office Engine</span>
-        <h3 class="text-2xl font-serif font-bold text-studio-ink">Propose a Solution</h3>
+        <h3 class="text-2xl font-sans font-bold text-studio-ink">Propose a Solution</h3>
       </div>
 
       <form onsubmit="handleCreateIdea(event)" class="space-y-4">
@@ -558,7 +561,7 @@
 
       <div class="space-y-1 mb-6">
         <span class="text-xs font-bold text-studio-terracotta uppercase tracking-wider">Team Management</span>
-        <h3 class="text-2xl font-serif font-bold text-studio-ink">Teams & Members</h3>
+        <h3 class="text-2xl font-sans font-bold text-studio-ink">Teams & Members</h3>
       </div>
 
       <!-- Add New Team Form -->
@@ -606,7 +609,7 @@
 
       <div class="space-y-1 mb-6">
         <span class="text-xs font-bold text-studio-terracotta uppercase tracking-wider">Security & Whitelist</span>
-        <h3 class="text-2xl font-serif font-bold text-studio-ink">Allowed Google Users</h3>
+        <h3 class="text-2xl font-sans font-bold text-studio-ink">Allowed Google Users</h3>
         <p class="text-xs text-stone-500">
           When this list is empty, any Google user can access the app. Once at least 1 user email is added, access is strictly limited to users on this list.
         </p>
@@ -633,11 +636,11 @@
     
     <div class="flex items-center justify-between">
       <div class="flex items-center space-x-3">
-        <div class="w-10 h-10 rounded-xl art-gradient-1 text-studio-ink flex items-center justify-center font-bold font-serif">
+        <div class="w-10 h-10 rounded-xl art-gradient-1 text-studio-ink flex items-center justify-center font-bold font-sans">
           ✨
         </div>
         <div>
-          <h2 class="font-serif font-bold text-xl text-white">IR&P Team Check-in</h2>
+          <h2 class="font-sans font-bold text-xl text-white">IR&P Team Check-in</h2>
           <p id="presenter-team-subtitle" class="text-xs text-stone-400">Active Meeting Mode</p>
         </div>
       </div>
@@ -653,18 +656,18 @@
       <div id="presenter-card" class="bg-stone-900/90 border-2 border-stone-700 rounded-3xl p-8 sm:p-12 shadow-2xl backdrop-blur-md space-y-8">
         
         <div class="inline-flex items-center space-x-4 px-6 py-3 bg-white/10 border border-white/20 rounded-2xl">
-          <div id="presenter-avatar" class="w-14 h-14 rounded-xl art-gradient-2 text-white font-serif font-bold text-2xl flex items-center justify-center shadow-md border border-white/30">
+          <div id="presenter-avatar" class="w-14 h-14 rounded-xl art-gradient-2 text-white font-sans font-bold text-2xl flex items-center justify-center shadow-md border border-white/30">
             --
           </div>
           <div class="text-left">
-            <h3 id="presenter-name" class="text-2xl sm:text-3xl font-serif font-bold text-white">Member Name</h3>
+            <h3 id="presenter-name" class="text-2xl sm:text-3xl font-sans font-bold text-white">Member Name</h3>
             <p id="presenter-role" class="text-xs text-studio-sun uppercase tracking-widest font-semibold">Role</p>
           </div>
         </div>
 
         <div class="space-y-3 max-w-2xl mx-auto">
           <span class="text-xs font-bold uppercase tracking-widest text-studio-coral block">Today's Reflection Question</span>
-          <p id="presenter-question" class="text-2xl sm:text-4xl font-serif italic text-stone-100 leading-snug">
+          <p id="presenter-question" class="text-2xl sm:text-4xl font-sans text-stone-100 leading-snug">
             "What do you need from us?"
           </p>
         </div>
@@ -707,6 +710,31 @@
     let SUPABASE_ANON_KEY = localStorage.getItem('bc_irp_supabase_key') || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVxYmx5b2dyY3NyYmd4c25jbmN1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIzMDEyNTMsImV4cCI6MjA5Nzg3NzI1M30.AKjE2io4qebY_jLHO5HakU6yZh1TdMne71F-muJGpLM';
 
     let supabaseClient = null;
+    let isAuthenticating = false;
+
+    function showNotification(message, type = 'error') {
+      const toast = document.getElementById('toast-notification');
+      if (!toast) return;
+
+      const bgColor = type === 'success' ? 'bg-emerald-600' : 'bg-studio-terracotta';
+      const icon = type === 'success' ? 'check-circle' : 'alert-circle';
+
+      toast.innerHTML = `
+        <div class="art-card ${bgColor} text-white px-5 py-3 rounded-2xl flex items-center space-x-3 shadow-xl pointer-events-auto">
+          <i data-lucide="${icon}" class="w-5 h-5 flex-shrink-0"></i>
+          <span class="text-xs font-bold">${escapeHtml(message)}</span>
+        </div>
+      `;
+      lucide.createIcons();
+
+      toast.classList.remove('translate-y-10', 'opacity-0', 'pointer-events-none');
+      toast.classList.add('translate-y-0', 'opacity-100');
+
+      setTimeout(() => {
+        toast.classList.remove('translate-y-0', 'opacity-100');
+        toast.classList.add('translate-y-10', 'opacity-0', 'pointer-events-none');
+      }, 4000);
+    }
 
     function isSupabaseConfigured() {
       return SUPABASE_URL && 
@@ -872,7 +900,7 @@
       const key = document.getElementById('input-supabase-key').value.trim();
 
       if (!url || !key) {
-        alert("Please enter both Supabase URL and Key.");
+        showNotification("Please enter both Supabase URL and Key.", "error");
         return;
       }
 
@@ -912,15 +940,60 @@
     }
 
     async function loginWithGoogle() {
+      if (isAuthenticating) return;
+
       if (!supabaseClient) {
-        alert("Supabase client is not configured.");
+        showNotification("Supabase client is not configured.", "error");
         return;
       }
-      const { error } = await supabaseClient.auth.signInWithOAuth({
-        provider: 'google',
-        options: { redirectTo: window.location.href }
+
+      isAuthenticating = true;
+
+      // Update all Google sign in buttons with spinner & disabled state
+      const buttons = document.querySelectorAll('[onclick="loginWithGoogle()"]');
+      buttons.forEach(btn => {
+        btn.disabled = true;
+        btn.classList.add('opacity-75', 'cursor-not-allowed');
+        btn.innerHTML = `
+          <i data-lucide="loader" class="w-4 h-4 animate-spin"></i>
+          <span>Connecting to Google...</span>
+        `;
       });
-      if (error) alert("Login Error: " + error.message);
+      lucide.createIcons();
+
+      try {
+        const { error } = await supabaseClient.auth.signInWithOAuth({
+          provider: 'google',
+          options: {
+            redirectTo: window.location.href,
+            queryParams: {
+              prompt: 'select_account'
+            }
+          }
+        });
+
+        if (error) {
+          showNotification("Login Error: " + error.message, "error");
+          resetLoginButtons();
+        }
+      } catch (err) {
+        showNotification("Authentication failed: " + (err.message || "Unable to reach sign-in server"), "error");
+        resetLoginButtons();
+      }
+    }
+
+    function resetLoginButtons() {
+      isAuthenticating = false;
+      const buttons = document.querySelectorAll('[onclick="loginWithGoogle()"]');
+      buttons.forEach(btn => {
+        btn.disabled = false;
+        btn.classList.remove('opacity-75', 'cursor-not-allowed');
+        btn.innerHTML = `
+          <i data-lucide="log-in" class="w-4 h-4"></i>
+          <span>Sign In with Google</span>
+        `;
+      });
+      lucide.createIcons();
     }
 
     async function logout() {
@@ -1152,7 +1225,7 @@
         div.innerHTML = `
           <div class="washi-tape"></div>
           <div class="space-y-1.5 pt-1">
-            <p class="text-sm font-serif font-semibold leading-snug">${escapeHtml(point.content)}</p>
+            <p class="text-sm font-sans font-semibold leading-snug">${escapeHtml(point.content)}</p>
             <span class="text-[11px] font-hand font-bold text-studio-terracotta text-sm block">— ${escapeHtml(point.author_name)}</span>
           </div>
           <div class="flex items-center space-x-1 flex-shrink-0 pt-1">
@@ -1173,7 +1246,7 @@
 
     async function handleAddWhiteboardPoint(e) {
       e.preventDefault();
-      if (!supabaseClient) { alert("Please configure Supabase credentials first."); return; }
+      if (!supabaseClient) { showNotification("Please configure Supabase credentials first.", "error"); return; }
       const team = getCurrentTeam();
       const input = document.getElementById('wb-input-content');
       if (!team || !input.value.trim()) return;
@@ -1187,7 +1260,7 @@
         is_addressed: false
       }]);
 
-      if (error) alert("Error adding whiteboard point: " + error.message);
+      if (error) showNotification("Error adding whiteboard point: " + error.message, "error");
       input.value = '';
       await fetchTeams();
     }
@@ -1200,14 +1273,14 @@
       if (!point) return;
 
       const { error } = await supabaseClient.from('whiteboard_points').update({ is_addressed: !point.is_addressed }).eq('id', pointId);
-      if (error) alert("Error updating whiteboard point: " + error.message);
+      if (error) showNotification("Error updating whiteboard point: " + error.message, "error");
       await fetchTeams();
     }
 
     async function deleteWhiteboardPoint(pointId) {
       if (!supabaseClient) return;
       const { error } = await supabaseClient.from('whiteboard_points').delete().eq('id', pointId);
-      if (error) alert("Error deleting whiteboard point: " + error.message);
+      if (error) showNotification("Error deleting whiteboard point: " + error.message, "error");
       await fetchTeams();
     }
 
@@ -1324,7 +1397,7 @@
               </div>
             </div>
 
-            <h3 class="text-xl font-serif font-bold text-studio-ink leading-snug">
+            <h3 class="text-xl font-sans font-bold text-studio-ink leading-snug">
               💡 ${escapeHtml(idea.title)}
             </h3>
 
@@ -1408,7 +1481,7 @@
     async function handleCreateIdea(e) {
       e.preventDefault();
       if (!currentUser) {
-        alert("Please sign in with Google to propose an idea.");
+        showNotification("Please sign in with Google to propose an idea.", "error");
         return;
       }
 
@@ -1432,7 +1505,7 @@
       }]);
 
       if (error) {
-        alert("Error creating idea: " + error.message);
+        showNotification("Error creating idea: " + error.message, "error");
         return;
       }
 
@@ -1441,12 +1514,13 @@
       document.getElementById('idea-problem').value = '';
       document.getElementById('idea-solution').value = '';
 
+      showNotification("Idea submitted successfully!", "success");
       await fetchIdeas();
     }
 
     async function toggleUpvote(ideaId) {
       if (!currentUser) {
-        alert("Please sign in with Google to vote.");
+        showNotification("Please sign in with Google to vote.", "error");
         return;
       }
 
@@ -1466,7 +1540,7 @@
 
     async function toggleVolunteer(ideaId) {
       if (!currentUser) {
-        alert("Please sign in with Google to volunteer.");
+        showNotification("Please sign in with Google to volunteer.", "error");
         return;
       }
 
@@ -1487,14 +1561,14 @@
 
     async function updateIdeaStatus(ideaId, newStatus) {
       const { error } = await supabaseClient.from('ideas').update({ status: newStatus }).eq('id', ideaId);
-      if (error) alert("Error updating status: " + error.message);
+      if (error) showNotification("Error updating status: " + error.message, "error");
       await fetchIdeas();
     }
 
     async function handleAddComment(e, ideaId) {
       e.preventDefault();
       if (!currentUser) {
-        alert("Please sign in with Google to comment.");
+        showNotification("Please sign in with Google to comment.", "error");
         return;
       }
 
@@ -1509,7 +1583,7 @@
         author_name: authorName
       }]);
 
-      if (error) alert("Error posting comment: " + error.message);
+      if (error) showNotification("Error posting comment: " + error.message, "error");
       input.value = '';
       await fetchIdeas();
     }
@@ -1558,7 +1632,7 @@
       }]).select('*');
 
       if (error) {
-        alert("Error creating team: " + error.message);
+        showNotification("Error creating team: " + error.message, "error");
         return;
       }
 
@@ -1566,6 +1640,7 @@
       if (data && data[0]) {
         activeTeamId = data[0].id;
       }
+      showNotification("Team created successfully!", "success");
       await fetchTeams();
       openManageTeamsModal();
     }
@@ -1585,7 +1660,7 @@
       }]);
 
       if (error) {
-        alert("Error adding team member: " + error.message);
+        showNotification("Error adding team member: " + error.message, "error");
         return;
       }
 
@@ -1597,7 +1672,7 @@
 
     async function removeMember(memberId) {
       const { error } = await supabaseClient.from('team_members').delete().eq('id', memberId);
-      if (error) alert("Error removing team member: " + error.message);
+      if (error) showNotification("Error removing team member: " + error.message, "error");
       await fetchTeams();
       renderManageMembersList();
     }
@@ -1650,7 +1725,7 @@
       }]);
 
       if (error) {
-        alert("Error adding allowed user: " + error.message);
+        showNotification("Error adding allowed user: " + error.message, "error");
         return;
       }
 
@@ -1661,7 +1736,7 @@
 
     async function removeAllowedUser(id) {
       const { error } = await supabaseClient.from('allowed_users').delete().eq('id', id);
-      if (error) alert("Error removing user: " + error.message);
+      if (error) showNotification("Error removing user: " + error.message, "error");
       await fetchAllowedUsers();
       renderAllowedUsersList();
     }

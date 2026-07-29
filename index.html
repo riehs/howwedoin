@@ -60,14 +60,11 @@
       font-family: 'Space Grotesk', sans-serif !important;
     }
 
-    .rotate-slightly-left { transform: rotate(-1.5deg); }
-    .rotate-slightly-right { transform: rotate(1.5deg); }
-
     .washi-tape-maroon {
       position: absolute;
       top: -12px;
       left: 50%;
-      transform: translateX(-50%) rotate(-1deg);
+      transform: translateX(-50%);
       width: 120px;
       height: 24px;
       background-color: rgba(124, 10, 2, 0.25);
@@ -85,7 +82,6 @@
       height: 22px;
       background-color: rgba(212, 175, 55, 0.4);
       backdrop-filter: blur(2px);
-      transform: rotate(3deg);
       border-left: 2px dashed rgba(0,0,0,0.1);
       border-right: 2px dashed rgba(0,0,0,0.1);
       z-index: 10;
@@ -101,7 +97,7 @@
   <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-2 max-w-sm"></div>
 
   <div id="auth-overlay" class="fixed inset-0 bg-stone-900/90 backdrop-blur-md z-40 flex items-center justify-center p-4">
-    <div class="bg-canvasBg border-4 border-black p-8 rounded-3xl shadow-artistic-lg max-w-md w-full text-center relative rotate-slightly-right">
+    <div class="bg-canvasBg border-4 border-black p-8 rounded-3xl shadow-artistic-lg max-w-md w-full text-center relative">
       <div class="washi-tape-maroon"></div>
       <div class="w-16 h-16 bg-bcMaroon text-bcGold rounded-2xl border-2 border-black flex items-center justify-center text-3xl font-black mx-auto mb-4 shadow-artistic-sm">
         <i class="fa-solid fa-graduation-cap"></i>
@@ -121,12 +117,6 @@
             <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
           </svg>
           <span id="btn-google-text">Sign in with Google</span>
-        </button>
-
-        <!-- Demo / Quick Access Fallback -->
-        <button onclick="loginAsDemoUser()" class="w-full py-2.5 px-4 bg-bcGold hover:bg-amber-400 text-bcMaroon font-extrabold border-2 border-black rounded-2xl shadow-artistic-sm transition text-sm flex items-center justify-center gap-2">
-          <i class="fa-solid fa-user-check"></i>
-          <span>Enter as Guest / Demo Mode</span>
         </button>
 
         <p id="auth-error-msg" class="text-xs text-red-600 font-bold hidden bg-red-50 p-2.5 rounded-xl border border-red-200 text-left"></p>
@@ -232,7 +222,7 @@
           </div>
 
           <!-- Carousel Stage Card -->
-          <div class="bg-white border-4 border-black p-6 sm:p-8 rounded-3xl shadow-artistic-lg relative min-h-[420px] flex flex-col justify-between items-center text-center rotate-slightly-left">
+          <div class="bg-white border-4 border-black p-6 sm:p-8 rounded-3xl shadow-artistic-lg relative min-h-[420px] flex flex-col justify-between items-center text-center">
             <div class="washi-tape-maroon"></div>
 
             <!-- Header status badge -->
@@ -260,7 +250,7 @@
               </div>
 
               <!-- Question Box -->
-              <div class="bg-amber-50 border-2 border-black p-4 rounded-2xl shadow-artistic-sm max-w-lg mx-auto relative rotate-slightly-right">
+              <div class="bg-amber-50 border-2 border-black p-4 rounded-2xl shadow-artistic-sm max-w-lg mx-auto relative">
                 <i class="fa-solid fa-quote-left text-amber-300 text-2xl absolute -top-3 -left-2"></i>
                 <p id="carousel-question" class="text-base sm:text-lg font-bold text-stone-800 relative z-10 px-2">
                   "What is one win you had this past week?"
@@ -335,7 +325,7 @@
     <section id="section-office" class="space-y-8 hidden">
       
       <!-- Section Intro Banner -->
-      <div class="bg-studioCard border-4 border-black p-6 sm:p-8 rounded-3xl shadow-artistic-lg relative flex flex-col md:flex-row items-start md:items-center justify-between gap-6 rotate-slightly-left">
+      <div class="bg-studioCard border-4 border-black p-6 sm:p-8 rounded-3xl shadow-artistic-lg relative flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
         <div class="washi-tape-gold"></div>
         <div class="space-y-2 max-w-2xl">
           <div class="inline-block px-3 py-1 bg-bcMaroon text-white font-black text-xs uppercase tracking-wider rounded-lg border border-black">
@@ -723,22 +713,6 @@
       }
       currentUser = null;
       showAuthOverlay('unauthenticated');
-    }
-
-    function loginAsDemoUser() {
-      currentUser = {
-        id: 'demo-user-id',
-        email: 'analyst@bc.edu',
-        user_metadata: {
-          full_name: 'BC IR&P Team Member',
-          avatar_url: 'https://placehold.co/40x40/7C0A02/FFF?text=BC'
-        }
-      };
-      hideAuthOverlay();
-      document.getElementById('user-display-name').innerText = currentUser.user_metadata.full_name;
-      fetchTeams();
-      fetchIdeas();
-      showNotification("Signed in in Demo Mode", "success");
     }
 
     function showAuthOverlay(state) {
@@ -1147,8 +1121,8 @@
         return;
       }
 
-      container.innerHTML = whiteboardPoints.map((pt, idx) => `
-        <div class="p-4 bg-amber-100 border-2 border-black rounded-2xl shadow-artistic-sm relative ${idx % 2 === 0 ? 'rotate-slightly-left' : 'rotate-slightly-right'} ${pt.is_addressed ? 'opacity-60 bg-stone-100' : ''}">
+      container.innerHTML = whiteboardPoints.map((pt) => `
+        <div class="p-4 bg-amber-100 border-2 border-black rounded-2xl shadow-artistic-sm relative ${pt.is_addressed ? 'opacity-60 bg-stone-100' : ''}">
           <div class="flex items-start justify-between gap-2">
             <p class="text-xs sm:text-sm font-bold text-stone-900 ${pt.is_addressed ? 'line-through text-stone-500' : ''}">${pt.content}</p>
             <button onclick="handleDeleteWhiteboardPoint('${pt.id}')" class="text-stone-400 hover:text-red-600 text-xs">

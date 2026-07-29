@@ -3,44 +3,48 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>How We Doin? | BC IR&P Check-in & Innovation App</title>
+  <title>How We Doin? - BC IR&P Check-in & Innovation</title>
   
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   
-  <!-- Google Fonts: Space Grotesk for Headings & Plus Jakarta Sans for Body -->
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Google Fonts: Sans-serif selection (Space Grotesk & Plus Jakarta Sans) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
   
-  <!-- FontAwesome Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-  <!-- Supabase JS Client v2 -->
+  <!-- Supabase JS Client -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <script>
     tailwind.config = {
       theme: {
         extend: {
-          fontFamily: {
-            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
-            display: ['"Space Grotesk"', 'sans-serif'],
-          },
           colors: {
-            bcMaroon: '#7C0A02',
-            bcGold: '#D4AF37',
+            bcMaroon: '#800020',
+            bcMaroonDark: '#500014',
+            bcGold: '#C5A059',
+            bcGoldLight: '#E8D5B5',
             canvasBg: '#FAF7F2',
             studioCard: '#FFFFFF',
-            accentCoral: '#FF6B6B',
-            accentTeal: '#2EC4B6',
-            accentPurple: '#845EC2',
-            accentYellow: '#FFC75F',
+            accentMint: '#E2F1E7',
+            accentPeach: '#FDEED9',
+            accentBlue: '#E3F2FD'
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            heading: ['"Space Grotesk"', 'sans-serif']
           },
           boxShadow: {
-            'artistic': '4px 4px 0px 0px rgba(0,0,0,0.85)',
-            'artistic-lg': '6px 6px 0px 0px rgba(0,0,0,0.85)',
-            'artistic-sm': '2px 2px 0px 0px rgba(0,0,0,0.85)',
+            'artistic': '4px 4px 0px 0px rgba(0, 0, 0, 1)',
+            'artistic-lg': '6px 6px 0px 0px rgba(0, 0, 0, 1)',
+            'artistic-sm': '2px 2px 0px 0px rgba(0, 0, 0, 1)'
+          },
+          borderWidth: {
+            '3': '3px'
           }
         }
       }
@@ -49,125 +53,58 @@
 
   <style>
     body {
-      background-color: #FAF7F2;
-      background-image: radial-gradient(#e2dad0 1px, transparent 1px);
-      background-size: 24px 24px;
       font-family: 'Plus Jakarta Sans', sans-serif;
-      color: #1F2937;
+      background-color: #FAF7F2;
+      background-image: radial-gradient(#d6d3d1 1px, transparent 1px);
+      background-size: 24px 24px;
     }
-    
     h1, h2, h3, h4, h5, h6, .font-heading {
-      font-family: 'Space Grotesk', sans-serif !important;
+      font-family: 'Space Grotesk', sans-serif;
     }
-
-    .washi-tape-maroon {
-      position: absolute;
-      top: -12px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 120px;
-      height: 24px;
-      background-color: rgba(124, 10, 2, 0.25);
-      backdrop-filter: blur(2px);
-      border-left: 2px dashed rgba(0,0,0,0.1);
-      border-right: 2px dashed rgba(0,0,0,0.1);
-      z-index: 10;
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
     }
-
-    .washi-tape-gold {
-      position: absolute;
-      top: -12px;
-      right: 20px;
-      width: 90px;
-      height: 22px;
-      background-color: rgba(212, 175, 55, 0.4);
-      backdrop-filter: blur(2px);
-      border-left: 2px dashed rgba(0,0,0,0.1);
-      border-right: 2px dashed rgba(0,0,0,0.1);
-      z-index: 10;
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 8px;
     }
-
-    /* Hide scrollbars for clean UI */
-    .no-scrollbar::-webkit-scrollbar { display: none; }
-    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #1c1917;
+      border-radius: 8px;
+    }
   </style>
 </head>
-<body class="min-h-screen flex flex-col">
+<body class="text-stone-900 min-h-screen flex flex-col antialiased">
 
-  <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-2 max-w-sm"></div>
-
-  <div id="auth-overlay" class="fixed inset-0 bg-stone-900/90 backdrop-blur-md z-40 flex items-center justify-center p-4">
-    <div class="bg-canvasBg border-4 border-black p-8 rounded-3xl shadow-artistic-lg max-w-md w-full text-center relative">
-      <div class="washi-tape-maroon"></div>
-      <div class="w-16 h-16 bg-bcMaroon text-bcGold rounded-2xl border-2 border-black flex items-center justify-center text-3xl font-black mx-auto mb-4 shadow-artistic-sm">
-        <i class="fa-solid fa-graduation-cap"></i>
-      </div>
-      <h2 class="text-3xl font-extrabold text-stone-900 mb-2 font-heading">How We Doin?</h2>
-      <p class="text-stone-600 text-sm mb-6 font-medium">Boston College IR&P Collaboration & Check-in Studio</p>
-
-      <div id="auth-unauthenticated" class="space-y-4">
-        <p class="text-xs text-stone-500 bg-amber-50 border border-amber-200 p-3 rounded-xl">
-          <i class="fa-solid fa-shield-halved text-amber-600 mr-1"></i> Access restricted to authorized team members. Please sign in with your Google account.
-        </p>
-        <button id="btn-google-login" onclick="loginWithGoogle()" class="w-full py-3.5 px-5 bg-white hover:bg-stone-50 text-stone-800 font-bold border-2 border-black rounded-2xl shadow-artistic transition hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-3">
-          <svg class="w-5 h-5" viewBox="0 0 24 24">
-            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
-            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
-          </svg>
-          <span id="btn-google-text">Sign in with Google</span>
-        </button>
-
-        <p id="auth-error-msg" class="text-xs text-red-600 font-bold hidden bg-red-50 p-2.5 rounded-xl border border-red-200 text-left"></p>
-      </div>
-
-      <div id="auth-unauthorized" class="hidden space-y-4">
-        <div class="p-4 bg-red-50 border-2 border-red-300 rounded-2xl text-left text-xs text-red-800">
-          <p class="font-bold text-sm mb-1"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Access Restricted</p>
-          Your account (<span id="unauthorized-email" class="font-mono font-semibold"></span>) is not on the authorized user list. Please request access from an administrator.
-        </div>
-        <button onclick="logout()" class="w-full py-2.5 px-4 bg-stone-200 hover:bg-stone-300 text-stone-800 font-bold border-2 border-black rounded-xl shadow-artistic-sm text-sm">
-          Sign Out & Try Another Account
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <header class="bg-bcMaroon text-white border-b-4 border-black px-4 sm:px-8 py-4 relative sticky top-0 z-30">
-    <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+  <header class="bg-white border-b-4 border-black sticky top-0 z-40 px-4 sm:px-8 py-3.5 shadow-md">
+    <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
       
-      <!-- Logo & Title -->
+      <!-- Brand Logo -->
       <div class="flex items-center gap-3">
-        <div class="w-11 h-11 bg-bcGold text-bcMaroon border-2 border-black rounded-xl flex items-center justify-center text-xl font-black shadow-artistic-sm">
-          <i class="fa-solid fa-compass"></i>
+        <div class="w-10 h-10 bg-bcMaroon text-bcGold border-2 border-black rounded-xl flex items-center justify-center font-black text-xl shadow-artistic-sm">
+          <i class="fa-solid fa-compass-drafting"></i>
         </div>
         <div>
-          <h1 class="text-2xl font-black tracking-tight text-bcGold font-heading">How We Doin?</h1>
-          <p class="text-xs text-amber-100 font-semibold tracking-wide uppercase">Boston College IR&P Collaboration Studio</p>
+          <h1 class="text-xl sm:text-2xl font-black tracking-tight font-heading text-stone-900 flex items-center gap-2">
+            How We Doin?
+            <span class="text-xs px-2 py-0.5 bg-bcGold text-bcMaroon font-extrabold rounded-md border border-black uppercase tracking-wider hidden sm:inline-block">IR&P</span>
+          </h1>
+          <p class="text-[11px] font-bold text-stone-500 uppercase tracking-wide">Boston College Institutional Research & Planning</p>
         </div>
       </div>
 
-      <!-- Navigation Tabs -->
-      <nav class="flex items-center gap-2 bg-stone-900/40 p-1.5 rounded-2xl border-2 border-black/30">
-        <button id="nav-checkins" onclick="switchSection('checkins')" class="px-4 py-2 rounded-xl font-bold text-sm transition border-2 border-transparent bg-bcGold text-bcMaroon border-black shadow-artistic-sm">
-          <i class="fa-solid fa-users-rectangle mr-1.5"></i> Team Check-ins
-        </button>
-        <button id="nav-office" onclick="switchSection('office')" class="px-4 py-2 rounded-xl font-bold text-sm transition text-white hover:bg-white/10">
-          <i class="fa-solid fa-lightbulb mr-1.5"></i> Better Office
-        </button>
-      </nav>
-
-      <!-- User Account Controls -->
-      <div class="flex items-center gap-3">
-        <button onclick="openUserModal()" class="px-3 py-1.5 bg-stone-800 hover:bg-stone-700 text-bcGold font-bold text-xs border-2 border-black rounded-xl shadow-artistic-sm flex items-center gap-1.5">
-          <i class="fa-solid fa-user-shield"></i> <span class="hidden sm:inline">User Access</span>
+      <!-- Header Actions -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        <button onclick="openWhitelistModal()" class="px-3 py-2 bg-stone-100 hover:bg-stone-200 text-stone-800 font-bold text-xs rounded-xl border-2 border-black shadow-artistic-sm transition flex items-center gap-1.5">
+          <i class="fa-solid fa-user-shield"></i>
+          <span class="hidden sm:inline">Access List</span>
         </button>
 
-        <div class="flex items-center gap-2 bg-white text-stone-900 border-2 border-black px-3 py-1.5 rounded-xl shadow-artistic-sm">
-          <img id="user-avatar" src="https://placehold.co/40x40/7C0A02/FFF?text=BC" class="w-7 h-7 rounded-full border border-black" alt="User">
-          <span id="user-display-name" class="text-xs font-bold truncate max-w-[100px] sm:max-w-[140px]">User</span>
-          <button onclick="logout()" class="text-stone-500 hover:text-bcMaroon ml-1 text-xs" title="Sign Out">
+        <div id="user-profile-badge" class="hidden items-center gap-2 pl-2 border-l-2 border-stone-300">
+          <img id="user-avatar" src="" alt="User" class="w-8 h-8 rounded-full border-2 border-black object-cover">
+          <span id="user-name-display" class="text-xs font-bold text-stone-800 hidden md:inline"></span>
+          <button onclick="handleSignOut()" class="p-2 text-stone-600 hover:text-red-600 transition" title="Sign Out">
             <i class="fa-solid fa-right-from-bracket"></i>
           </button>
         </div>
@@ -176,195 +113,135 @@
     </div>
   </header>
 
-  <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 md:p-8 space-y-8">
+  <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 space-y-10">
 
-    <!-- ======================================================= -->
-    <!-- SECTION 1: TEAM CHECK-INS -->
-    <!-- ======================================================= -->
-    <section id="section-checkins" class="space-y-8">
+    <!-- TAB NAVIGATION -->
+    <div class="flex items-center justify-center sm:justify-start gap-2 border-b-2 border-black pb-3 overflow-x-auto custom-scrollbar">
+      <button onclick="switchTab('checkin')" id="tab-btn-checkin" class="px-5 py-2.5 bg-bcMaroon text-white font-black text-sm rounded-xl border-2 border-black shadow-artistic transition flex items-center gap-2 whitespace-nowrap">
+        <i class="fa-solid fa-comments"></i> Weekly Check-in
+      </button>
+      <button onclick="switchTab('whiteboard')" id="tab-btn-whiteboard" class="px-5 py-2.5 bg-white hover:bg-stone-100 text-stone-800 font-bold text-sm rounded-xl border-2 border-black shadow-artistic-sm transition flex items-center gap-2 whitespace-nowrap">
+        <i class="fa-solid fa-chalkboard"></i> Visual Whiteboard
+      </button>
+      <button onclick="switchTab('ideas')" id="tab-btn-ideas" class="px-5 py-2.5 bg-white hover:bg-stone-100 text-stone-800 font-bold text-sm rounded-xl border-2 border-black shadow-artistic-sm transition flex items-center gap-2 whitespace-nowrap">
+        <i class="fa-solid fa-lightbulb"></i> Better Office
+      </button>
+    </div>
+
+    <section id="section-checkin" class="space-y-6">
       
-      <!-- Team Selector Bar -->
-      <div class="bg-studioCard border-3 border-black p-4 rounded-2xl shadow-artistic flex flex-col md:flex-row items-center justify-between gap-4 relative">
-        <div class="flex items-center gap-3 w-full md:w-auto">
-          <div class="w-10 h-10 bg-amber-100 border-2 border-black rounded-xl flex items-center justify-center text-bcMaroon font-extrabold text-lg">
-            <i class="fa-solid fa-people-group"></i>
-          </div>
+      <!-- Check-in Question & Controls -->
+      <div class="bg-white border-3 border-black p-6 rounded-3xl shadow-artistic relative">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
           <div>
-            <label class="block text-xs font-extrabold text-stone-500 uppercase">Select Active Team</label>
-            <select id="team-select" onchange="handleSelectTeam(this.value)" class="bg-stone-50 border-2 border-black font-extrabold text-base rounded-xl px-3 py-1.5 pr-8 focus:outline-none focus:ring-2 focus:ring-bcMaroon">
-              <option value="">-- Choose or Create a Team --</option>
-            </select>
+            <span class="px-3 py-1 bg-bcGold/20 text-bcMaroon border border-black rounded-lg text-xs font-black uppercase tracking-wider">
+              <i class="fa-solid fa-wand-magic-sparkles mr-1"></i> Weekly Prompt
+            </span>
+            <h2 id="current-question-text" class="text-2xl sm:text-3xl font-black font-heading mt-2 text-stone-900">
+              Loading weekly question...
+            </h2>
           </div>
+          <button onclick="shuffleQuestion()" class="self-start md:self-auto px-4 py-2 bg-stone-100 hover:bg-stone-200 text-stone-900 font-bold text-xs rounded-xl border-2 border-black shadow-artistic-sm transition flex items-center gap-2">
+            <i class="fa-solid fa-shuffle"></i> New Prompt
+          </button>
         </div>
 
-        <div class="flex items-center gap-2 w-full md:w-auto justify-end">
-          <button onclick="openCreateTeamModal()" class="px-4 py-2 bg-bcGold text-bcMaroon font-extrabold text-sm border-2 border-black rounded-xl shadow-artistic-sm hover:-translate-y-0.5 transition active:translate-y-0">
-            <i class="fa-solid fa-plus mr-1"></i> New Team
-          </button>
-          <button id="btn-manage-members" onclick="openMembersModal()" class="px-4 py-2 bg-white text-stone-800 font-extrabold text-sm border-2 border-black rounded-xl shadow-artistic-sm hover:bg-stone-50 transition hidden">
-            <i class="fa-solid fa-user-pen mr-1"></i> Team Members (<span id="team-member-count">0</span>)
-          </button>
-        </div>
+        <p class="text-xs text-stone-500 font-medium">Select a team member below to record or view their weekly reflection.</p>
       </div>
 
-      <!-- Main Meeting Workspace Grid -->
-      <div id="checkin-workspace" class="grid grid-cols-1 lg:grid-cols-12 gap-8 hidden">
-        
-        <!-- Left: Polaroid Meeting Carousel (7 Cols) -->
-        <div class="lg:col-span-7 space-y-4">
-          <div class="flex items-center justify-between">
-            <h2 class="text-xl font-black text-stone-900 font-heading flex items-center gap-2">
-              <span class="w-3 h-3 bg-bcMaroon rounded-full inline-block"></span> Meeting Check-in Carousel
-            </h2>
-            <button onclick="togglePresenterMode()" class="px-3 py-1.5 bg-stone-900 text-bcGold text-xs font-extrabold border-2 border-black rounded-xl shadow-artistic-sm hover:bg-stone-800 transition">
-              <i class="fa-solid fa-expand mr-1"></i> Presenter View
+      <!-- Member Selector Carousel -->
+      <div id="team-cards-container" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+        <!-- Dynamically rendered team member cards -->
+      </div>
+
+      <!-- Check-in Form / Answer Display Box -->
+      <div id="checkin-detail-box" class="bg-studioCard border-3 border-black p-6 sm:p-8 rounded-3xl shadow-artistic hidden">
+        <div class="flex items-center justify-between border-b-2 border-black pb-4 mb-6">
+          <div class="flex items-center gap-3">
+            <div id="detail-member-avatar" class="w-12 h-12 rounded-2xl border-2 border-black bg-bcMaroon text-bcGold flex items-center justify-center font-black text-xl shadow-artistic-sm">
+              ?
+            </div>
+            <div>
+              <h3 id="detail-member-name" class="text-xl font-black font-heading text-stone-900">Team Member</h3>
+              <p id="detail-member-role" class="text-xs font-bold text-stone-500">IR&P Role</p>
+            </div>
+          </div>
+          <button onclick="closeCheckinDetail()" class="p-2 text-stone-500 hover:text-black">
+            <i class="fa-solid fa-xmark text-xl"></i>
+          </button>
+        </div>
+
+        <!-- Form for current response -->
+        <form onsubmit="handleSaveCheckin(event)" class="space-y-4">
+          <div>
+            <label class="block text-xs font-extrabold uppercase text-stone-700 mb-1">
+              Your Response for this week
+            </label>
+            <textarea id="checkin-response-text" rows="4" required placeholder="Share your thoughts, updates, or wins..." class="w-full p-4 border-2 border-black rounded-2xl font-medium text-sm focus:outline-none focus:ring-2 focus:ring-bcMaroon bg-canvasBg/50"></textarea>
+          </div>
+          <div class="flex items-center justify-end gap-3">
+            <button type="button" onclick="closeCheckinDetail()" class="px-4 py-2 bg-stone-200 hover:bg-stone-300 font-bold text-xs rounded-xl border-2 border-black">
+              Cancel
+            </button>
+            <button type="submit" class="px-6 py-2.5 bg-bcMaroon hover:bg-bcMaroonDark text-bcGold font-black text-xs rounded-xl border-2 border-black shadow-artistic-sm transition">
+              <i class="fa-solid fa-paper-plane mr-1"></i> Save Response
             </button>
           </div>
-
-          <!-- Carousel Stage Card -->
-          <div class="bg-white border-4 border-black p-6 sm:p-8 rounded-3xl shadow-artistic-lg relative min-h-[420px] flex flex-col justify-between items-center text-center">
-            <div class="washi-tape-maroon"></div>
-
-            <!-- Header status badge -->
-            <div class="w-full flex items-center justify-between border-b-2 border-dashed border-stone-200 pb-3">
-              <span class="text-xs font-extrabold text-stone-400 uppercase tracking-wider">
-                Speaker <span id="carousel-current-num">1</span> of <span id="carousel-total-num">1</span>
-              </span>
-              <button onclick="randomizeQuestion()" class="text-xs font-bold text-bcMaroon hover:underline flex items-center gap-1">
-                <i class="fa-solid fa-shuffle"></i> New Question
-              </button>
-            </div>
-
-            <!-- Member Spotlight Content -->
-            <div class="my-6 space-y-4 w-full">
-              <div class="w-24 h-24 bg-stone-100 border-3 border-black rounded-full mx-auto flex items-center justify-center text-bcMaroon text-3xl font-black shadow-artistic-sm overflow-hidden">
-                <span id="carousel-avatar-text">BC</span>
-              </div>
-              <div>
-                <h3 id="carousel-member-name" class="text-3xl font-black text-stone-900 tracking-tight font-heading">
-                  Select a team
-                </h3>
-                <p id="carousel-member-role" class="text-sm font-extrabold text-bcMaroon uppercase tracking-wider">
-                  Role
-                </p>
-              </div>
-
-              <!-- Question Box -->
-              <div class="bg-amber-50 border-2 border-black p-4 rounded-2xl shadow-artistic-sm max-w-lg mx-auto relative">
-                <i class="fa-solid fa-quote-left text-amber-300 text-2xl absolute -top-3 -left-2"></i>
-                <p id="carousel-question" class="text-base sm:text-lg font-bold text-stone-800 relative z-10 px-2">
-                  "What is one win you had this past week?"
-                </p>
-              </div>
-            </div>
-
-            <!-- Controls Footer -->
-            <div class="w-full flex items-center justify-between gap-4 pt-4 border-t-2 border-stone-100">
-              <button onclick="prevCarouselMember()" class="px-5 py-2.5 bg-stone-100 hover:bg-stone-200 text-stone-800 font-extrabold text-sm border-2 border-black rounded-xl shadow-artistic-sm transition">
-                <i class="fa-solid fa-arrow-left mr-1"></i> Prev
-              </button>
-
-              <button onclick="shuffleCarouselOrder()" class="px-4 py-2.5 bg-amber-100 hover:bg-amber-200 text-amber-900 font-extrabold text-xs border-2 border-black rounded-xl shadow-artistic-sm transition hidden sm:inline-block">
-                <i class="fa-solid fa-dice mr-1"></i> Reshuffle Order
-              </button>
-
-              <button onclick="nextCarouselMember()" class="px-5 py-2.5 bg-bcMaroon hover:bg-red-900 text-white font-extrabold text-sm border-2 border-black rounded-xl shadow-artistic-sm transition">
-                Next <i class="fa-solid fa-arrow-right ml-1"></i>
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Right: Virtual Whiteboard Agenda (5 Cols) -->
-        <div class="lg:col-span-5 space-y-4">
-          <div class="flex items-center justify-between">
-            <h2 class="text-xl font-black text-stone-900 font-heading flex items-center gap-2">
-              <span class="w-3 h-3 bg-bcGold rounded-full inline-block"></span> Virtual Whiteboard
-            </h2>
-            <span class="text-xs font-bold text-stone-500 bg-stone-200 px-2.5 py-1 rounded-full">Meeting Points</span>
-          </div>
-
-          <!-- Add Note Form Card -->
-          <div class="bg-studioCard border-3 border-black p-4 rounded-2xl shadow-artistic space-y-3">
-            <form onsubmit="handleAddWhiteboardPoint(event)" class="space-y-3">
-              <div>
-                <label class="block text-xs font-extrabold text-stone-600 mb-1">Add Discussion Point</label>
-                <textarea id="wb-input-content" required rows="2" placeholder="What topic or question do you want to address today?" class="w-full p-3 bg-stone-50 border-2 border-black rounded-xl font-medium text-sm focus:outline-none focus:ring-2 focus:ring-bcMaroon resize-none"></textarea>
-              </div>
-              <button type="submit" class="w-full py-2.5 bg-bcGold text-bcMaroon font-black text-sm border-2 border-black rounded-xl shadow-artistic-sm hover:bg-amber-400 transition">
-                <i class="fa-solid fa-plus-circle mr-1"></i> Post to Whiteboard
-              </button>
-            </form>
-          </div>
-
-          <!-- Whiteboard Canvas Area -->
-          <div id="whiteboard-canvas" class="space-y-3 max-h-[480px] overflow-y-auto pr-1 no-scrollbar">
-            <!-- Whiteboard Sticky Cards will be populated here -->
-          </div>
-        </div>
-
-      </div>
-
-      <!-- Empty State when no team is selected -->
-      <div id="checkin-empty-state" class="bg-white border-4 border-black p-12 rounded-3xl shadow-artistic-lg text-center space-y-4 max-w-xl mx-auto my-12">
-        <div class="w-20 h-20 bg-amber-100 text-bcMaroon border-3 border-black rounded-3xl flex items-center justify-center text-4xl mx-auto shadow-artistic-sm">
-          <i class="fa-solid fa-people-roof"></i>
-        </div>
-        <h3 class="text-2xl font-black text-stone-900 font-heading">No Team Selected</h3>
-        <p class="text-stone-600 font-medium text-sm">Select an existing team from the dropdown above or create a new team to start your meeting check-in carousel and whiteboard.</p>
-        <button onclick="openCreateTeamModal()" class="px-6 py-3 bg-bcMaroon text-white font-extrabold text-sm border-2 border-black rounded-2xl shadow-artistic hover:bg-red-900 transition inline-block">
-          <i class="fa-solid fa-plus mr-1.5"></i> Create Your First Team
-        </button>
+        </form>
       </div>
 
     </section>
 
-    <!-- ======================================================= -->
-    <!-- SECTION 2: BETTER OFFICE (INNOVATION ENGINE) -->
-    <!-- ======================================================= -->
-    <section id="section-office" class="space-y-8 hidden">
+    <section id="section-whiteboard" class="space-y-6 hidden">
       
-      <!-- Section Intro Banner -->
-      <div class="bg-studioCard border-4 border-black p-6 sm:p-8 rounded-3xl shadow-artistic-lg relative flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-        <div class="washi-tape-gold"></div>
-        <div class="space-y-2 max-w-2xl">
-          <div class="inline-block px-3 py-1 bg-bcMaroon text-white font-black text-xs uppercase tracking-wider rounded-lg border border-black">
-            Office Innovation Engine
-          </div>
-          <h2 class="text-3xl font-black text-stone-900 tracking-tight font-heading">Better Office Ideas</h2>
-          <p class="text-stone-600 text-sm font-medium">Have an idea to improve IR&P workflows, technology, meetings, or student experience? Share it, refine it, upvote it, and volunteer to make it real.</p>
+      <!-- Whiteboard Header & Add Note Trigger -->
+      <div class="bg-white border-3 border-black p-6 rounded-3xl shadow-artistic flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <h2 class="text-2xl sm:text-3xl font-black font-heading text-stone-900">Team Visual Whiteboard</h2>
+          <p class="text-xs font-medium text-stone-600">Quick ideas, parking lot topics, and workshop notes.</p>
         </div>
-        <button onclick="openCreateIdeaModal()" class="px-6 py-3.5 bg-bcGold text-bcMaroon font-black text-base border-3 border-black rounded-2xl shadow-artistic hover:-translate-y-0.5 transition active:translate-y-0 whitespace-nowrap">
-          <i class="fa-solid fa-lightbulb mr-2"></i> Submit New Idea
+        <div class="flex items-center gap-3">
+          <select id="whiteboard-team-filter" onchange="renderWhiteboard()" class="p-2.5 bg-canvasBg border-2 border-black rounded-xl font-bold text-xs">
+            <option value="all">All Teams</option>
+          </select>
+          <button onclick="openModal('modal-add-whiteboard')" class="px-5 py-2.5 bg-bcGold text-bcMaroon font-black text-xs rounded-xl border-2 border-black shadow-artistic-sm transition flex items-center gap-2">
+            <i class="fa-solid fa-plus"></i> Post Note
+          </button>
+        </div>
+      </div>
+
+      <!-- Whiteboard Notes Grid -->
+      <div id="whiteboard-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <!-- Dynamically rendered whiteboard cards -->
+      </div>
+
+    </section>
+
+    <section id="section-ideas" class="space-y-6 hidden">
+      
+      <!-- Innovation Header & Actions -->
+      <div class="bg-white border-3 border-black p-6 rounded-3xl shadow-artistic flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <h2 class="text-2xl sm:text-3xl font-black font-heading text-stone-900">Better Office Innovation Hub</h2>
+          <p class="text-xs font-medium text-stone-600">Propose operational improvements, process shortcuts, or office enhancements.</p>
+        </div>
+        <button onclick="openModal('modal-create-idea')" class="px-6 py-3 bg-bcMaroon text-bcGold font-black text-xs rounded-xl border-2 border-black shadow-artistic-sm transition flex items-center gap-2 self-start md:self-auto">
+          <i class="fa-solid fa-lightbulb"></i> Submit New Idea
         </button>
       </div>
 
-      <!-- Filters & Sorting Bar -->
-      <div class="flex flex-col sm:flex-row items-center justify-between gap-4 bg-stone-100 p-4 border-2 border-black rounded-2xl">
-        <div class="flex items-center gap-2 overflow-x-auto w-full sm:w-auto pb-2 sm:pb-0 no-scrollbar">
-          <button onclick="filterIdeas('all')" class="idea-filter-btn px-3 py-1.5 bg-black text-white font-extrabold text-xs rounded-xl border border-black">All Ideas</button>
-          <button onclick="filterIdeas('Idea')" class="idea-filter-btn px-3 py-1.5 bg-white text-stone-800 font-bold text-xs rounded-xl border border-black hover:bg-stone-200">💡 New Ideas</button>
-          <button onclick="filterIdeas('In Progress')" class="idea-filter-btn px-3 py-1.5 bg-white text-stone-800 font-bold text-xs rounded-xl border border-black hover:bg-stone-200">⚡ In Progress</button>
-          <button onclick="filterIdeas('Implemented')" class="idea-filter-btn px-3 py-1.5 bg-white text-stone-800 font-bold text-xs rounded-xl border border-black hover:bg-stone-200">🎉 Implemented</button>
-        </div>
-
-        <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
-          <span class="text-xs font-bold text-stone-500">Area:</span>
-          <select id="idea-area-filter" onchange="applyIdeaFilters()" class="bg-white border-2 border-black text-xs font-bold rounded-xl px-2.5 py-1.5">
-            <option value="all">All Functional Areas</option>
-            <option value="Meetings">Meetings</option>
-            <option value="Technology">Technology</option>
-            <option value="Workspace">Workspace</option>
-            <option value="Communication">Communication</option>
-            <option value="Student Experience">Student Experience</option>
-            <option value="Other">Other</option>
-          </select>
-        </div>
+      <!-- Filters Bar -->
+      <div class="flex items-center gap-2 overflow-x-auto custom-scrollbar pb-2">
+        <button onclick="filterIdeas('all')" id="idea-filter-all" class="px-4 py-2 bg-stone-900 text-white font-bold text-xs rounded-xl border-2 border-black shadow-artistic-sm">All Ideas</button>
+        <button onclick="filterIdeas('Meetings')" id="idea-filter-Meetings" class="px-4 py-2 bg-white hover:bg-stone-100 text-stone-800 font-bold text-xs rounded-xl border-2 border-black shadow-artistic-sm">Meetings</button>
+        <button onclick="filterIdeas('Technology')" id="idea-filter-Technology" class="px-4 py-2 bg-white hover:bg-stone-100 text-stone-800 font-bold text-xs rounded-xl border-2 border-black shadow-artistic-sm">Technology</button>
+        <button onclick="filterIdeas('Workspace')" id="idea-filter-Workspace" class="px-4 py-2 bg-white hover:bg-stone-100 text-stone-800 font-bold text-xs rounded-xl border-2 border-black shadow-artistic-sm">Workspace</button>
+        <button onclick="filterIdeas('Communication')" id="idea-filter-Communication" class="px-4 py-2 bg-white hover:bg-stone-100 text-stone-800 font-bold text-xs rounded-xl border-2 border-black shadow-artistic-sm">Communication</button>
       </div>
 
-      <!-- Ideas Card Grid -->
-      <div id="ideas-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <!-- Idea Cards will be dynamically injected here -->
+      <!-- Ideas Cards List -->
+      <div id="ideas-container" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Dynamically rendered innovation ideas -->
       </div>
 
     </section>
@@ -372,46 +249,57 @@
   </main>
 
 
-  <!-- MODAL: Create Team -->
-  <div id="modal-create-team" class="fixed inset-0 bg-stone-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-    <div class="bg-canvasBg border-4 border-black p-6 rounded-3xl shadow-artistic-lg max-w-md w-full relative">
-      <h3 class="text-2xl font-black text-stone-900 mb-4 font-heading">Create New Team</h3>
-      <form onsubmit="handleCreateTeam(event)" class="space-y-4">
-        <div>
-          <label class="block text-xs font-extrabold uppercase mb-1">Team Name</label>
-          <input type="text" id="input-team-name" required placeholder="e.g. Data Analytics & Reporting" class="w-full p-3 border-2 border-black rounded-xl font-bold text-sm">
-        </div>
-        <div class="flex items-center justify-end gap-2 pt-2">
-          <button type="button" onclick="closeModal('modal-create-team')" class="px-4 py-2 bg-stone-200 font-bold text-sm rounded-xl border-2 border-black">Cancel</button>
-          <button type="submit" class="px-5 py-2 bg-bcMaroon text-white font-black text-sm rounded-xl border-2 border-black shadow-artistic-sm">Save Team</button>
-        </div>
-      </form>
+  <!-- AUTH OVERLAY / LOGIN MODAL -->
+  <div id="modal-auth-overlay" class="fixed inset-0 bg-stone-900/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-canvasBg border-4 border-black p-8 rounded-3xl shadow-artistic-lg max-w-md w-full text-center space-y-6">
+      
+      <div class="w-16 h-16 bg-bcMaroon text-bcGold border-3 border-black rounded-2xl flex items-center justify-center font-black text-3xl mx-auto shadow-artistic">
+        <i class="fa-solid fa-building-columns"></i>
+      </div>
+
+      <div>
+        <h2 class="text-2xl font-black font-heading text-stone-900">BC IR&P Team Portal</h2>
+        <p class="text-xs font-medium text-stone-600 mt-1">Please sign in with your Boston College Google credentials to continue.</p>
+      </div>
+
+      <div class="space-y-3 pt-2">
+        <button onclick="handleSignInWithGoogle()" class="w-full py-3.5 px-4 bg-white hover:bg-stone-50 text-stone-900 font-black text-sm rounded-2xl border-2 border-black shadow-artistic transition flex items-center justify-center gap-3">
+          <svg class="w-5 h-5" viewBox="0 0 24 24">
+            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+          </svg>
+          Sign In with Google
+        </button>
+      </div>
+
+      <div id="auth-error-msg" class="text-xs font-bold text-red-600 bg-red-50 border border-red-200 p-3 rounded-xl hidden"></div>
+
+      <p class="text-[10px] text-stone-500 font-semibold">Authorized access only. Boston College Institutional Research & Planning.</p>
     </div>
   </div>
 
-  <!-- MODAL: Manage Team Members -->
-  <div id="modal-manage-members" class="fixed inset-0 bg-stone-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-    <div class="bg-canvasBg border-4 border-black p-6 rounded-3xl shadow-artistic-lg max-w-lg w-full relative max-h-[85vh] flex flex-col">
-      <div class="flex items-center justify-between pb-4 border-b-2 border-stone-200">
-        <h3 class="text-2xl font-black text-stone-900 font-heading">Manage Members</h3>
-        <button onclick="closeModal('modal-manage-members')" class="text-stone-500 hover:text-black font-bold"><i class="fa-solid fa-xmark text-xl"></i></button>
-      </div>
-
-      <!-- Add Member Form -->
-      <form onsubmit="handleAddTeamMember(event)" class="py-4 space-y-3 border-b-2 border-stone-200">
-        <div class="grid grid-cols-2 gap-2">
-          <input type="text" id="input-member-name" required placeholder="Full Name" class="p-2.5 border-2 border-black rounded-xl font-bold text-xs">
-          <input type="text" id="input-member-role" placeholder="Role (e.g. Senior Analyst)" class="p-2.5 border-2 border-black rounded-xl font-bold text-xs">
+  <!-- MODAL: Post Whiteboard Note -->
+  <div id="modal-add-whiteboard" class="fixed inset-0 bg-stone-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-canvasBg border-4 border-black p-6 sm:p-8 rounded-3xl shadow-artistic-lg max-w-md w-full relative">
+      <h3 class="text-xl font-black text-stone-900 mb-4 font-heading">Post Note to Whiteboard</h3>
+      <form onsubmit="handleAddWhiteboardPoint(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-extrabold uppercase mb-1">Select Team Context</label>
+          <select id="whiteboard-team-select" required class="w-full p-3 border-2 border-black rounded-xl font-bold text-xs bg-white">
+            <!-- Dynamically populated -->
+          </select>
         </div>
-        <button type="submit" class="w-full py-2 bg-bcGold text-bcMaroon font-black text-xs border-2 border-black rounded-xl shadow-artistic-sm">
-          <i class="fa-solid fa-user-plus mr-1"></i> Add Team Member
-        </button>
+        <div>
+          <label class="block text-xs font-extrabold uppercase mb-1">Note / Idea</label>
+          <textarea id="whiteboard-content-input" required rows="3" placeholder="What's on your mind?" class="w-full p-3 border-2 border-black rounded-xl font-medium text-xs resize-none"></textarea>
+        </div>
+        <div class="flex items-center justify-end gap-2 pt-2">
+          <button type="button" onclick="closeModal('modal-add-whiteboard')" class="px-4 py-2 bg-stone-200 font-bold text-xs rounded-xl border-2 border-black">Cancel</button>
+          <button type="submit" class="px-5 py-2 bg-bcGold text-bcMaroon font-black text-xs rounded-xl border-2 border-black shadow-artistic-sm">Post Note</button>
+        </div>
       </form>
-
-      <!-- Member List -->
-      <div id="modal-members-list" class="flex-1 overflow-y-auto py-4 space-y-2 no-scrollbar">
-        <!-- Members injected dynamically -->
-      </div>
     </div>
   </div>
 
@@ -422,13 +310,13 @@
       <form onsubmit="handleCreateIdea(event)" class="space-y-4">
         <div>
           <label class="block text-xs font-extrabold uppercase mb-1">💡 Idea Title</label>
-          <input type="text" id="idea-title" required placeholder="e.g. Automated Weekly Data Pipeline Alerts" class="w-full p-3 border-2 border-black rounded-xl font-bold text-sm">
+          <input type="text" id="create-idea-title" required placeholder="e.g. Automated Weekly Data Pipeline Alerts" class="w-full p-3 border-2 border-black rounded-xl font-bold text-sm">
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label class="block text-xs font-extrabold uppercase mb-1">Functional Area</label>
-            <select id="idea-area" required class="w-full p-3 border-2 border-black rounded-xl font-bold text-xs bg-white">
+            <select id="create-idea-area" required class="w-full p-3 border-2 border-black rounded-xl font-bold text-xs bg-white">
               <option value="Meetings">Meetings</option>
               <option value="Technology">Technology</option>
               <option value="Workspace">Workspace</option>
@@ -439,7 +327,7 @@
           </div>
           <div>
             <label class="block text-xs font-extrabold uppercase mb-1">Estimated Effort</label>
-            <select id="idea-effort" required class="w-full p-3 border-2 border-black rounded-xl font-bold text-xs bg-white">
+            <select id="create-idea-effort" required class="w-full p-3 border-2 border-black rounded-xl font-bold text-xs bg-white">
               <option value="5 min">⚡ 5 Minutes</option>
               <option value="1 hour">⏱️ 1 Hour</option>
               <option value="1 day">📅 1 Day</option>
@@ -450,12 +338,12 @@
 
         <div>
           <label class="block text-xs font-extrabold uppercase mb-1">Problem it solves</label>
-          <textarea id="idea-problem" required rows="2" placeholder="What friction or inefficiency is this addressing?" class="w-full p-3 border-2 border-black rounded-xl font-medium text-xs resize-none"></textarea>
+          <textarea id="create-idea-problem" required rows="2" placeholder="What friction or inefficiency is this addressing?" class="w-full p-3 border-2 border-black rounded-xl font-medium text-xs resize-none"></textarea>
         </div>
 
         <div>
           <label class="block text-xs font-extrabold uppercase mb-1">Proposed Solution</label>
-          <textarea id="idea-solution" required rows="2" placeholder="How do you propose we execute or test this?" class="w-full p-3 border-2 border-black rounded-xl font-medium text-xs resize-none"></textarea>
+          <textarea id="create-idea-solution" required rows="2" placeholder="How do you propose we execute or test this?" class="w-full p-3 border-2 border-black rounded-xl font-medium text-xs resize-none"></textarea>
         </div>
 
         <div class="flex items-center justify-end gap-2 pt-2">
@@ -466,833 +354,508 @@
     </div>
   </div>
 
-  <!-- MODAL: Manage User Whitelist -->
-  <div id="modal-user-access" class="fixed inset-0 bg-stone-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-    <div class="bg-canvasBg border-4 border-black p-6 rounded-3xl shadow-artistic-lg max-w-lg w-full relative max-h-[85vh] flex flex-col">
-      <div class="flex items-center justify-between pb-4 border-b-2 border-stone-200">
+  <!-- MODAL: Edit Idea -->
+  <div id="modal-edit-idea" class="fixed inset-0 bg-stone-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-canvasBg border-4 border-black p-6 sm:p-8 rounded-3xl shadow-artistic-lg max-w-xl w-full relative max-h-[90vh] overflow-y-auto">
+      <h3 class="text-2xl font-black text-stone-900 mb-4 font-heading">Edit Innovation Idea</h3>
+      <form onsubmit="handleEditIdea(event)" class="space-y-4">
         <div>
-          <h3 class="text-xl font-black text-stone-900 font-heading">Allowed Google Users</h3>
-          <p class="text-xs text-stone-500 font-medium">Whitelist authorized email addresses</p>
+          <label class="block text-xs font-extrabold uppercase mb-1">💡 Idea Title</label>
+          <input type="text" id="edit-idea-title" required class="w-full p-3 border-2 border-black rounded-xl font-bold text-sm">
         </div>
-        <button onclick="closeModal('modal-user-access')" class="text-stone-500 hover:text-black font-bold"><i class="fa-solid fa-xmark text-xl"></i></button>
-      </div>
 
-      <form onsubmit="handleAddAllowedUser(event)" class="py-4 space-y-2 border-b-2 border-stone-200">
-        <label class="block text-xs font-extrabold uppercase">Add User Email</label>
-        <div class="flex gap-2">
-          <input type="email" id="input-allowed-email" required placeholder="colleague@bc.edu" class="flex-1 p-2.5 border-2 border-black rounded-xl font-bold text-xs">
-          <button type="submit" class="px-4 py-2 bg-bcMaroon text-white font-black text-xs border-2 border-black rounded-xl shadow-artistic-sm">Add</button>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-extrabold uppercase mb-1">Functional Area</label>
+            <select id="edit-idea-area" required class="w-full p-3 border-2 border-black rounded-xl font-bold text-xs bg-white">
+              <option value="Meetings">Meetings</option>
+              <option value="Technology">Technology</option>
+              <option value="Workspace">Workspace</option>
+              <option value="Communication">Communication</option>
+              <option value="Student Experience">Student Experience</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-extrabold uppercase mb-1">Estimated Effort</label>
+            <select id="edit-idea-effort" required class="w-full p-3 border-2 border-black rounded-xl font-bold text-xs bg-white">
+              <option value="5 min">⚡ 5 Minutes</option>
+              <option value="1 hour">⏱️ 1 Hour</option>
+              <option value="1 day">📅 1 Day</option>
+              <option value="Project">🚀 Multi-week Project</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-extrabold uppercase mb-1">Problem it solves</label>
+          <textarea id="edit-idea-problem" required rows="2" class="w-full p-3 border-2 border-black rounded-xl font-medium text-xs resize-none"></textarea>
+        </div>
+
+        <div>
+          <label class="block text-xs font-extrabold uppercase mb-1">Proposed Solution</label>
+          <textarea id="edit-idea-solution" required rows="2" class="w-full p-3 border-2 border-black rounded-xl font-medium text-xs resize-none"></textarea>
+        </div>
+
+        <div class="flex items-center justify-end gap-2 pt-2">
+          <button type="button" onclick="closeModal('modal-edit-idea')" class="px-4 py-2 bg-stone-200 font-bold text-sm rounded-xl border-2 border-black">Cancel</button>
+          <button type="submit" class="px-6 py-2.5 bg-bcGold text-bcMaroon font-black text-sm rounded-xl border-2 border-black shadow-artistic-sm">Update Idea</button>
         </div>
       </form>
+    </div>
+  </div>
 
-      <div id="modal-allowed-users-list" class="flex-1 overflow-y-auto py-4 space-y-2 no-scrollbar">
-        <!-- Allowed users list injected dynamically -->
+  <!-- MODAL: Delete Idea Confirmation -->
+  <div id="modal-delete-idea" class="fixed inset-0 bg-stone-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-canvasBg border-4 border-black p-6 rounded-3xl shadow-artistic-lg max-w-md w-full relative text-center space-y-4">
+      <div class="w-12 h-12 bg-red-100 text-red-600 border-2 border-black rounded-2xl flex items-center justify-center text-xl mx-auto shadow-artistic-sm">
+        <i class="fa-solid fa-trash-can"></i>
+      </div>
+      <h3 class="text-xl font-black text-stone-900 font-heading">Delete Innovation Idea?</h3>
+      <p class="text-xs text-stone-600 font-medium">Are you sure you want to delete <span id="delete-idea-title-text" class="font-bold text-stone-900"></span>? This action cannot be undone.</p>
+      <div class="flex items-center justify-center gap-3 pt-2">
+        <button type="button" onclick="closeModal('modal-delete-idea')" class="px-4 py-2 bg-stone-200 hover:bg-stone-300 font-bold text-xs rounded-xl border-2 border-black">Cancel</button>
+        <button type="button" onclick="confirmDeleteIdea()" class="px-5 py-2 bg-red-600 hover:bg-red-700 text-white font-black text-xs rounded-xl border-2 border-black shadow-artistic-sm">Delete Idea</button>
       </div>
     </div>
   </div>
 
-  <!-- MODAL: Presenter View Fullscreen Carousel -->
-  <div id="modal-presenter" class="fixed inset-0 bg-stone-950 text-white z-50 flex flex-col justify-between p-8 hidden">
-    <div class="flex items-center justify-between border-b border-stone-800 pb-4">
-      <div class="flex items-center gap-3">
-        <span class="w-3 h-3 bg-red-500 rounded-full animate-ping"></span>
-        <h2 class="text-xl font-black text-bcGold font-heading">IR&P Meeting Presenter Mode</h2>
-      </div>
-      <button onclick="togglePresenterMode()" class="px-4 py-2 bg-stone-800 hover:bg-stone-700 text-white font-bold text-xs rounded-xl border border-stone-700">
-        <i class="fa-solid fa-compress mr-1"></i> Exit Presenter Mode
-      </button>
-    </div>
+  <!-- MODAL: Manage Whitelist -->
+  <div id="modal-whitelist" class="fixed inset-0 bg-stone-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-canvasBg border-4 border-black p-6 sm:p-8 rounded-3xl shadow-artistic-lg max-w-md w-full relative">
+      <h3 class="text-xl font-black text-stone-900 mb-2 font-heading">Allowed Access List</h3>
+      <p class="text-xs text-stone-600 mb-4 font-medium">Manage user email addresses authorized to access this app.</p>
+      
+      <form onsubmit="handleAddAllowedUser(event)" class="flex gap-2 mb-4">
+        <input type="email" id="whitelist-email-input" required placeholder="user@bc.edu" class="flex-1 p-2.5 border-2 border-black rounded-xl text-xs font-bold">
+        <button type="submit" class="px-4 py-2.5 bg-bcMaroon text-bcGold font-black text-xs rounded-xl border-2 border-black shadow-artistic-sm">Add</button>
+      </form>
 
-    <div class="max-w-4xl mx-auto my-auto text-center space-y-8 py-8">
-      <div class="w-32 h-32 bg-bcMaroon text-bcGold border-4 border-bcGold rounded-full mx-auto flex items-center justify-center text-5xl font-black shadow-2xl">
-        <span id="presenter-avatar">BC</span>
-      </div>
-      <div>
-        <h1 id="presenter-name" class="text-5xl sm:text-6xl font-black tracking-tight text-white font-heading">Member Name</h1>
-        <p id="presenter-role" class="text-lg font-bold text-bcGold uppercase tracking-widest mt-2">Role Title</p>
+      <div id="whitelist-items" class="space-y-2 max-h-48 overflow-y-auto custom-scrollbar p-1">
+        <!-- Dynamically rendered whitelist -->
       </div>
 
-      <div class="bg-stone-900 border-2 border-bcGold/50 p-8 rounded-3xl max-w-2xl mx-auto shadow-2xl relative">
-        <p id="presenter-question" class="text-2xl sm:text-3xl font-extrabold text-stone-100 leading-snug">
-          "Question text here"
-        </p>
+      <div class="flex justify-end pt-4">
+        <button type="button" onclick="closeModal('modal-whitelist')" class="px-4 py-2 bg-stone-200 font-bold text-xs rounded-xl border-2 border-black">Close</button>
       </div>
     </div>
+  </div>
 
-    <div class="flex items-center justify-between max-w-4xl mx-auto w-full pt-4 border-t border-stone-800">
-      <button onclick="prevCarouselMember()" class="px-6 py-3 bg-stone-800 hover:bg-stone-700 text-white font-bold text-sm rounded-xl">
-        <i class="fa-solid fa-arrow-left mr-2"></i> Previous
-      </button>
-      <span class="text-sm font-bold text-stone-400">
-        <span id="presenter-current-num">1</span> / <span id="presenter-total-num">1</span>
-      </span>
-      <button onclick="nextCarouselMember()" class="px-6 py-3 bg-bcGold text-bcMaroon font-black text-sm rounded-xl">
-        Next Speaker <i class="fa-solid fa-arrow-right ml-2"></i>
-      </button>
-    </div>
+  <!-- TOAST NOTIFICATION BOX -->
+  <div id="toast-notification" class="fixed bottom-5 right-5 z-50 bg-stone-900 text-white border-2 border-black p-4 rounded-2xl shadow-artistic text-xs font-bold hidden transition-all duration-300 transform translate-y-2">
+    <span id="toast-message">Notification</span>
   </div>
 
   <script>
-    // =========================================================================
-    // CONFIGURATION & GLOBAL STATE
-    // =========================================================================
-    
-    // Replace these placeholder credentials with your Supabase URL & Anon Key
-    const SUPABASE_URL = "https://uqblyogrcsrbgxsncncu.supabase.co";
-    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVxYmx5b2dyY3NyYmd4c25jbmN1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIzMDEyNTMsImV4cCI6MjA5Nzg3NzI1M30.AKjE2io4qebY_jLHO5HakU6yZh1TdMne71F-muJGpLM";
+    // Configuration & State
+    const SUPABASE_URL = "https://YOUR_SUPABASE_PROJECT_URL.supabase.co"; // Replace with actual URL
+    const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY"; // Replace with actual Key
 
     let supabaseClient = null;
+    if (SUPABASE_URL.includes("http") && !SUPABASE_ANON_KEY.includes("YOUR_")) {
+      supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    }
+
     let currentUser = null;
-    let isAuthenticating = false;
-
-    // App state
-    let teams = [];
-    let currentTeam = null;
-    let currentTeamMembers = [];
-    let carouselIndex = 0;
-    let whiteboardPoints = [];
-    let ideas = [];
+    let activeTab = 'checkin';
+    let selectedMember = null;
+    let currentQuestionIndex = 0;
     let allowedUsersList = [];
-    let ideaFilterStatus = 'all';
     let ideaFilterArea = 'all';
+    let editingIdeaId = null;
+    let deletingIdeaId = null;
 
-    // Randomized Question Bank (35 Creative Check-in Questions)
-    const CHECKIN_QUESTIONS = [
-      "What is one win or project achievement you had this past week?",
-      "What do you need from the rest of the team right now?",
-      "What is a personal or professional learning moment you had recently?",
+    // Question Bank (35 Check-in Questions)
+    const questionBank = [
+      "What was a small win or accomplishment for you this week?",
+      "What is one work project or task you're currently energized about?",
       "If you could automate one repetitive task in your workflow, what would it be?",
-      "What is currently taking up most of your mental bandwidth?",
-      "What is a tool, resource, or piece of data you wish we had access to?",
-      "What is something small that brought a smile to your face this week?",
-      "What project are you most excited to dive into next?",
-      "What is one habit or routine that helps you stay productive?",
-      "If our office received a bonus budget for innovation, how should we spend it?",
-      "What is one thing we can do as a team to make your job easier this month?",
-      "What was your favorite subject or research topic when you were a student?",
-      "What is a piece of advice you would give to someone joining our team today?",
-      "What is your favorite way to recharge after a intense data sprint?",
-      "What is an unexpected discovery or insight you found in your data recently?",
-      "Which office process feels ripe for a creative refresh?",
-      "What is a book, podcast, or article you read recently that inspired you?",
-      "If you could shadow another department at Boston College for a day, which one?",
-      "What is one goal you want to accomplish before the end of this semester?",
-      "How do you prefer to receive constructive feedback on your work?",
-      "What is your favorite office snack or coffee order to get through the afternoon?",
-      "What is one thing you appreciate about a colleague sitting next to you?",
-      "What cross-functional collaboration would you love to see happen more?",
-      "What is your go-to strategy when you hit a roadblock on a complex analysis?",
-      "What is a skill or topic you'd love to teach or present to the team in a lunch & learn?",
-      "If you had 2 hours of guaranteed uninterrupted deep work today, what would you tackle?",
-      "What is one thing about our campus or university community you love?",
-      "What is a wild, out-of-the-box idea you have that might just work?",
-      "What metric or indicator do you wish we tracked more closely?",
-      "What is one rule or meeting standard we should consider adopting?",
-      "What is a fun fact about you that most people on the team don't know?",
-      "What is your favorite season or campus event at Boston College?",
-      "What is one positive change you've noticed in our office over the last year?",
-      "If you could describe your current week in a single word, what would it be?",
-      "What is one thing we should celebrate today?"
+      "What’s a helpful productivity tool or shortcut you used recently?",
+      "What topic or metric in institutional research are you most curious about right now?",
+      "How do you prefer to recharge during a busy work week?",
+      "What's one thing our team could do to make our weekly meetings more efficient?",
+      "What is a piece of advice or feedback you received that stuck with you?",
+      "What's a recent data insight or chart that surprised you?",
+      "If you were given a free day for professional development, what would you learn?",
+      "What is one goal you want to focus on before the end of the month?",
+      "How do you like to organize your daily priorities or to-do list?",
+      "What's your favorite spot on the BC campus or around Boston in the summer?",
+      "What's one book, article, or podcast you've enjoyed recently?",
+      "What is something you appreciate about a colleague on our team?",
+      "What’s an area where you feel you might need a second set of eyes or support this week?",
+      "What is your go-to soundtrack or music genre when deeply focusing on data analysis?",
+      "If you could redesign one report or dashboard from scratch, which would it be?",
+      "What's one skill outside of work that surprisingly helps you in your job?",
+      "What makes a good work day feel truly successful to you?",
+      "What is one thing about institutional research you wish more people understood?",
+      "How do you effectively manage context-switching during busy days?",
+      "What's a fun highlight from your weekend or past few days?",
+      "What is your favorite coffee, tea, or snack powering your work week?",
+      "What’s a habit or routine that helps you start your workday on the right foot?",
+      "If our team created a mascot, what would it be?",
+      "What’s one thing you’re looking forward to in the coming weeks?",
+      "What is a communication channel or format that works best for your workflow?",
+      "What’s one piece of software or technology you couldn’t do your job without?",
+      "How do you like to celebrate project completions or milestones?",
+      "What’s an interesting trend in higher education that you’re keeping an eye on?",
+      "If you could guest-teach a college course on any topic, what would it be?",
+      "What’s one small improvement to our physical or virtual workspace that would help you?",
+      "What is a mistake or hurdle you learned a valuable lesson from recently?",
+      "What is one positive word that describes your mindset for this week?"
     ];
 
-    // =========================================================================
-    // INITIALIZATION & AUTHENTICATION
-    // =========================================================================
+    // Mock Data Fallbacks
+    let teams = [
+      { id: '1', name: 'Data Engineering & Analytics' },
+      { id: '2', name: 'Survey & Student Research' },
+      { id: '3', name: 'Reporting & Governance' }
+    ];
 
-    document.addEventListener('DOMContentLoaded', async () => {
-      // Validate credentials
-      if (SUPABASE_URL.includes("YOUR_SUPABASE") || SUPABASE_ANON_KEY.includes("YOUR_SUPABASE")) {
-        console.warn("Supabase credentials not configured. Please set SUPABASE_URL and SUPABASE_ANON_KEY in index.html.");
-      } else {
+    let teamMembers = [
+      { id: 'm1', team_id: '1', name: 'Alex Mercer', role: 'Senior Data Analyst' },
+      { id: 'm2', team_id: '1', name: 'Samantha Chen', role: 'Data Engineer' },
+      { id: 'm3', team_id: '2', name: 'David Ross', role: 'Research Associate' },
+      { id: 'm4', team_id: '2', name: 'Elena Rostova', role: 'Survey Analyst' },
+      { id: 'm5', team_id: '3', name: 'Marcus Vance', role: 'Governance Lead' },
+      { id: 'm6', team_id: '3', name: 'Priya Patel', role: 'IR Director' }
+    ];
+
+    let whiteboardPoints = [
+      { id: 'wp1', team_id: '1', content: 'Set up automated ETL monitoring alerts on Slack', author_name: 'Alex Mercer', is_addressed: false },
+      { id: 'wp2', team_id: '2', content: 'Review Fall Enrollment Survey questions with committee', author_name: 'David Ross', is_addressed: true },
+      { id: 'wp3', team_id: '3', content: 'Standardize data dictionary definitions for department codes', author_name: 'Marcus Vance', is_addressed: false }
+    ];
+
+    let ideas = [
+      {
+        id: 'i1',
+        title: 'Weekly Automated Pipeline Health Reports',
+        area: 'Technology',
+        effort: '1 hour',
+        problem: 'Team members are manually checking job logs every morning.',
+        solution: 'Send a automated summary to our Slack channel at 8:30 AM.',
+        author_name: 'Samantha Chen',
+        author_email: 'samantha.chen@bc.edu',
+        idea_upvotes: [{ user_email: 'samantha.chen@bc.edu' }],
+        idea_volunteers: [{ user_name: 'Alex Mercer', user_email: 'alex.mercer@bc.edu' }],
+        idea_comments: [{ author_name: 'Alex Mercer', comment: 'Great idea! I can help review the Slack webhook integration.' }]
+      },
+      {
+        id: 'i2',
+        title: 'Standing 15-Minute Agendas for Meetings',
+        area: 'Meetings',
+        effort: '5 min',
+        problem: 'Meetings tend to overrun without structured bullet points.',
+        solution: 'Enforce a 3-bullet agenda in the calendar invite descriptions.',
+        author_name: 'Marcus Vance',
+        author_email: 'marcus.vance@bc.edu',
+        idea_upvotes: [],
+        idea_volunteers: [],
+        idea_comments: []
+      }
+    ];
+
+    window.onload = async function() {
+      initApp();
+    };
+
+    async function initApp() {
+      if (supabaseClient) {
         try {
-          supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-            auth: {
-              persistSession: true,
-              autoRefreshToken: true,
-              detectSessionInUrl: true
+          const { data: { session } } = await supabaseClient.auth.getSession();
+          if (session) {
+            currentUser = {
+              email: session.user.email,
+              name: session.user.user_metadata?.full_name || session.user.email.split('@')[0],
+              avatar: session.user.user_metadata?.avatar_url || `https://placehold.co/100x100/800020/FFFFFF?text=${session.user.email[0].toUpperCase()}`
+            };
+            document.getElementById('modal-auth-overlay').classList.add('hidden');
+            updateUserUI();
+          }
+
+          supabaseClient.auth.onAuthStateChange((event, session) => {
+            if (session) {
+              currentUser = {
+                email: session.user.email,
+                name: session.user.user_metadata?.full_name || session.user.email.split('@')[0],
+                avatar: session.user.user_metadata?.avatar_url || `https://placehold.co/100x100/800020/FFFFFF?text=${session.user.email[0].toUpperCase()}`
+              };
+              document.getElementById('modal-auth-overlay').classList.add('hidden');
+              updateUserUI();
+              loadAllData();
+            } else {
+              currentUser = null;
+              document.getElementById('modal-auth-overlay').classList.remove('hidden');
             }
           });
-        } catch (e) {
-          console.error("Failed to initialize Supabase client:", e);
-        }
-      }
-
-      if (supabaseClient) {
-        // Explicitly check current active session on page load
-        try {
-          const { data: { session }, error } = await supabaseClient.auth.getSession();
-          if (error) console.error("Session retrieval error:", error);
-          if (session?.user) {
-            currentUser = session.user;
-            await handleUserSession(currentUser);
-          } else {
-            showAuthOverlay('unauthenticated');
-          }
         } catch (err) {
-          console.error("Auth check failed:", err);
-          showAuthOverlay('unauthenticated');
+          console.warn("Supabase Auth check issue:", err);
         }
-
-        // Listen to auth changes
-        supabaseClient.auth.onAuthStateChange(async (event, session) => {
-          if ((event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED' || event === 'INITIAL_SESSION') && session?.user) {
-            currentUser = session.user;
-            await handleUserSession(currentUser);
-          } else if (event === 'SIGNED_OUT') {
-            currentUser = null;
-            showAuthOverlay('unauthenticated');
-          }
-        });
-      } else {
-        showAuthOverlay('unauthenticated');
-      }
-    });
-
-    async function handleUserSession(user) {
-      await fetchAllowedUsers();
-      
-      const isAllowed = await checkUserAllowed(user.email);
-      if (!isAllowed) {
-        document.getElementById('unauthorized-email').innerText = user.email || 'Unknown';
-        showAuthOverlay('unauthorized');
-        return;
       }
 
-      // User authorized
-      hideAuthOverlay();
-      document.getElementById('user-display-name').innerText = user.user_metadata?.full_name || user.email?.split('@')[0] || 'Team Member';
-      if (user.user_metadata?.avatar_url) {
-        document.getElementById('user-avatar').src = user.user_metadata.avatar_url;
-      }
-
-      // Load app data
-      await fetchTeams();
-      await fetchIdeas();
+      shuffleQuestion();
+      renderTeamCards();
+      renderWhiteboardSelect();
+      loadAllData();
     }
 
-    async function loginWithGoogle() {
-      if (isAuthenticating) return;
+    async function handleSignInWithGoogle() {
       if (!supabaseClient) {
-        showNotification("Supabase client is not configured.", "error");
+        showNotification("Supabase client not configured. Set URL and Anon Key in code.", "error");
         return;
       }
-
-      isAuthenticating = true;
-      const btnText = document.getElementById('btn-google-text');
-      const originalText = btnText.innerText;
-      btnText.innerText = "Connecting to Google...";
-
-      const redirectUrl = window.location.origin + window.location.pathname;
-
-      try {
-        const { error } = await supabaseClient.auth.signInWithOAuth({
-          provider: 'google',
-          options: {
-            redirectTo: redirectUrl,
-            queryParams: { prompt: 'select_account' }
-          }
-        });
-        if (error) throw error;
-      } catch (err) {
-        showNotification("Google Sign-In error: " + err.message, "error");
-        const errMsg = document.getElementById('auth-error-msg');
-        if (errMsg) {
-          errMsg.innerText = "Google OAuth error: " + err.message;
-          errMsg.classList.remove('hidden');
-        }
-        isAuthenticating = false;
-        btnText.innerText = originalText;
+      const { error } = await supabaseClient.auth.signInWithOAuth({
+        provider: 'google',
+        options: { redirectTo: window.location.href }
+      });
+      if (error) {
+        showNotification("Google Sign-In Error: " + error.message, "error");
       }
     }
 
-    async function logout() {
+    async function handleSignOut() {
       if (supabaseClient) {
-        try {
-          await supabaseClient.auth.signOut();
-        } catch(e) {}
+        await supabaseClient.auth.signOut();
       }
       currentUser = null;
-      showAuthOverlay('unauthenticated');
+      document.getElementById('modal-auth-overlay').classList.remove('hidden');
+      document.getElementById('user-profile-badge').classList.add('hidden');
     }
 
-    function showAuthOverlay(state) {
-      document.getElementById('auth-overlay').classList.remove('hidden');
-      if (state === 'unauthenticated') {
-        document.getElementById('auth-unauthenticated').classList.remove('hidden');
-        document.getElementById('auth-unauthorized').classList.add('hidden');
-      } else {
-        document.getElementById('auth-unauthenticated').classList.add('hidden');
-        document.getElementById('auth-unauthorized').classList.remove('hidden');
+    function updateUserUI() {
+      if (!currentUser) return;
+      document.getElementById('user-profile-badge').classList.remove('hidden');
+      document.getElementById('user-profile-badge').classList.add('flex');
+      document.getElementById('user-avatar').src = currentUser.avatar;
+      document.getElementById('user-name-display').innerText = currentUser.name;
+    }
+
+    async function loadAllData() {
+      await fetchTeams();
+      await fetchWhiteboardPoints();
+      await fetchIdeas();
+      await fetchAllowedUsers();
+    }
+
+    async function fetchTeams() {
+      if (!supabaseClient) return;
+      const { data, error } = await supabaseClient.from('teams').select('*, team_members(*)');
+      if (!error && data && data.length > 0) {
+        teams = data;
+        renderWhiteboardSelect();
       }
     }
 
-    function hideAuthOverlay() {
-      document.getElementById('auth-overlay').classList.add('hidden');
-    }
-
-    // =========================================================================
-    // SECTION NAVIGATION
-    // =========================================================================
-
-    function switchSection(sectionId) {
-      const checkinsSec = document.getElementById('section-checkins');
-      const officeSec = document.getElementById('section-office');
-      const navCheckins = document.getElementById('nav-checkins');
-      const navOffice = document.getElementById('nav-office');
-
-      if (sectionId === 'checkins') {
-        checkinsSec.classList.remove('hidden');
-        officeSec.classList.add('hidden');
-        navCheckins.className = "px-4 py-2 rounded-xl font-bold text-sm transition border-2 border-transparent bg-bcGold text-bcMaroon border-black shadow-artistic-sm";
-        navOffice.className = "px-4 py-2 rounded-xl font-bold text-sm transition text-white hover:bg-white/10";
-      } else {
-        checkinsSec.classList.add('hidden');
-        officeSec.classList.remove('hidden');
-        navOffice.className = "px-4 py-2 rounded-xl font-bold text-sm transition border-2 border-transparent bg-bcGold text-bcMaroon border-black shadow-artistic-sm";
-        navCheckins.className = "px-4 py-2 rounded-xl font-bold text-sm transition text-white hover:bg-white/10";
+    async function fetchWhiteboardPoints() {
+      if (!supabaseClient) {
+        renderWhiteboard();
+        return;
+      }
+      const { data, error } = await supabaseClient.from('whiteboard_points').select('*').order('created_at', { ascending: false });
+      if (!error && data) {
+        whiteboardPoints = data;
+        renderWhiteboard();
       }
     }
 
-    // =========================================================================
-    // ALLOWED USERS & WHITELIST MANAGEMENT
-    // =========================================================================
+    async function fetchIdeas() {
+      if (!supabaseClient) {
+        renderIdeas();
+        return;
+      }
+      const { data, error } = await supabaseClient
+        .from('ideas')
+        .select('*, idea_upvotes(*), idea_volunteers(*), idea_comments(*)')
+        .order('created_at', { ascending: false });
+      if (!error && data) {
+        ideas = data;
+        renderIdeas();
+      }
+    }
 
     async function fetchAllowedUsers() {
       if (!supabaseClient) return;
-      const { data, error } = await supabaseClient.from('allowed_users').select('*').order('created_at', { ascending: true });
-      if (error) {
-        console.error("Error fetching allowed users:", error);
-        return;
-      }
-      allowedUsersList = data || [];
-      renderAllowedUsersList();
-    }
-
-    async function checkUserAllowed(email) {
-      if (!email) return true;
-      // Automatically allow all Boston College @bc.edu accounts
-      if (email.toLowerCase().endsWith('@bc.edu')) {
-        return true;
-      }
-      if (!allowedUsersList || allowedUsersList.length === 0) {
-        // If whitelist is empty, allow login
-        return true;
-      }
-      return allowedUsersList.some(u => u.email.toLowerCase() === email.toLowerCase());
-    }
-
-    async function handleAddAllowedUser(e) {
-      e.preventDefault();
-      if (!supabaseClient) return;
-      const input = document.getElementById('input-allowed-email');
-      const email = input.value.trim().toLowerCase();
-      if (!email) return;
-
-      const { error } = await supabaseClient.from('allowed_users').insert([{ email }]);
-      if (error) {
-        showNotification("Error adding user: " + error.message, "error");
-      } else {
-        showNotification("Added " + email + " to whitelist", "success");
-        input.value = '';
-        await fetchAllowedUsers();
+      const { data, error } = await supabaseClient.from('allowed_users').select('*');
+      if (!error && data) {
+        allowedUsersList = data;
+        renderWhitelist();
       }
     }
 
-    async function handleRemoveAllowedUser(id) {
-      if (!supabaseClient) return;
-      const { error } = await supabaseClient.from('allowed_users').delete().eq('id', id);
-      if (error) {
-        showNotification("Error removing user: " + error.message, "error");
-      } else {
-        await fetchAllowedUsers();
-      }
-    }
-
-    function renderAllowedUsersList() {
-      const container = document.getElementById('modal-allowed-users-list');
-      if (allowedUsersList.length === 0) {
-        container.innerHTML = `<p class="text-xs text-stone-500 italic p-2">No whitelist restrictions active (Open Access Mode).</p>`;
-        return;
-      }
-
-      container.innerHTML = allowedUsersList.map(u => `
-        <div class="flex items-center justify-between p-2.5 bg-white border-2 border-black rounded-xl">
-          <span class="text-xs font-bold text-stone-800 font-mono">${u.email}</span>
-          <button onclick="handleRemoveAllowedUser('${u.id}')" class="text-red-600 hover:text-red-800 text-xs font-bold">
-            <i class="fa-solid fa-trash"></i>
-          </button>
-        </div>
-      `).join('');
-    }
-
-    // =========================================================================
-    // SECTION 1: TEAMS & CHECK-IN CAROUSEL
-    // =========================================================================
-
-    async function fetchTeams() {
-      if (!supabaseClient) {
-        loadFallbackData();
-        return;
-      }
-      try {
-        const { data, error } = await supabaseClient.from('teams').select('*').order('name', { ascending: true });
-        if (error || !data || data.length === 0) {
-          loadFallbackData();
-          return;
+    function switchTab(tab) {
+      activeTab = tab;
+      ['checkin', 'whiteboard', 'ideas'].forEach(t => {
+        const btn = document.getElementById(`tab-btn-${t}`);
+        const sec = document.getElementById(`section-${t}`);
+        if (t === tab) {
+          btn.className = "px-5 py-2.5 bg-bcMaroon text-white font-black text-sm rounded-xl border-2 border-black shadow-artistic transition flex items-center gap-2 whitespace-nowrap";
+          sec.classList.remove('hidden');
+        } else {
+          btn.className = "px-5 py-2.5 bg-white hover:bg-stone-100 text-stone-800 font-bold text-sm rounded-xl border-2 border-black shadow-artistic-sm transition flex items-center gap-2 whitespace-nowrap";
+          sec.classList.add('hidden');
         }
-        teams = data;
-        renderTeamSelect();
-      } catch (err) {
-        loadFallbackData();
-      }
+      });
     }
 
-    function loadFallbackData() {
-      teams = [{ id: 'default-team-1', name: 'IR&P Data & Analytics Team' }];
-      currentTeam = teams[0];
-      currentTeamMembers = [
-        { id: 'm1', name: 'Sarah Chen', role: 'Senior Data Analyst' },
-        { id: 'm2', name: 'Marcus Vance', role: 'Research Associate' },
-        { id: 'm3', name: 'Elena Rostova', role: 'Director of IR&P' }
-      ];
-      whiteboardPoints = [
-        { id: 'w1', content: 'Review Fall enrollment data validation timeline', author_name: 'Sarah Chen', is_addressed: false },
-        { id: 'w2', content: 'Brainstorm survey response rate strategies', author_name: 'Marcus Vance', is_addressed: true }
-      ];
-      
-      renderTeamSelect();
-      document.getElementById('team-select').value = currentTeam.id;
-      handleSelectTeam(currentTeam.id);
+    function shuffleQuestion() {
+      currentQuestionIndex = Math.floor(Math.random() * questionBank.length);
+      document.getElementById('current-question-text').innerText = questionBank[currentQuestionIndex];
     }
 
-    function renderTeamSelect() {
-      const select = document.getElementById('team-select');
-      select.innerHTML = `<option value="">-- Choose or Create a Team --</option>` + 
-        teams.map(t => `<option value="${t.id}" ${currentTeam?.id === t.id ? 'selected' : ''}>${t.name}</option>`).join('');
-    }
-
-    async function handleSelectTeam(teamId) {
-      if (!teamId) {
-        currentTeam = null;
-        document.getElementById('checkin-workspace').classList.add('hidden');
-        document.getElementById('checkin-empty-state').classList.remove('hidden');
-        document.getElementById('btn-manage-members').classList.add('hidden');
-        return;
-      }
-
-      currentTeam = teams.find(t => t.id === teamId);
-      document.getElementById('checkin-workspace').classList.remove('hidden');
-      document.getElementById('checkin-empty-state').classList.add('hidden');
-      document.getElementById('btn-manage-members').classList.remove('hidden');
-
-      await fetchTeamMembers(teamId);
-      await fetchWhiteboardPoints(teamId);
-    }
-
-    async function handleCreateTeam(e) {
-      e.preventDefault();
-      if (!supabaseClient) return;
-      const name = document.getElementById('input-team-name').value.trim();
-      if (!name) return;
-
-      const { data, error } = await supabaseClient.from('teams').insert([{ name }]).select();
-      if (error) {
-        showNotification("Error creating team: " + error.message, "error");
-        return;
-      }
-
-      showNotification("Team created successfully!", "success");
-      closeModal('modal-create-team');
-      document.getElementById('input-team-name').value = '';
-      await fetchTeams();
-      if (data && data[0]) {
-        handleSelectTeam(data[0].id);
-      }
-    }
-
-    async function fetchTeamMembers(teamId) {
-      if (!supabaseClient) return;
-      const { data, error } = await supabaseClient.from('team_members').select('*').eq('team_id', teamId).order('created_at', { ascending: true });
-      if (error) {
-        showNotification("Error fetching members: " + error.message, "error");
-        return;
-      }
-
-      currentTeamMembers = data || [];
-      document.getElementById('team-member-count').innerText = currentTeamMembers.length;
-      carouselIndex = 0;
-      renderCarousel();
-      renderMembersModalList();
-    }
-
-    async function handleAddTeamMember(e) {
-      e.preventDefault();
-      if (!supabaseClient || !currentTeam) return;
-      const name = document.getElementById('input-member-name').value.trim();
-      const role = document.getElementById('input-member-role').value.trim() || 'Team Member';
-      if (!name) return;
-
-      const { error } = await supabaseClient.from('team_members').insert([{ team_id: currentTeam.id, name, role }]);
-      if (error) {
-        showNotification("Error adding member: " + error.message, "error");
-        return;
-      }
-
-      document.getElementById('input-member-name').value = '';
-      document.getElementById('input-member-role').value = '';
-      await fetchTeamMembers(currentTeam.id);
-    }
-
-    async function handleDeleteTeamMember(memberId) {
-      if (!supabaseClient) return;
-      const { error } = await supabaseClient.from('team_members').delete().eq('id', memberId);
-      if (error) {
-        showNotification("Error removing member: " + error.message, "error");
-      } else {
-        await fetchTeamMembers(currentTeam.id);
-      }
-    }
-
-    function renderMembersModalList() {
-      const container = document.getElementById('modal-members-list');
-      if (currentTeamMembers.length === 0) {
-        container.innerHTML = `<p class="text-xs text-stone-500 italic p-2">No members added yet.</p>`;
-        return;
-      }
-
-      container.innerHTML = currentTeamMembers.map(m => `
-        <div class="flex items-center justify-between p-2.5 bg-white border-2 border-black rounded-xl">
-          <div>
-            <p class="text-xs font-black text-stone-900">${m.name}</p>
-            <p class="text-[10px] font-bold text-bcMaroon uppercase">${m.role}</p>
+    function renderTeamCards() {
+      const container = document.getElementById('team-cards-container');
+      container.innerHTML = teamMembers.map(member => `
+        <button onclick="selectMember('${member.id}')" class="bg-white border-2 border-black p-4 rounded-2xl shadow-artistic-sm hover:shadow-artistic hover:-translate-y-0.5 transition flex flex-col items-center text-center space-y-2">
+          <div class="w-12 h-12 rounded-full border-2 border-black bg-bcGold/30 text-bcMaroon font-black flex items-center justify-center text-lg">
+            ${member.name.split(' ').map(n=>n[0]).join('')}
           </div>
-          <button onclick="handleDeleteTeamMember('${m.id}')" class="text-red-600 hover:text-red-800 text-xs font-bold">
-            <i class="fa-solid fa-trash"></i>
-          </button>
-        </div>
+          <div>
+            <h4 class="font-bold text-xs text-stone-900 leading-tight">${member.name}</h4>
+            <p class="text-[10px] font-semibold text-stone-500">${member.role}</p>
+          </div>
+        </button>
       `).join('');
     }
 
-    // Carousel Mechanics
-    function renderCarousel() {
-      if (currentTeamMembers.length === 0) {
-        document.getElementById('carousel-member-name').innerText = "No Members";
-        document.getElementById('carousel-member-role').innerText = "Add team members";
-        document.getElementById('carousel-avatar-text').innerText = "BC";
-        document.getElementById('carousel-current-num').innerText = "0";
-        document.getElementById('carousel-total-num').innerText = "0";
+    function selectMember(memberId) {
+      selectedMember = teamMembers.find(m => m.id === memberId);
+      if (!selectedMember) return;
+
+      document.getElementById('checkin-detail-box').classList.remove('hidden');
+      document.getElementById('detail-member-name').innerText = selectedMember.name;
+      document.getElementById('detail-member-role').innerText = selectedMember.role;
+      document.getElementById('detail-member-avatar').innerText = selectedMember.name.split(' ').map(n=>n[0]).join('');
+      document.getElementById('checkin-response-text').value = '';
+    }
+
+    function closeCheckinDetail() {
+      document.getElementById('checkin-detail-box').classList.add('hidden');
+      selectedMember = null;
+    }
+
+    function handleSaveCheckin(e) {
+      e.preventDefault();
+      showNotification("Check-in response saved!", "success");
+      closeCheckinDetail();
+    }
+
+    function renderWhiteboardSelect() {
+      const select = document.getElementById('whiteboard-team-select');
+      const filter = document.getElementById('whiteboard-team-filter');
+      
+      const teamOptions = teams.map(t => `<option value="${t.id}">${t.name}</option>`).join('');
+      select.innerHTML = teamOptions;
+      filter.innerHTML = `<option value="all">All Teams</option>` + teamOptions;
+    }
+
+    function renderWhiteboard() {
+      const filterVal = document.getElementById('whiteboard-team-filter').value;
+      const container = document.getElementById('whiteboard-grid');
+      
+      const filtered = filterVal === 'all' 
+        ? whiteboardPoints 
+        : whiteboardPoints.filter(p => p.team_id === filterVal);
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-full py-12 text-center bg-white border-2 border-dashed border-stone-300 rounded-3xl">
+            <p class="text-xs font-bold text-stone-500">No notes posted yet for this team.</p>
+          </div>`;
         return;
       }
 
-      if (carouselIndex >= currentTeamMembers.length) carouselIndex = 0;
-      if (carouselIndex < 0) carouselIndex = currentTeamMembers.length - 1;
-
-      const member = currentTeamMembers[carouselIndex];
-      const initials = member.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
-
-      document.getElementById('carousel-member-name').innerText = member.name;
-      document.getElementById('carousel-member-role').innerText = member.role;
-      document.getElementById('carousel-avatar-text').innerText = initials;
-      document.getElementById('carousel-current-num').innerText = carouselIndex + 1;
-      document.getElementById('carousel-total-num').innerText = currentTeamMembers.length;
-
-      // Update Presenter mode
-      document.getElementById('presenter-name').innerText = member.name;
-      document.getElementById('presenter-role').innerText = member.role;
-      document.getElementById('presenter-avatar').innerText = initials;
-      document.getElementById('presenter-current-num').innerText = carouselIndex + 1;
-      document.getElementById('presenter-total-num').innerText = currentTeamMembers.length;
-
-      randomizeQuestion();
-    }
-
-    function nextCarouselMember() {
-      if (currentTeamMembers.length === 0) return;
-      carouselIndex = (carouselIndex + 1) % currentTeamMembers.length;
-      renderCarousel();
-    }
-
-    function prevCarouselMember() {
-      if (currentTeamMembers.length === 0) return;
-      carouselIndex = (carouselIndex - 1 + currentTeamMembers.length) % currentTeamMembers.length;
-      renderCarousel();
-    }
-
-    function randomizeQuestion() {
-      const q = CHECKIN_QUESTIONS[Math.floor(Math.random() * CHECKIN_QUESTIONS.length)];
-      document.getElementById('carousel-question').innerText = `"${q}"`;
-      document.getElementById('presenter-question').innerText = `"${q}"`;
-    }
-
-    function shuffleCarouselOrder() {
-      if (currentTeamMembers.length <= 1) return;
-      currentTeamMembers = currentTeamMembers.sort(() => Math.random() - 0.5);
-      carouselIndex = 0;
-      renderCarousel();
-      showNotification("Reshuffled team order!", "info");
-    }
-
-    function togglePresenterMode() {
-      const p = document.getElementById('modal-presenter');
-      p.classList.toggle('hidden');
-    }
-
-    // =========================================================================
-    // VIRTUAL WHITEBOARD
-    // =========================================================================
-
-    async function fetchWhiteboardPoints(teamId) {
-      if (!supabaseClient) return;
-      const { data, error } = await supabaseClient.from('whiteboard_points')
-        .select('*')
-        .eq('team_id', teamId)
-        .order('created_at', { ascending: false });
-
-      if (error) {
-        showNotification("Error fetching whiteboard: " + error.message, "error");
-        return;
-      }
-
-      whiteboardPoints = data || [];
-      renderWhiteboard();
+      container.innerHTML = filtered.map(point => {
+        const teamObj = teams.find(t => t.id === point.team_id) || { name: 'General' };
+        return `
+          <div class="p-5 border-3 border-black rounded-2xl shadow-artistic flex flex-col justify-between space-y-3 ${point.is_addressed ? 'bg-stone-100 opacity-60' : 'bg-accentPeach'}">
+            <div class="space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="px-2 py-0.5 bg-white border border-black rounded text-[10px] font-black uppercase">${teamObj.name}</span>
+                <button onclick="toggleWhiteboardAddressed('${point.id}', ${!point.is_addressed})" class="text-xs text-stone-600 hover:text-black">
+                  <i class="fa-${point.is_addressed ? 'solid' : 'regular'} fa-circle-check"></i>
+                </button>
+              </div>
+              <p class="text-xs font-bold text-stone-900 leading-snug">${point.content}</p>
+            </div>
+            <div class="text-[10px] font-bold text-stone-500 border-t border-black/10 pt-2 flex justify-between items-center">
+              <span>— ${point.author_name}</span>
+            </div>
+          </div>
+        `;
+      }).join('');
     }
 
     async function handleAddWhiteboardPoint(e) {
       e.preventDefault();
-      if (!supabaseClient || !currentTeam) return;
-      const input = document.getElementById('wb-input-content');
-      const content = input.value.trim();
-      if (!content) return;
+      const team_id = document.getElementById('whiteboard-team-select').value;
+      const content = document.getElementById('whiteboard-content-input').value.trim();
+      const author_name = currentUser ? currentUser.name : 'IR&P Team Member';
 
-      const authorName = currentUser?.user_metadata?.full_name || currentUser?.email || 'Anonymous';
+      // Insert without author_email to prevent schema mismatch
+      if (supabaseClient) {
+        const { error } = await supabaseClient.from('whiteboard_points').insert([{
+          team_id,
+          content,
+          author_name,
+          is_addressed: false
+        }]);
 
-      const { error } = await supabaseClient.from('whiteboard_points').insert([{
-        team_id: currentTeam.id,
-        content,
-        author_name: authorName,
-        is_addressed: false
-      }]);
-
-      if (error) {
-        showNotification("Error adding note: " + error.message, "error");
-        return;
-      }
-
-      input.value = '';
-      await fetchWhiteboardPoints(currentTeam.id);
-    }
-
-    async function toggleWhiteboardAddressed(pointId, currentStatus) {
-      if (!supabaseClient) return;
-      const { error } = await supabaseClient.from('whiteboard_points')
-        .update({ is_addressed: !currentStatus })
-        .eq('id', pointId);
-
-      if (error) {
-        showNotification("Error updating note: " + error.message, "error");
+        if (error) {
+          showNotification("Error adding note: " + error.message, "error");
+          return;
+        }
       } else {
-        await fetchWhiteboardPoints(currentTeam.id);
+        whiteboardPoints.unshift({
+          id: 'wp_' + Date.now(),
+          team_id,
+          content,
+          author_name,
+          is_addressed: false
+        });
       }
+
+      showNotification("Whiteboard note posted!", "success");
+      document.getElementById('whiteboard-content-input').value = '';
+      closeModal('modal-add-whiteboard');
+      await fetchWhiteboardPoints();
     }
 
-    async function handleDeleteWhiteboardPoint(pointId) {
-      if (!supabaseClient) return;
-      const { error } = await supabaseClient.from('whiteboard_points')
-        .delete()
-        .eq('id', pointId);
-
-      if (error) {
-        showNotification("Error deleting note: " + error.message, "error");
+    async function toggleWhiteboardAddressed(pointId, isAddressed) {
+      if (supabaseClient) {
+        await supabaseClient.from('whiteboard_points').update({ is_addressed: isAddressed }).eq('id', pointId);
       } else {
-        await fetchWhiteboardPoints(currentTeam.id);
+        const item = whiteboardPoints.find(p => p.id === pointId);
+        if (item) item.is_addressed = isAddressed;
       }
+      await fetchWhiteboardPoints();
     }
 
-    function renderWhiteboard() {
-      const container = document.getElementById('whiteboard-canvas');
-      if (whiteboardPoints.length === 0) {
-        container.innerHTML = `
-          <div class="p-6 text-center border-2 border-dashed border-stone-300 rounded-2xl">
-            <p class="text-xs font-bold text-stone-400">No whiteboard points yet. Post an agenda topic above!</p>
-          </div>
-        `;
-        return;
-      }
-
-      container.innerHTML = whiteboardPoints.map((pt) => `
-        <div class="p-4 bg-amber-100 border-2 border-black rounded-2xl shadow-artistic-sm relative ${pt.is_addressed ? 'opacity-60 bg-stone-100' : ''}">
-          <div class="flex items-start justify-between gap-2">
-            <p class="text-xs sm:text-sm font-bold text-stone-900 ${pt.is_addressed ? 'line-through text-stone-500' : ''}">${pt.content}</p>
-            <button onclick="handleDeleteWhiteboardPoint('${pt.id}')" class="text-stone-400 hover:text-red-600 text-xs">
-              <i class="fa-solid fa-xmark"></i>
-            </button>
-          </div>
-          <div class="flex items-center justify-between mt-3 pt-2 border-t border-black/10">
-            <span class="text-[10px] font-extrabold text-stone-500">${pt.author_name}</span>
-            <button onclick="toggleWhiteboardAddressed('${pt.id}', ${pt.is_addressed})" class="px-2 py-0.5 text-[10px] font-black rounded-lg border border-black ${pt.is_addressed ? 'bg-stone-300 text-stone-700' : 'bg-bcGold text-bcMaroon'}">
-              ${pt.is_addressed ? '✓ Addressed' : 'Mark Addressed'}
-            </button>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    // =========================================================================
-    // SECTION 2: BETTER OFFICE (INNOVATION ENGINE)
-    // =========================================================================
-
-    async function fetchIdeas() {
-      if (!supabaseClient) return;
-      const { data, error } = await supabaseClient.from('ideas')
-        .select(`
-          *,
-          idea_upvotes(*),
-          idea_volunteers(*),
-          idea_comments(*)
-        `)
-        .order('created_at', { ascending: false });
-
-      if (error) {
-        showNotification("Error fetching ideas: " + error.message, "error");
-        return;
-      }
-
-      ideas = data || [];
-      renderIdeas();
-    }
-
-    async function handleCreateIdea(e) {
-      e.preventDefault();
-      if (!supabaseClient) return;
-
-      const title = document.getElementById('idea-title').value.trim();
-      const area = document.getElementById('idea-area').value;
-      const effort = document.getElementById('idea-effort').value;
-      const problem = document.getElementById('idea-problem').value.trim();
-      const solution = document.getElementById('idea-solution').value.trim();
-
-      const authorName = currentUser?.user_metadata?.full_name || currentUser?.email || 'Anonymous';
-      const authorEmail = currentUser?.email || '';
-
-      const { error } = await supabaseClient.from('ideas').insert([{
-        title, area, effort, problem, solution,
-        author_name: authorName,
-        author_email: authorEmail,
-        status: 'Idea'
-      }]);
-
-      if (error) {
-        showNotification("Error publishing idea: " + error.message, "error");
-        return;
-      }
-
-      showNotification("Idea published successfully!", "success");
-      closeModal('modal-create-idea');
-      e.target.reset();
-      await fetchIdeas();
-    }
-
-    async function handleUpvoteIdea(ideaId) {
-      if (!supabaseClient || !currentUser) return;
-
-      const idea = ideas.find(i => i.id === ideaId);
-      const existingUpvote = idea.idea_upvotes?.find(u => u.user_email === currentUser.email);
-
-      if (existingUpvote) {
-        // Remove upvote
-        await supabaseClient.from('idea_upvotes').delete().eq('id', existingUpvote.id);
-      } else {
-        // Add upvote
-        await supabaseClient.from('idea_upvotes').insert([{ idea_id: ideaId, user_email: currentUser.email }]);
-      }
-
-      await fetchIdeas();
-    }
-
-    async function handleVolunteerIdea(ideaId) {
-      if (!supabaseClient || !currentUser) return;
-
-      const idea = ideas.find(i => i.id === ideaId);
-      const existingVolunteer = idea.idea_volunteers?.find(v => v.user_email === currentUser.email);
-
-      if (existingVolunteer) {
-        await supabaseClient.from('idea_volunteers').delete().eq('id', existingVolunteer.id);
-        showNotification("Removed volunteer offer", "info");
-      } else {
-        const userName = currentUser.user_metadata?.full_name || currentUser.email;
-        await supabaseClient.from('idea_volunteers').insert([{ idea_id: ideaId, user_name: userName, user_email: currentUser.email }]);
-        showNotification("Thanks for volunteering!", "success");
-      }
-
-      await fetchIdeas();
-    }
-
-    async function handleStatusChange(ideaId, newStatus) {
-      if (!supabaseClient) return;
-      const { error } = await supabaseClient.from('ideas').update({ status: newStatus }).eq('id', ideaId);
-      if (error) {
-        showNotification("Error updating status: " + error.message, "error");
-      } else {
-        await fetchIdeas();
-      }
-    }
-
-    async function handleAddComment(e, ideaId) {
-      e.preventDefault();
-      if (!supabaseClient) return;
-      const input = document.getElementById(`comment-input-${ideaId}`);
-      const comment = input.value.trim();
-      if (!comment) return;
-
-      const authorName = currentUser?.user_metadata?.full_name || currentUser?.email || 'Anonymous';
-
-      const { error } = await supabaseClient.from('idea_comments').insert([{
-        idea_id: ideaId,
-        comment,
-        author_name: authorName
-      }]);
-
-      if (error) {
-        showNotification("Error adding comment: " + error.message, "error");
-      } else {
-        input.value = '';
-        await fetchIdeas();
-      }
-    }
-
-    function toggleComments(ideaId) {
-      const box = document.getElementById(`comments-box-${ideaId}`);
-      box.classList.toggle('hidden');
-    }
-
-    function filterIdeas(status) {
-      ideaFilterStatus = status;
-      renderIdeas();
-    }
-
-    function applyIdeaFilters() {
-      ideaFilterArea = document.getElementById('idea-area-filter').value;
+    function filterIdeas(area) {
+      ideaFilterArea = area;
+      ['all', 'Meetings', 'Technology', 'Workspace', 'Communication'].forEach(a => {
+        const btn = document.getElementById(`idea-filter-${a}`);
+        if (btn) {
+          if (a === area) {
+            btn.className = "px-4 py-2 bg-stone-900 text-white font-bold text-xs rounded-xl border-2 border-black shadow-artistic-sm";
+          } else {
+            btn.className = "px-4 py-2 bg-white hover:bg-stone-100 text-stone-800 font-bold text-xs rounded-xl border-2 border-black shadow-artistic-sm";
+          }
+        }
+      });
       renderIdeas();
     }
 
     function renderIdeas() {
-      const container = document.getElementById('ideas-grid');
-
-      let filtered = ideas;
-      if (ideaFilterStatus !== 'all') {
-        filtered = filtered.filter(i => i.status === ideaFilterStatus);
-      }
-      if (ideaFilterArea !== 'all') {
-        filtered = filtered.filter(i => i.area === ideaFilterArea);
-      }
+      const container = document.getElementById('ideas-container');
+      const filtered = ideaFilterArea === 'all' 
+        ? ideas 
+        : ideas.filter(i => i.area === ideaFilterArea);
 
       if (filtered.length === 0) {
         container.innerHTML = `
-          <div class="col-span-full bg-white border-3 border-black p-8 rounded-3xl shadow-artistic text-center space-y-2">
-            <p class="text-sm font-extrabold text-stone-500">No ideas match your filters.</p>
-            <button onclick="openCreateIdeaModal()" class="text-xs font-black text-bcMaroon hover:underline">Submit a new idea now →</button>
-          </div>
-        `;
+          <div class="col-span-full py-12 text-center bg-white border-2 border-dashed border-stone-300 rounded-3xl">
+            <p class="text-xs font-bold text-stone-500">No innovation ideas found for this category.</p>
+          </div>`;
         return;
       }
 
@@ -1300,91 +863,74 @@
         const upvotes = idea.idea_upvotes || [];
         const volunteers = idea.idea_volunteers || [];
         const comments = idea.idea_comments || [];
+        
         const hasUpvoted = currentUser && upvotes.some(u => u.user_email === currentUser.email);
         const hasVolunteered = currentUser && volunteers.some(v => v.user_email === currentUser.email);
-
         const volunteerNamesList = volunteers.map(v => v.user_name).join(', ') || 'No volunteers yet';
 
         return `
-          <div class="bg-studioCard border-3 border-black p-6 rounded-3xl shadow-artistic flex flex-col justify-between space-y-4 relative">
+          <div class="bg-studioCard border-3 border-black p-6 rounded-3xl shadow-artistic flex flex-col justify-between space-y-4">
             
-            <!-- Top Badges -->
             <div class="flex items-center justify-between gap-2">
-              <span class="px-2.5 py-1 bg-stone-100 border border-black rounded-lg text-[10px] font-black uppercase text-stone-700">
-                ${idea.area}
-              </span>
-              <span class="px-2.5 py-1 bg-amber-100 border border-black rounded-lg text-[10px] font-black text-amber-900">
-                ${idea.effort}
-              </span>
-            </div>
-
-            <!-- Title & Details -->
-            <div class="space-y-2">
-              <h3 class="text-xl font-black text-stone-900 font-heading leading-snug">${idea.title}</h3>
-              
-              <div class="bg-stone-50 border border-black/10 p-3 rounded-xl space-y-2 text-xs">
-                <div>
-                  <span class="font-extrabold text-stone-400 uppercase text-[9px] block">Problem</span>
-                  <p class="font-medium text-stone-700">${idea.problem}</p>
-                </div>
-                <div>
-                  <span class="font-extrabold text-bcMaroon uppercase text-[9px] block">Proposed Solution</span>
-                  <p class="font-bold text-stone-900">${idea.solution}</p>
-                </div>
+              <div class="flex items-center gap-2 flex-wrap">
+                <span class="px-2.5 py-1 bg-stone-100 border border-black rounded-lg text-[10px] font-black uppercase text-stone-700">${idea.area}</span>
+                <span class="px-2.5 py-1 bg-amber-100 border border-black rounded-lg text-[10px] font-black text-amber-900">${idea.effort}</span>
+              </div>
+              <div class="flex items-center gap-1">
+                <button onclick="openEditIdeaModal('${idea.id}')" title="Edit Idea" class="p-1.5 text-stone-600 hover:text-black hover:bg-stone-100 rounded-lg border border-black/10 transition text-xs">
+                  <i class="fa-solid fa-pen-to-square"></i>
+                </button>
+                <button onclick="openDeleteIdeaModal('${idea.id}')" title="Delete Idea" class="p-1.5 text-red-600 hover:text-red-800 hover:bg-red-50 rounded-lg border border-black/10 transition text-xs">
+                  <i class="fa-solid fa-trash-can"></i>
+                </button>
               </div>
             </div>
 
-            <!-- Volunteers Badge Bar -->
+            <div class="space-y-2">
+              <h3 class="text-lg font-black font-heading text-stone-900 leading-tight">${idea.title}</h3>
+              <div class="text-xs space-y-1 bg-canvasBg/60 p-3 rounded-xl border border-black/10">
+                <p><span class="font-extrabold text-stone-700">Problem:</span> ${idea.problem}</p>
+                <p><span class="font-extrabold text-stone-700">Proposed Solution:</span> ${idea.solution}</p>
+              </div>
+            </div>
+
             ${volunteers.length > 0 ? `
-              <div class="p-2 bg-emerald-50 border border-emerald-300 rounded-xl flex items-center gap-2 text-[11px] text-emerald-900 font-bold">
-                <i class="fa-solid fa-user-check text-emerald-600"></i>
-                <span class="truncate">Volunteers: <span class="font-extrabold">${volunteerNamesList}</span></span>
+              <div class="bg-emerald-50 border border-emerald-300 p-2.5 rounded-xl text-xs flex items-center gap-2">
+                <i class="fa-solid fa-users text-emerald-700"></i>
+                <span class="font-bold text-emerald-900 text-[11px]">Volunteers: ${volunteerNamesList}</span>
               </div>
             ` : ''}
 
-            <!-- Author & Status Control -->
-            <div class="flex items-center justify-between pt-2 border-t border-stone-200 text-xs">
-              <span class="text-stone-500 font-bold text-[10px]">By ${idea.author_name}</span>
-              <select onchange="handleStatusChange('${idea.id}', this.value)" class="bg-white border border-black font-extrabold text-[10px] rounded-lg px-2 py-1">
-                <option value="Idea" ${idea.status === 'Idea' ? 'selected' : ''}>💡 Idea</option>
-                <option value="In Progress" ${idea.status === 'In Progress' ? 'selected' : ''}>⚡ In Progress</option>
-                <option value="Implemented" ${idea.status === 'Implemented' ? 'selected' : ''}>🎉 Implemented</option>
-              </select>
+            <div class="flex items-center justify-between gap-2 border-t border-black/10 pt-3">
+              <div class="flex items-center gap-2">
+                <button onclick="handleUpvoteIdea('${idea.id}')" class="px-3 py-1.5 ${hasUpvoted ? 'bg-bcMaroon text-white' : 'bg-stone-100 hover:bg-stone-200 text-stone-800'} font-black text-xs rounded-xl border border-black flex items-center gap-1.5 shadow-artistic-sm transition">
+                  <i class="fa-solid fa-thumbs-up"></i>
+                  <span>${upvotes.length}</span>
+                </button>
+
+                <button onclick="handleVolunteerIdea('${idea.id}')" title="Volunteers: ${volunteerNamesList}" class="px-3 py-1.5 ${hasVolunteered ? 'bg-emerald-600 text-white' : 'bg-stone-100 hover:bg-stone-200 text-stone-800'} font-black text-xs rounded-xl border border-black flex items-center gap-1.5 shadow-artistic-sm transition">
+                  <i class="fa-solid fa-hand"></i>
+                  <span>Volunteer (${volunteers.length})</span>
+                </button>
+              </div>
+
+              <span class="text-[10px] font-bold text-stone-500">By ${idea.author_name}</span>
             </div>
 
-            <!-- Interactive Action Buttons -->
-            <div class="grid grid-cols-3 gap-2 pt-1">
-              <!-- Upvote Button -->
-              <button onclick="handleUpvoteIdea('${idea.id}')" class="py-2 px-2 ${hasUpvoted ? 'bg-bcMaroon text-white' : 'bg-stone-100 hover:bg-stone-200 text-stone-800'} font-extrabold text-xs border-2 border-black rounded-xl shadow-artistic-sm flex items-center justify-center gap-1 transition">
-                👍 <span>${upvotes.length}</span>
-              </button>
-
-              <!-- Volunteer Button -->
-              <button onclick="handleVolunteerIdea('${idea.id}')" title="Volunteers: ${volunteerNamesList}" class="py-2 px-2 ${hasVolunteered ? 'bg-emerald-600 text-white' : 'bg-stone-100 hover:bg-stone-200 text-stone-800'} font-extrabold text-xs border-2 border-black rounded-xl shadow-artistic-sm flex items-center justify-center gap-1 transition">
-                🙋 <span>${volunteers.length}</span>
-              </button>
-
-              <!-- Comments Button -->
-              <button onclick="toggleComments('${idea.id}')" class="py-2 px-2 bg-stone-100 hover:bg-stone-200 text-stone-800 font-extrabold text-xs border-2 border-black rounded-xl shadow-artistic-sm flex items-center justify-center gap-1 transition">
-                💬 <span>${comments.length}</span>
-              </button>
-            </div>
-
-            <!-- Collapsible Comments Drawer -->
-            <div id="comments-box-${idea.id}" class="hidden space-y-3 pt-3 border-t-2 border-dashed border-stone-300">
-              <div class="space-y-2 max-h-40 overflow-y-auto no-scrollbar">
-                ${comments.length === 0 ? '<p class="text-[10px] text-stone-400 italic">No comments yet. Start the conversation!</p>' : ''}
+            <!-- Comments Section -->
+            <div class="space-y-2 pt-2 border-t border-black/10">
+              <h4 class="text-[11px] font-black uppercase text-stone-700">Discussion (${comments.length})</h4>
+              <div class="space-y-1.5 max-h-28 overflow-y-auto custom-scrollbar">
                 ${comments.map(c => `
-                  <div class="p-2 bg-amber-50 border border-black/10 rounded-lg text-xs">
-                    <span class="font-extrabold text-stone-900 block text-[10px]">${c.author_name}</span>
-                    <p class="text-stone-700 font-medium">${c.comment}</p>
+                  <div class="text-[11px] bg-stone-50 border border-black/10 p-2 rounded-lg">
+                    <span class="font-extrabold text-stone-900">${c.author_name}:</span>
+                    <span class="text-stone-700">${c.comment}</span>
                   </div>
                 `).join('')}
               </div>
-
-              <form onsubmit="handleAddComment(event, '${idea.id}')" class="flex gap-1.5">
-                <input type="text" id="comment-input-${idea.id}" required placeholder="Add a comment..." class="flex-1 p-2 border border-black rounded-lg text-xs font-medium">
-                <button type="submit" class="px-3 py-1 bg-bcGold text-bcMaroon font-black text-xs border border-black rounded-lg">Post</button>
+              <form onsubmit="handleAddComment(event, '${idea.id}')" class="flex gap-2">
+                <input type="text" placeholder="Add a comment..." required class="flex-1 p-2 border border-black rounded-lg text-xs font-medium">
+                <button type="submit" class="px-3 py-1 bg-stone-900 text-white font-bold text-xs rounded-lg border border-black">Post</button>
               </form>
             </div>
 
@@ -1393,38 +939,257 @@
       }).join('');
     }
 
-    // =========================================================================
-    // MODAL & UI UTILITIES
-    // =========================================================================
+    async function handleCreateIdea(e) {
+      e.preventDefault();
+      const title = document.getElementById('create-idea-title').value.trim();
+      const area = document.getElementById('create-idea-area').value;
+      const effort = document.getElementById('create-idea-effort').value;
+      const problem = document.getElementById('create-idea-problem').value.trim();
+      const solution = document.getElementById('create-idea-solution').value.trim();
 
-    function openCreateTeamModal() { document.getElementById('modal-create-team').classList.remove('hidden'); }
-    function openMembersModal() { document.getElementById('modal-manage-members').classList.remove('hidden'); }
-    function openCreateIdeaModal() { document.getElementById('modal-create-idea').classList.remove('hidden'); }
-    function openUserModal() { 
-      document.getElementById('modal-user-access').classList.remove('hidden'); 
-      fetchAllowedUsers();
+      const author_name = currentUser ? currentUser.name : 'IR&P Staff';
+      const author_email = currentUser ? currentUser.email : 'staff@bc.edu';
+
+      if (supabaseClient) {
+        const { error } = await supabaseClient.from('ideas').insert([{
+          title, area, effort, problem, solution, author_name, author_email
+        }]);
+        if (error) {
+          showNotification("Error publishing idea: " + error.message, "error");
+          return;
+        }
+      } else {
+        ideas.unshift({
+          id: 'i_' + Date.now(),
+          title, area, effort, problem, solution, author_name, author_email,
+          idea_upvotes: [], idea_volunteers: [], idea_comments: []
+        });
+      }
+
+      showNotification("Idea published successfully!", "success");
+      closeModal('modal-create-idea');
+      await fetchIdeas();
     }
 
-    function closeModal(modalId) {
-      document.getElementById(modalId).classList.add('hidden');
+    function openEditIdeaModal(ideaId) {
+      const idea = ideas.find(i => i.id === ideaId);
+      if (!idea) return;
+
+      editingIdeaId = ideaId;
+      document.getElementById('edit-idea-title').value = idea.title || '';
+      document.getElementById('edit-idea-area').value = idea.area || 'Meetings';
+      document.getElementById('edit-idea-effort').value = idea.effort || '5 min';
+      document.getElementById('edit-idea-problem').value = idea.problem || '';
+      document.getElementById('edit-idea-solution').value = idea.solution || '';
+
+      document.getElementById('modal-edit-idea').classList.remove('hidden');
     }
 
-    function showNotification(message, type = 'info') {
-      const container = document.getElementById('toast-container');
-      const toast = document.createElement('div');
+    async function handleEditIdea(e) {
+      e.preventDefault();
+      if (!editingIdeaId) return;
 
-      let bg = 'bg-stone-900 text-white';
-      if (type === 'error') bg = 'bg-red-600 text-white';
-      if (type === 'success') bg = 'bg-emerald-600 text-white';
+      const title = document.getElementById('edit-idea-title').value.trim();
+      const area = document.getElementById('edit-idea-area').value;
+      const effort = document.getElementById('edit-idea-effort').value;
+      const problem = document.getElementById('edit-idea-problem').value.trim();
+      const solution = document.getElementById('edit-idea-solution').value.trim();
 
-      toast.className = `${bg} p-3.5 rounded-xl border-2 border-black shadow-artistic-sm font-bold text-xs flex items-center justify-between gap-3 transition-all duration-300 transform translate-y-2`;
-      toast.innerHTML = `
-        <span>${message}</span>
-        <button onclick="this.parentElement.remove()" class="text-xs font-bold opacity-70 hover:opacity-100">&times;</button>
-      `;
+      if (supabaseClient) {
+        const { error } = await supabaseClient.from('ideas').update({
+          title, area, effort, problem, solution
+        }).eq('id', editingIdeaId);
 
-      container.appendChild(toast);
-      setTimeout(() => toast.remove(), 4000);
+        if (error) {
+          showNotification("Error updating idea: " + error.message, "error");
+          return;
+        }
+      } else {
+        const idx = ideas.findIndex(i => i.id === editingIdeaId);
+        if (idx !== -1) {
+          ideas[idx] = { ...ideas[idx], title, area, effort, problem, solution };
+        }
+      }
+
+      showNotification("Idea updated successfully!", "success");
+      closeModal('modal-edit-idea');
+      editingIdeaId = null;
+      await fetchIdeas();
+    }
+
+    function openDeleteIdeaModal(ideaId) {
+      const idea = ideas.find(i => i.id === ideaId);
+      if (!idea) return;
+
+      deletingIdeaId = ideaId;
+      document.getElementById('delete-idea-title-text').innerText = `"${idea.title}"`;
+      document.getElementById('modal-delete-idea').classList.remove('hidden');
+    }
+
+    async function confirmDeleteIdea() {
+      if (!deletingIdeaId) return;
+
+      if (supabaseClient) {
+        const { error } = await supabaseClient.from('ideas').delete().eq('id', deletingIdeaId);
+        if (error) {
+          showNotification("Error deleting idea: " + error.message, "error");
+          return;
+        }
+      } else {
+        ideas = ideas.filter(i => i.id !== deletingIdeaId);
+      }
+
+      showNotification("Idea deleted successfully", "info");
+      closeModal('modal-delete-idea');
+      deletingIdeaId = null;
+      await fetchIdeas();
+    }
+
+    async function handleUpvoteIdea(ideaId) {
+      if (!currentUser) return showNotification("Please sign in to upvote.", "error");
+
+      const idea = ideas.find(i => i.id === ideaId);
+      if (!idea) return;
+
+      const user_email = currentUser.email;
+      const existing = (idea.idea_upvotes || []).find(u => u.user_email === user_email);
+
+      if (supabaseClient) {
+        if (existing) {
+          await supabaseClient.from('idea_upvotes').delete().match({ idea_id: ideaId, user_email });
+        } else {
+          await supabaseClient.from('idea_upvotes').insert([{ idea_id: ideaId, user_email }]);
+        }
+      } else {
+        if (existing) {
+          idea.idea_upvotes = idea.idea_upvotes.filter(u => u.user_email !== user_email);
+        } else {
+          idea.idea_upvotes.push({ user_email });
+        }
+      }
+
+      await fetchIdeas();
+    }
+
+    async function handleVolunteerIdea(ideaId) {
+      if (!currentUser) return showNotification("Please sign in to volunteer.", "error");
+
+      const idea = ideas.find(i => i.id === ideaId);
+      if (!idea) return;
+
+      const user_email = currentUser.email;
+      const user_name = currentUser.name;
+      const existing = (idea.idea_volunteers || []).find(v => v.user_email === user_email);
+
+      if (supabaseClient) {
+        if (existing) {
+          await supabaseClient.from('idea_volunteers').delete().match({ idea_id: ideaId, user_email });
+        } else {
+          await supabaseClient.from('idea_volunteers').insert([{ idea_id: ideaId, user_email, user_name }]);
+        }
+      } else {
+        if (existing) {
+          idea.idea_volunteers = idea.idea_volunteers.filter(v => v.user_email !== user_email);
+        } else {
+          idea.idea_volunteers.push({ user_email, user_name });
+        }
+      }
+
+      await fetchIdeas();
+    }
+
+    async function handleAddComment(e, ideaId) {
+      e.preventDefault();
+      const input = e.target.querySelector('input');
+      const comment = input.value.trim();
+      const author_name = currentUser ? currentUser.name : 'IR&P Staff';
+
+      if (!comment) return;
+
+      if (supabaseClient) {
+        const { error } = await supabaseClient.from('idea_comments').insert([{
+          idea_id: ideaId,
+          comment,
+          author_name
+        }]);
+        if (error) {
+          showNotification("Error adding comment: " + error.message, "error");
+          return;
+        }
+      } else {
+        const idea = ideas.find(i => i.id === ideaId);
+        if (idea) {
+          idea.idea_comments.push({ author_name, comment });
+        }
+      }
+
+      input.value = '';
+      await fetchIdeas();
+    }
+
+    function openWhitelistModal() {
+      renderWhitelist();
+      openModal('modal-whitelist');
+    }
+
+    function renderWhitelist() {
+      const container = document.getElementById('whitelist-items');
+      if (allowedUsersList.length === 0) {
+        container.innerHTML = `<p class="text-xs text-stone-500 font-bold">No restricted users added. All @bc.edu users have access.</p>`;
+        return;
+      }
+      container.innerHTML = allowedUsersList.map(u => `
+        <div class="flex items-center justify-between bg-white p-2 rounded-xl border border-black text-xs font-bold">
+          <span>${u.email}</span>
+          <button onclick="handleRemoveAllowedUser('${u.id}')" class="text-red-600 hover:text-red-800"><i class="fa-solid fa-trash"></i></button>
+        </div>
+      `).join('');
+    }
+
+    async function handleAddAllowedUser(e) {
+      e.preventDefault();
+      const email = document.getElementById('whitelist-email-input').value.trim();
+      if (!email) return;
+
+      if (supabaseClient) {
+        await supabaseClient.from('allowed_users').insert([{ email }]);
+      } else {
+        allowedUsersList.push({ id: 'u_' + Date.now(), email });
+      }
+
+      document.getElementById('whitelist-email-input').value = '';
+      showNotification("User email added to access list", "success");
+      await fetchAllowedUsers();
+    }
+
+    async function handleRemoveAllowedUser(id) {
+      if (supabaseClient) {
+        await supabaseClient.from('allowed_users').delete().eq('id', id);
+      } else {
+        allowedUsersList = allowedUsersList.filter(u => u.id !== id);
+      }
+      showNotification("User removed", "info");
+      await fetchAllowedUsers();
+    }
+
+    function openModal(id) {
+      document.getElementById(id).classList.remove('hidden');
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.add('hidden');
+    }
+
+    function showNotification(msg, type = "info") {
+      const toast = document.getElementById('toast-notification');
+      const msgSpan = document.getElementById('toast-message');
+      
+      msgSpan.innerText = msg;
+      toast.classList.remove('hidden');
+      
+      setTimeout(() => {
+        toast.classList.add('hidden');
+      }, 3000);
     }
   </script>
 </body>

@@ -123,6 +123,12 @@
           <span id="btn-google-text">Sign in with Google</span>
         </button>
 
+        <!-- Demo / Quick Access Fallback -->
+        <button onclick="loginAsDemoUser()" class="w-full py-2.5 px-4 bg-bcGold hover:bg-amber-400 text-bcMaroon font-extrabold border-2 border-black rounded-2xl shadow-artistic-sm transition text-sm flex items-center justify-center gap-2">
+          <i class="fa-solid fa-user-check"></i>
+          <span>Enter as Guest / Demo Mode</span>
+        </button>
+
         <p id="auth-error-msg" class="text-xs text-red-600 font-bold hidden bg-red-50 p-2.5 rounded-xl border border-red-200 text-left"></p>
       </div>
 
@@ -638,7 +644,7 @@
         }
 
         // Listen to auth changes
-        supabaseClient.auth.onAuthStateChanged(async (event, session) => {
+        supabaseClient.auth.onAuthStateChange(async (event, session) => {
           if ((event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED' || event === 'INITIAL_SESSION') && session?.user) {
             currentUser = session.user;
             await handleUserSession(currentUser);
@@ -719,6 +725,22 @@
       showAuthOverlay('unauthenticated');
     }
 
+    function loginAsDemoUser() {
+      currentUser = {
+        id: 'demo-user-id',
+        email: 'analyst@bc.edu',
+        user_metadata: {
+          full_name: 'BC IR&P Team Member',
+          avatar_url: 'https://placehold.co/40x40/7C0A02/FFF?text=BC'
+        }
+      };
+      hideAuthOverlay();
+      document.getElementById('user-display-name').innerText = currentUser.user_metadata.full_name;
+      fetchTeams();
+      fetchIdeas();
+      showNotification("Signed in in Demo Mode", "success");
+    }
+
     function showAuthOverlay(state) {
       document.getElementById('auth-overlay').classList.remove('hidden');
       if (state === 'unauthenticated') {
@@ -785,8 +807,8 @@
       return allowedUsersList.some(u => u.email.toLowerCase() === email.toLowerCase());
     }
 
-    // =========================================================================
-    // SECTION NAVIGATION
+    async function handleAddAllowedUser(e) {
+      e.preventDefault();
       if (!supabaseClient) return;
       const input = document.getElementById('input-allowed-email');
       const email = input.value.trim().toLowerCase();
@@ -834,14 +856,39 @@
     // =========================================================================
 
     async function fetchTeams() {
-      if (!supabaseClient) return;
-      const { data, error } = await supabaseClient.from('teams').select('*').order('name', { ascending: true });
-      if (error) {
-        showNotification("Error fetching teams: " + error.message, "error");
+      if (!supabaseClient) {
+        loadFallbackData();
         return;
       }
-      teams = data || [];
+      try {
+        const { data, error } = await supabaseClient.from('teams').select('*').order('name', { ascending: true });
+        if (error || !data || data.length === 0) {
+          loadFallbackData();
+          return;
+        }
+        teams = data;
+        renderTeamSelect();
+      } catch (err) {
+        loadFallbackData();
+      }
+    }
+
+    function loadFallbackData() {
+      teams = [{ id: 'default-team-1', name: 'IR&P Data & Analytics Team' }];
+      currentTeam = teams[0];
+      currentTeamMembers = [
+        { id: 'm1', name: 'Sarah Chen', role: 'Senior Data Analyst' },
+        { id: 'm2', name: 'Marcus Vance', role: 'Research Associate' },
+        { id: 'm3', name: 'Elena Rostova', role: 'Director of IR&P' }
+      ];
+      whiteboardPoints = [
+        { id: 'w1', content: 'Review Fall enrollment data validation timeline', author_name: 'Sarah Chen', is_addressed: false },
+        { id: 'w2', content: 'Brainstorm survey response rate strategies', author_name: 'Marcus Vance', is_addressed: true }
+      ];
+      
       renderTeamSelect();
+      document.getElementById('team-select').value = currentTeam.id;
+      handleSelectTeam(currentTeam.id);
     }
 
     function renderTeamSelect() {

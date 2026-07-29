@@ -158,15 +158,11 @@
       <div id="login-error" class="mt-4 p-3 bg-red-100 border-2 border-red-800 text-red-800 text-xs font-semibold rounded-lg hidden"></div>
     </div>
 
-    <!-- MAIN APP WRAPPER (HIDDEN UNTIL AUTHENTICATED) -->
+    <!-- MAIN APP WRAPPER -->
     <div id="view-app" class="hidden">
 
-      <!-- ==================================================================== -->
       <!-- SECTION 1: TEAM CHECKINS -->
-      <!-- ==================================================================== -->
       <section id="section-checkins" class="space-y-8">
-        
-        <!-- Team Selector Bar -->
         <div class="studio-card p-6 bg-white flex flex-col md:flex-row items-center justify-between gap-4">
           <div class="flex items-center space-x-4 w-full md:w-auto">
             <div class="w-12 h-12 bg-bc-gold border-2 border-bc-dark rounded-xl flex items-center justify-center text-bc-dark text-xl font-bold shadow-[2px_2px_0px_#111827]">
@@ -175,7 +171,6 @@
             <div>
               <label class="block text-xs font-bold uppercase tracking-wider text-gray-500">Active Team</label>
               <select id="team-select" onchange="handleSelectTeam(this.value)" class="mt-1 font-heading font-bold text-lg bg-gray-50 border-2 border-bc-dark rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-bc-maroon">
-                <!-- Teams loaded dynamically -->
               </select>
             </div>
           </div>
@@ -190,10 +185,7 @@
           </div>
         </div>
 
-        <!-- Checkin Grid: Carousel + Whiteboard -->
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-
-          <!-- Left Column: Meeting Carousel (8 cols) -->
           <div class="lg:col-span-7 studio-card p-6 bg-white space-y-6">
             <div class="flex justify-between items-center border-b-2 border-gray-200 pb-4">
               <div>
@@ -207,12 +199,9 @@
               </button>
             </div>
 
-            <!-- Carousel Display Box -->
             <div id="carousel-box" class="relative bg-bc-cream border-2 border-bc-dark rounded-xl p-8 text-center min-h-[280px] flex flex-col justify-between shadow-[inset_0px_2px_4px_rgba(0,0,0,0.05)]">
-              <!-- Content rendered dynamically -->
             </div>
 
-            <!-- Carousel Controls -->
             <div class="flex items-center justify-between pt-2">
               <button id="carousel-prev-btn" onclick="prevCarouselMember()" class="studio-btn-secondary px-4 py-2 text-sm flex items-center">
                 <i class="fa-solid fa-arrow-left mr-2"></i>Previous
@@ -226,7 +215,6 @@
             </div>
           </div>
 
-          <!-- Right Column: Virtual Whiteboard (5 cols) -->
           <div class="lg:col-span-5 studio-card p-6 bg-white flex flex-col space-y-4">
             <div class="border-b-2 border-gray-200 pb-3 flex justify-between items-center">
               <div>
@@ -240,47 +228,34 @@
               </button>
             </div>
 
-            <!-- Notes List -->
             <div id="whiteboard-notes-list" class="flex-1 space-y-3 max-h-[380px] overflow-y-auto pr-1">
-              <!-- Notes dynamically loaded -->
             </div>
           </div>
-
         </div>
       </section>
 
-      <!-- ==================================================================== -->
       <!-- SECTION 2: BETTER OFFICE -->
-      <!-- ==================================================================== -->
       <section id="section-better-office" class="hidden space-y-8">
-        
-        <!-- Section Header -->
         <div class="studio-card p-6 bg-white flex flex-col md:flex-row items-center justify-between gap-4">
           <div>
             <h2 class="text-2xl font-extrabold font-heading text-bc-dark flex items-center">
               <i class="fa-solid fa-rocket text-bc-maroon mr-3"></i>Better Office Ideas
             </h2>
-            <p class="text-sm text-gray-600 mt-1">Submit, upvote, and volunteer for office improvements and innovative concepts.</p>
+            <p class="text-sm text-gray-600 mt-1">Submit, upvote, comment, and volunteer for office improvements and innovative concepts.</p>
           </div>
           <button onclick="openCreateIdeaModal()" class="studio-btn-primary px-5 py-2.5 flex items-center text-sm">
             <i class="fa-solid fa-lightbulb mr-2"></i>Submit New Idea
           </button>
         </div>
 
-        <!-- Ideas Grid -->
         <div id="ideas-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <!-- Idea cards loaded dynamically -->
         </div>
       </section>
 
     </div>
   </main>
 
-  <!-- ==================================================================== -->
   <!-- MODALS -->
-  <!-- ==================================================================== -->
-
-  <!-- Modal: Create Team -->
   <div id="modal-create-team" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
     <div class="studio-card max-w-md w-full bg-white p-6 space-y-4">
       <div class="flex justify-between items-center border-b-2 border-gray-200 pb-3">
@@ -290,7 +265,7 @@
       <form onsubmit="handleCreateTeam(event)" class="space-y-4">
         <div>
           <label class="block text-xs font-bold uppercase mb-1">Team Name</label>
-          <input type="text" id="new-team-name" required placeholder="e.g. Analytics & Reporting" class="w-full border-2 border-bc-dark rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-bc-maroon font-medium">
+          <input type="text" id="new-team-name" required placeholder="e.g. Analytics & Reporting" class="w-full border-2 border-bc-dark rounded-lg p-2.5 font-medium">
         </div>
         <div class="flex justify-end space-x-2 pt-2">
           <button type="button" onclick="closeModal('modal-create-team')" class="studio-btn-secondary px-4 py-2 text-xs">Cancel</button>
@@ -300,32 +275,24 @@
     </div>
   </div>
 
-  <!-- Modal: Manage Team Members -->
   <div id="modal-manage-team" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
     <div class="studio-card max-w-lg w-full bg-white p-6 space-y-4">
       <div class="flex justify-between items-center border-b-2 border-gray-200 pb-3">
         <h3 class="text-xl font-bold font-heading">Manage Team Members</h3>
         <button onclick="closeModal('modal-manage-team')" class="text-gray-400 hover:text-gray-700 text-xl font-bold">&times;</button>
       </div>
-      
-      <!-- Add Member Input -->
       <form onsubmit="handleAddTeamMember(event)" class="flex gap-2">
-        <input type="text" id="new-member-name" required placeholder="Member name..." class="flex-1 border-2 border-bc-dark rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-bc-maroon">
+        <input type="text" id="new-member-name" required placeholder="Member name..." class="flex-1 border-2 border-bc-dark rounded-lg p-2 text-sm">
         <button type="submit" class="studio-btn-gold px-4 py-2 text-xs">Add</button>
       </form>
-
-      <!-- Existing Members List -->
       <div id="team-members-list" class="space-y-2 max-h-60 overflow-y-auto border-2 border-gray-200 rounded-lg p-3">
-        <!-- Members dynamically populated -->
       </div>
-
       <div class="flex justify-end pt-2">
         <button onclick="closeModal('modal-manage-team')" class="studio-btn-secondary px-4 py-2 text-xs">Done</button>
       </div>
     </div>
   </div>
 
-  <!-- Modal: Add Whiteboard Note -->
   <div id="modal-add-point" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
     <div class="studio-card max-w-md w-full bg-white p-6 space-y-4">
       <div class="flex justify-between items-center border-b-2 border-gray-200 pb-3">
@@ -335,7 +302,7 @@
       <form onsubmit="handleAddWhiteboardPoint(event)" class="space-y-4">
         <div>
           <label class="block text-xs font-bold uppercase mb-1">Topic / Agenda Point</label>
-          <textarea id="point-content" required rows="3" placeholder="What would you like to discuss?" class="w-full border-2 border-bc-dark rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-bc-maroon"></textarea>
+          <textarea id="point-content" required rows="3" placeholder="What would you like to discuss?" class="w-full border-2 border-bc-dark rounded-lg p-2.5 text-sm"></textarea>
         </div>
         <div class="flex justify-end space-x-2 pt-2">
           <button type="button" onclick="closeModal('modal-add-point')" class="studio-btn-secondary px-4 py-2 text-xs">Cancel</button>
@@ -345,7 +312,6 @@
     </div>
   </div>
 
-  <!-- Modal: Create Idea -->
   <div id="modal-create-idea" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
     <div class="studio-card max-w-lg w-full bg-white p-6 space-y-4 max-h-[90vh] overflow-y-auto">
       <div class="flex justify-between items-center border-b-2 border-gray-200 pb-3">
@@ -392,7 +358,6 @@
     </div>
   </div>
 
-  <!-- Modal: Edit Idea -->
   <div id="modal-edit-idea" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
     <div class="studio-card max-w-lg w-full bg-white p-6 space-y-4 max-h-[90vh] overflow-y-auto">
       <div class="flex justify-between items-center border-b-2 border-gray-200 pb-3">
@@ -440,7 +405,6 @@
     </div>
   </div>
 
-  <!-- Modal: Delete Confirmation -->
   <div id="modal-delete-idea" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
     <div class="studio-card max-w-sm w-full bg-white p-6 text-center space-y-4">
       <div class="w-12 h-12 bg-red-100 text-red-600 rounded-full border-2 border-bc-dark flex items-center justify-center mx-auto text-xl font-bold">
@@ -456,18 +420,11 @@
     </div>
   </div>
 
-
-  <!-- ==================================================================== -->
   <!-- JAVASCRIPT LOGIC -->
-  <!-- ==================================================================== -->
   <script>
-    // -------------------------------------------------------------------
-    // 1. SUPABASE INITIALIZATION
-    // -------------------------------------------------------------------
-    const SUPABASE_URL = "https://uqblyogrcsrbgxsncncu.supabase.co"; // Replace with your URL if custom
-    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVxYmx5b2dyY3NyYmd4c25jbmN1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIzMDEyNTMsImV4cCI6MjA5Nzg3NzI1M30.AKjE2io4qebY_jLHO5HakU6yZh1TdMne71F-muJGpLM";                      // Replace with your Key if custom
+    const SUPABASE_URL = "https://uqblyogrcsrbgxsncncu.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVxYmx5b2dyY3NyYmd4c25jbmN1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIzMDEyNTMsImV4cCI6MjA5Nzg3NzI1M30.AKjE2io4qebY_jLHO5HakU6yZh1TdMne71F-muJGpLM";
     
-    // Initialize Supabase Client
     let supabaseClient;
     try {
       supabaseClient = supabase.createClient(
@@ -478,9 +435,6 @@
       console.warn("Supabase init warning:", err);
     }
 
-    // -------------------------------------------------------------------
-    // 2. STATE MANAGEMENT
-    // -------------------------------------------------------------------
     let currentUser = null;
     let currentTab = 'checkins';
     
@@ -489,10 +443,10 @@
     let teamMembers = [];
     let whiteboardPoints = [];
     let ideas = [];
+    let expandedComments = {}; // Track expanded comment sections per idea
 
     let carouselIndex = 0;
 
-    // 35 Creative Checkin Questions
     const CHECKIN_QUESTIONS = [
       "What do you need from us today?",
       "What is your primary focus for this week?",
@@ -514,7 +468,7 @@
       "What's a key milestone coming up for your current work?",
       "What's a question you've been pondering about our current goals?",
       "What is one thing we should stop doing or simplify?",
-      "What's the best advice or tip you've received recently?",
+      "What's the best advice or tip you'received recently?",
       "How can the team support your well-being this week?",
       "What data point or report surprised you recently?",
       "What is one commitment you're making before our next checkin?",
@@ -531,9 +485,6 @@
       "What's one thing you appreciate about our office culture?"
     ];
 
-    // -------------------------------------------------------------------
-    // 3. APPLICATION INITIALIZATION & AUTH
-    // -------------------------------------------------------------------
     document.addEventListener('DOMContentLoaded', async () => {
       initAuthListener();
     });
@@ -541,7 +492,6 @@
     async function initAuthListener() {
       if (!supabaseClient) return;
 
-      // Check current session
       const { data: { session } } = await supabaseClient.auth.getSession();
       if (session) {
         handleUserAuthenticated(session.user);
@@ -549,7 +499,6 @@
         showLoginView();
       }
 
-      // Listen for auth state changes
       supabaseClient.auth.onAuthStateChange((event, session) => {
         if (session) {
           handleUserAuthenticated(session.user);
@@ -582,9 +531,7 @@
       if (!supabaseClient) return;
       const { error } = await supabaseClient.auth.signInWithOAuth({
         provider: 'google',
-        options: {
-          redirectTo: window.location.origin
-        }
+        options: { redirectTo: window.location.origin }
       });
       if (error) {
         const errEl = document.getElementById('login-error');
@@ -614,9 +561,6 @@
       `;
     }
 
-    // -------------------------------------------------------------------
-    // 4. DATA FETCHING (SUPABASE)
-    // -------------------------------------------------------------------
     async function loadInitialData() {
       await fetchTeams();
       await fetchIdeas();
@@ -695,9 +639,6 @@
       }
     }
 
-    // -------------------------------------------------------------------
-    // 5. TAB SWITCHING
-    // -------------------------------------------------------------------
     function switchTab(tab) {
       currentTab = tab;
       const checkinsBtn = document.getElementById('tab-checkins-btn');
@@ -718,9 +659,6 @@
       }
     }
 
-    // -------------------------------------------------------------------
-    // 6. CHECKINS: TEAMS & CAROUSEL
-    // -------------------------------------------------------------------
     function renderTeamDropdown() {
       const select = document.getElementById('team-select');
       if (teams.length === 0) {
@@ -768,7 +706,6 @@
       if (carouselIndex >= teamMembers.length) carouselIndex = teamMembers.length - 1;
 
       const currentMember = teamMembers[carouselIndex];
-      // Get deterministic random question per member view
       const randomQuestion = CHECKIN_QUESTIONS[(carouselIndex * 7 + currentMember.name.length) % CHECKIN_QUESTIONS.length];
 
       counterEl.innerText = `Member ${carouselIndex + 1} of ${teamMembers.length}`;
@@ -805,7 +742,6 @@
 
     function shuffleTeamRotation() {
       if (teamMembers.length <= 1) return;
-      // Fisher-Yates shuffle
       for (let i = teamMembers.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [teamMembers[i], teamMembers[j]] = [teamMembers[j], teamMembers[i]];
@@ -814,9 +750,6 @@
       renderCarousel();
     }
 
-    // -------------------------------------------------------------------
-    // 7. CHECKINS: VIRTUAL WHITEBOARD
-    // -------------------------------------------------------------------
     function renderWhiteboard() {
       const container = document.getElementById('whiteboard-notes-list');
       if (whiteboardPoints.length === 0) {
@@ -879,9 +812,11 @@
       }
     }
 
-    // -------------------------------------------------------------------
-    // 8. BETTER OFFICE: IDEAS & VOTING
-    // -------------------------------------------------------------------
+    function toggleComments(ideaId) {
+      expandedComments[ideaId] = !expandedComments[ideaId];
+      renderIdeas();
+    }
+
     function renderIdeas() {
       const container = document.getElementById('ideas-grid');
       if (ideas.length === 0) {
@@ -901,6 +836,7 @@
         const upvotes = idea.idea_upvotes || [];
         const volunteers = idea.idea_volunteers || [];
         const comments = idea.idea_comments || [];
+        const isCommentsOpen = !!expandedComments[idea.id];
 
         const hasUpvoted = upvotes.some(v => v.user_email === userEmail);
         const hasVolunteered = volunteers.some(v => v.user_email === userEmail);
@@ -909,7 +845,6 @@
         return `
           <div class="studio-card p-6 bg-white flex flex-col justify-between space-y-4">
             <div class="space-y-3">
-              <!-- Header Badges -->
               <div class="flex justify-between items-start gap-2">
                 <span class="bg-bc-gold/20 text-bc-dark border border-bc-gold font-bold px-2.5 py-0.5 rounded-full text-[10px] uppercase tracking-wider">
                   ${escapeHtml(idea.area)}
@@ -942,7 +877,6 @@
             </div>
 
             <div class="space-y-3 pt-2 border-t border-gray-100">
-              <!-- Volunteers List -->
               ${volunteers.length > 0 ? `
                 <div class="text-[11px] bg-gray-50 p-2 rounded-lg border border-gray-200">
                   <span class="font-bold text-bc-dark block mb-1"><i class="fa-solid fa-hand-raising text-bc-maroon mr-1"></i> Volunteers (${volunteers.length}):</span>
@@ -952,18 +886,54 @@
                 </div>
               ` : ''}
 
-              <!-- Actions -->
+              <!-- Upvote, Volunteer, Comments Toggles -->
               <div class="flex items-center justify-between text-xs pt-1">
-                <button onclick="handleUpvoteIdea('${idea.id}')" class="${hasUpvoted ? 'bg-bc-maroon text-white' : 'studio-btn-secondary'} px-3 py-1.5 rounded-lg font-bold flex items-center space-x-1">
-                  <i class="fa-solid fa-thumbs-up"></i>
-                  <span>${upvotes.length}</span>
-                </button>
+                <div class="flex items-center space-x-2">
+                  <button onclick="handleUpvoteIdea('${idea.id}')" class="${hasUpvoted ? 'bg-bc-maroon text-white' : 'studio-btn-secondary'} px-3 py-1.5 rounded-lg font-bold flex items-center space-x-1">
+                    <i class="fa-solid fa-thumbs-up"></i>
+                    <span>${upvotes.length}</span>
+                  </button>
 
-                <button onclick="handleVolunteerIdea('${idea.id}')" class="${hasVolunteered ? 'bg-bc-gold text-bc-dark' : 'studio-btn-secondary'} px-3 py-1.5 rounded-lg font-bold flex items-center space-x-1">
-                  <i class="fa-solid fa-hand-raising"></i>
-                  <span>${hasVolunteered ? 'Volunteered' : 'Volunteer'}</span>
+                  <button onclick="handleVolunteerIdea('${idea.id}')" class="${hasVolunteered ? 'bg-bc-gold text-bc-dark' : 'studio-btn-secondary'} px-3 py-1.5 rounded-lg font-bold flex items-center space-x-1">
+                    <i class="fa-solid fa-hand-raising"></i>
+                    <span>${hasVolunteered ? 'Volunteered' : 'Volunteer'}</span>
+                  </button>
+                </div>
+
+                <button onclick="toggleComments('${idea.id}')" class="studio-btn-secondary px-3 py-1.5 rounded-lg font-bold flex items-center space-x-1">
+                  <i class="fa-solid fa-comment"></i>
+                  <span>${comments.length}</span>
                 </button>
               </div>
+
+              <!-- COMMENTS SECTION (Collapsible) -->
+              ${isCommentsOpen ? `
+                <div class="bg-gray-50 border-2 border-bc-dark rounded-xl p-3 space-y-3 text-xs">
+                  <div class="font-bold text-bc-dark flex items-center justify-between border-b border-gray-200 pb-1.5">
+                    <span><i class="fa-solid fa-comments text-bc-maroon mr-1"></i> Comments (${comments.length})</span>
+                  </div>
+
+                  <!-- Comment List -->
+                  <div class="space-y-2 max-h-40 overflow-y-auto pr-1">
+                    ${comments.length === 0 ? `
+                      <p class="text-gray-400 text-[11px] italic">No comments yet. Start the conversation!</p>
+                    ` : comments.map(c => `
+                      <div class="bg-white p-2 rounded-lg border border-gray-200 space-y-0.5">
+                        <div class="flex justify-between items-center text-[10px]">
+                          <span class="font-bold text-bc-dark">${escapeHtml(c.author_name || 'Anonymous')}</span>
+                        </div>
+                        <p class="text-gray-700 text-xs">${escapeHtml(c.content || c.comment_text || '')}</p>
+                      </div>
+                    `).join('')}
+                  </div>
+
+                  <!-- Add Comment Form -->
+                  <form onsubmit="handleAddComment(event, '${idea.id}')" class="flex items-center gap-1.5 pt-1">
+                    <input type="text" id="comment-input-${idea.id}" required placeholder="Add a comment..." class="flex-1 border-2 border-bc-dark rounded-lg p-1.5 text-xs">
+                    <button type="submit" class="studio-btn-primary px-3 py-1.5 text-xs">Post</button>
+                  </form>
+                </div>
+              ` : ''}
 
               <!-- Author info -->
               <div class="text-[10px] text-gray-400 font-medium text-right">
@@ -973,6 +943,32 @@
           </div>
         `;
       }).join('');
+    }
+
+    async function handleAddComment(e, ideaId) {
+      e.preventDefault();
+      if (!currentUser) return;
+
+      const inputEl = document.getElementById(`comment-input-${ideaId}`);
+      if (!inputEl) return;
+      const content = inputEl.value.trim();
+      if (!content) return;
+
+      const authorName = currentUser.user_metadata?.full_name || currentUser.email.split('@')[0];
+
+      const { error } = await supabaseClient
+        .from('idea_comments')
+        .insert([{
+          idea_id: ideaId,
+          content: content,
+          author_name: authorName,
+          author_email: currentUser.email
+        }]);
+
+      if (!error) {
+        inputEl.value = '';
+        await fetchIdeas();
+      }
     }
 
     async function handleCreateIdea(e) {
@@ -1057,7 +1053,6 @@
       if (!currentUser) return;
       const userEmail = currentUser.email;
 
-      // Check if already upvoted
       const idea = ideas.find(i => i.id === ideaId);
       const existing = idea?.idea_upvotes?.find(v => v.user_email === userEmail);
 
@@ -1085,9 +1080,6 @@
       await fetchIdeas();
     }
 
-    // -------------------------------------------------------------------
-    // 9. TEAM CREATION & MEMBER MANAGEMENT MODALS
-    // -------------------------------------------------------------------
     function openCreateTeamModal() { openModal('modal-create-team'); }
     function openAddPointModal() { openModal('modal-add-point'); }
     function openCreateIdeaModal() { openModal('modal-create-idea'); }
@@ -1165,9 +1157,6 @@
       }
     }
 
-    // -------------------------------------------------------------------
-    // 10. UTILITIES
-    // -------------------------------------------------------------------
     function openModal(id) {
       document.getElementById(id).classList.remove('hidden');
     }

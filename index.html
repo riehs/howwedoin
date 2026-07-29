@@ -207,6 +207,27 @@
     </div>
   </header>
 
+  <!-- AUTH SHIELD / ACCESS GATEWAY (Only visible if not logged in or not authorized) -->
+  <div id="auth-shield" class="fixed inset-0 bg-studio-plum/95 backdrop-blur-md z-50 flex items-center justify-center p-4 text-white">
+    <div class="art-card bg-white text-studio-ink rounded-3xl p-8 sm:p-12 max-w-md w-full text-center space-y-6 shadow-2xl relative">
+      <div class="w-16 h-16 rounded-2xl art-gradient-1 border-2 border-studio-ink flex items-center justify-center font-serif text-3xl mx-auto shadow-md">
+        🔒
+      </div>
+      <div class="space-y-2">
+        <h2 id="auth-shield-title" class="text-2xl font-serif font-bold text-studio-ink">Authentication Required</h2>
+        <p id="auth-shield-msg" class="text-xs text-stone-600 font-medium leading-relaxed">
+          Please sign in with your Google account to access the BC IR&P Check-in & Innovation Studio.
+        </p>
+      </div>
+      <div id="auth-shield-actions" class="pt-2">
+        <button onclick="loginWithGoogle()" class="w-full py-3 px-6 art-gradient-1 text-studio-ink font-black text-sm rounded-2xl art-button flex items-center justify-center space-x-2">
+          <i data-lucide="log-in" class="w-4 h-4"></i>
+          <span>Sign In with Google</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- Main Container -->
   <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10">
 
@@ -766,18 +787,54 @@
         // Listen to Supabase auth state changes
         supabaseClient.auth.onAuthStateChange(async (event, session) => {
           currentUser = session?.user || null;
-          await fetchAllowedUsers();
+          
+          const authShield = document.getElementById('auth-shield');
+          const shieldTitle = document.getElementById('auth-shield-title');
+          const shieldMsg = document.getElementById('auth-shield-msg');
+          const shieldActions = document.getElementById('auth-shield-actions');
 
-          // Check Whitelist Access
-          if (currentUser && allowedUsers.length > 0) {
-            const isAllowed = allowedUsers.some(u => u.email.toLowerCase() === currentUser.email.toLowerCase());
-            if (!isAllowed) {
-              alert(`Access Restricted: ${currentUser.email} is not on the allowed Google user list.`);
-              await supabaseClient.auth.signOut();
-              currentUser = null;
+          if (!currentUser) {
+            // Require login before showing app content
+            if (authShield) authShield.classList.remove('hidden');
+            if (shieldTitle) shieldTitle.textContent = "Authentication Required";
+            if (shieldMsg) shieldMsg.textContent = "Please sign in with your Google account to access the BC IR&P Check-in & Innovation Studio.";
+            if (shieldActions) {
+              shieldActions.innerHTML = `
+                <button onclick="loginWithGoogle()" class="w-full py-3 px-6 art-gradient-1 text-studio-ink font-black text-sm rounded-2xl art-button flex items-center justify-center space-x-2">
+                  <i data-lucide="log-in" class="w-4 h-4"></i>
+                  <span>Sign In with Google</span>
+                </button>
+              `;
             }
+            renderUserProfile();
+            lucide.createIcons();
+            return;
           }
 
+          // User is logged in, check whitelist in allowed_users
+          await fetchAllowedUsers();
+
+          const isAllowed = allowedUsers.some(u => u.email.toLowerCase() === currentUser.email.toLowerCase());
+
+          if (!isAllowed) {
+            if (authShield) authShield.classList.remove('hidden');
+            if (shieldTitle) shieldTitle.textContent = "Access Restricted";
+            if (shieldMsg) shieldMsg.textContent = `The account (${currentUser.email}) is not listed in the allowed users database. Please contact an administrator to request access.`;
+            if (shieldActions) {
+              shieldActions.innerHTML = `
+                <button onclick="logout()" class="w-full py-3 px-6 bg-stone-100 hover:bg-stone-200 text-studio-ink font-bold text-sm rounded-2xl art-button flex items-center justify-center space-x-2 border-2 border-studio-ink">
+                  <i data-lucide="log-out" class="w-4 h-4"></i>
+                  <span>Sign Out (${currentUser.email})</span>
+                </button>
+              `;
+            }
+            renderUserProfile();
+            lucide.createIcons();
+            return;
+          }
+
+          // User is logged in AND authorized
+          if (authShield) authShield.classList.add('hidden');
           renderUserProfile();
           await fetchTeams();
           await fetchIdeas();

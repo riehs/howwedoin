@@ -70,6 +70,7 @@
             display: flex;
             gap: 1rem;
             margin: 2rem 2rem 1rem 2rem;
+            justify-content: center;
         }
 
         .tab-btn {
@@ -378,6 +379,29 @@
             border: 2px solid transparent;
             border-radius: 6px;
         }
+
+        /* Theme Modes */
+        body.theme-dark {
+            --bg-color: #121824;
+            --surface-color: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #475569;
+            --shadow-flat: 4px 4px 0px #0f172a;
+            --shadow-hover: 6px 6px 0px #0f172a;
+        }
+
+        body.theme-bc {
+            --bg-color: #240403;
+            --surface-color: #4a0907;
+            --text-main: #fffdf0;
+            --text-muted: #fde68a;
+            --border-color: #eaaa00;
+            --bc-maroon: #8a100b;
+            --bc-gold: #f59e0b;
+            --shadow-flat: 4px 4px 0px #eaaa00;
+            --shadow-hover: 6px 6px 0px #f59e0b;
+        }
     </style>
 </head>
 <body>
@@ -387,8 +411,13 @@
             <h1>How We Doin?</h1>
             <span class="brand-tag">BC IR&P</span>
         </div>
-        <div id="user-nav">
-            <span id="user-email-display" style="font-weight: 600; margin-right: 1rem;"></span>
+        <div id="user-nav" style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">
+            <div class="theme-switcher" style="display:flex; gap:0.25rem; margin-right:0.5rem;">
+                <button class="btn" style="padding:0.3rem 0.5rem; font-size:0.75rem;" onclick="setTheme('light')" title="Light Mode">☀️ Light</button>
+                <button class="btn" style="padding:0.3rem 0.5rem; font-size:0.75rem;" onclick="setTheme('dark')" title="Dark Mode">🌙 Dark</button>
+                <button class="btn" style="padding:0.3rem 0.5rem; font-size:0.75rem; background:var(--bc-gold); color:#121212;" onclick="setTheme('bc')" title="BC Mode">🦅 BC</button>
+            </div>
+            <span id="user-email-display" style="font-weight: 600; margin-right: 0.5rem;"></span>
             <button class="btn" onclick="openManageUsersModal()" style="margin-right: 0.5rem;">👥 Access Control</button>
             <button class="btn btn-danger" id="logout-btn" onclick="handleLogout()">Logout</button>
         </div>
@@ -432,6 +461,18 @@
                             <button class="btn" onclick="openModal('add-member-modal')">+ Add Member</button>
                         </div>
                         <div id="member-badges" class="badge-list"></div>
+                    </div>
+
+                    <!-- Spotlight Assignment Section -->
+                    <div class="card" style="border: 3px solid var(--bc-gold); background: linear-gradient(135deg, rgba(234, 170, 0, 0.1) 0%, rgba(138, 16, 11, 0.05) 100%);">
+                        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
+                            <div>
+                                <h3 style="display:flex; align-items:center; gap:0.5rem;">🎯 Spotlight Assignment <span class="tag" style="background:var(--bc-gold);">1 Max Per Team</span></h3>
+                                <p style="font-size:0.85rem; color:var(--text-muted); margin-top:0.2rem;">Single key priority action item assigned to one team member.</p>
+                            </div>
+                            <button class="btn btn-primary" onclick="openSpotlightModal()">+ Set Spotlight Assignment</button>
+                        </div>
+                        <div id="spotlight-display" style="margin-top:1rem;"></div>
                     </div>
 
                     <!-- Meeting Rotation Carousel -->
@@ -499,18 +540,37 @@
             <input type="text" id="member-firstname" placeholder="First Name">
             <label style="font-weight:600;">Choose Avatar:</label>
             <div class="avatar-picker" id="avatar-picker" style="margin-bottom: 1rem;">
-                <span onclick="selectAvatar('🎨')" class="selected">🎨</span>
-                <span onclick="selectAvatar('🚀')">🚀</span>
-                <span onclick="selectAvatar('☕')">☕</span>
-                <span onclick="selectAvatar('🦅')">🦅</span>
-                <span onclick="selectAvatar('📊')">📊</span>
-                <span onclick="selectAvatar('💡')">💡</span>
-                <span onclick="selectAvatar('🦉')">🦉</span>
-                <span onclick="selectAvatar('🍕')">🍕</span>
+                <span onclick="selectAvatar('🎨', this)" class="selected">🎨</span>
+                <span onclick="selectAvatar('🚀', this)">🚀</span>
+                <span onclick="selectAvatar('☕', this)">☕</span>
+                <span onclick="selectAvatar('🦅', this)">🦅</span>
+                <span onclick="selectAvatar('📊', this)">📊</span>
+                <span onclick="selectAvatar('💡', this)">💡</span>
+                <span onclick="selectAvatar('🦉', this)">🦉</span>
+                <span onclick="selectAvatar('🍕', this)">🍕</span>
             </div>
             <div style="display:flex; gap:0.5rem; justify-content:flex-end;">
                 <button class="btn" onclick="closeModal('add-member-modal')">Cancel</button>
                 <button class="btn btn-primary" onclick="addTeamMember()">Add</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Spotlight Assignment Modal -->
+    <div id="spotlight-modal" class="modal-overlay">
+        <div class="modal">
+            <h3>🎯 Set Spotlight Assignment</h3>
+            <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:0.8rem;">Setting a new assignment will replace any existing spotlight assignment for this team.</p>
+            
+            <label style="font-weight:600;">Assign To:</label>
+            <select id="spotlight-assignee"></select>
+            
+            <label style="font-weight:600; margin-top:0.5rem; display:block;">Action Item / Focus Task:</label>
+            <textarea id="spotlight-task" rows="3" placeholder="Describe the single critical task for this person..."></textarea>
+            
+            <div style="display:flex; gap:0.5rem; justify-content:flex-end; margin-top:0.5rem;">
+                <button class="btn" onclick="closeModal('spotlight-modal')">Cancel</button>
+                <button class="btn btn-primary" onclick="saveSpotlightAssignment()">Assign Spotlight</button>
             </div>
         </div>
     </div>
@@ -632,6 +692,21 @@
         let selectedAvatar = '🎨';
         let currentOpenIdeaId = null;
         let soundEnabled = true;
+
+        // Color Theme Controller
+        function setTheme(theme) {
+            document.body.classList.remove('theme-dark', 'theme-bc');
+            if (theme === 'dark') {
+                document.body.classList.add('theme-dark');
+            } else if (theme === 'bc') {
+                document.body.classList.add('theme-bc');
+            }
+            localStorage.setItem('app_theme', theme);
+        }
+
+        // Load initial theme
+        const savedTheme = localStorage.getItem('app_theme');
+        if (savedTheme) setTheme(savedTheme);
 
         // Web Audio Synthesizer for lightweight sound effects
         function playChime(type) {
@@ -870,6 +945,117 @@
             renderBadges();
             resetCarousel();
             loadWhiteboard();
+            loadSpotlightAssignment();
+        }
+
+        // Spotlight Assignment Logic
+        async function loadSpotlightAssignment() {
+            if (!selectedTeamId) return;
+            const display = document.getElementById('spotlight-display');
+            display.innerHTML = '<div style="font-size:0.85rem; color:var(--text-muted);">Loading spotlight assignment...</div>';
+
+            let assignment = null;
+
+            try {
+                const { data, error } = await supabaseClient
+                    .from('spotlight_assignments')
+                    .select('*')
+                    .eq('team_id', selectedTeamId)
+                    .maybeSingle();
+                
+                if (!error && data) {
+                    assignment = data;
+                }
+            } catch (e) {
+                console.debug('Supabase spotlight fetch error, fallback to local store:', e);
+            }
+
+            if (!assignment) {
+                const local = localStorage.getItem(`spotlight_${selectedTeamId}`);
+                if (local) {
+                    try { assignment = JSON.parse(local); } catch(e){}
+                }
+            }
+
+            if (assignment && assignment.task) {
+                display.innerHTML = `
+                    <div style="background: var(--surface-color); border: 2px solid var(--border-color); padding: 1rem; border-radius: 6px; box-shadow: 2px 2px 0px #121212; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                        <div style="display: flex; align-items: center; gap: 0.8rem;">
+                            <span style="font-size: 2.2rem; background: var(--bg-color); padding: 0.3rem 0.6rem; border: 2px solid var(--border-color); border-radius: 8px;">${assignment.assignee_avatar || '👤'}</span>
+                            <div>
+                                <div style="font-weight: 800; font-family: var(--font-heading); font-size: 1.1rem; color: var(--bc-maroon);">${escapeHtml(assignment.assignee_name)}</div>
+                                <div style="font-size: 1rem; margin-top: 0.2rem; font-weight: 600;">${escapeHtml(assignment.task)}</div>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <button class="btn btn-success" style="font-size: 0.8rem;" onclick="clearSpotlightAssignment()">✔ Complete & Clear</button>
+                        </div>
+                    </div>
+                `;
+            } else {
+                display.innerHTML = `
+                    <div style="text-align: center; padding: 1rem; border: 2px dashed var(--border-color); border-radius: 6px; background: rgba(255,255,255,0.4);">
+                        <span style="font-size: 1.5rem;">⚡</span>
+                        <div style="font-weight: 600; font-size: 0.9rem; margin-top: 0.3rem;">No active spotlight assignment for this team.</div>
+                        <p style="font-size: 0.8rem; color: var(--text-muted);">Click "+ Set Spotlight Assignment" above to assign a single high-priority item.</p>
+                    </div>
+                `;
+            }
+        }
+
+        function openSpotlightModal() {
+            const select = document.getElementById('spotlight-assignee');
+            select.innerHTML = '';
+            if (currentMembers.length === 0) {
+                select.innerHTML = '<option value="">No team members available</option>';
+            } else {
+                currentMembers.forEach(m => {
+                    const opt = document.createElement('option');
+                    opt.value = JSON.stringify({ name: m.first_name, avatar: m.avatar });
+                    opt.textContent = `${m.avatar} ${m.first_name}`;
+                    select.appendChild(opt);
+                });
+            }
+            document.getElementById('spotlight-task').value = '';
+            openModal('spotlight-modal');
+        }
+
+        async function saveSpotlightAssignment() {
+            const assigneeVal = document.getElementById('spotlight-assignee').value;
+            const task = document.getElementById('spotlight-task').value.trim();
+
+            if (!assigneeVal || !task || !selectedTeamId) return;
+
+            const assignee = JSON.parse(assigneeVal);
+            const payload = {
+                team_id: selectedTeamId,
+                assignee_name: assignee.name,
+                assignee_avatar: assignee.avatar,
+                task: task,
+                created_at: new Date().toISOString()
+            };
+
+            localStorage.setItem(`spotlight_${selectedTeamId}`, JSON.stringify(payload));
+
+            try {
+                await supabaseClient.from('spotlight_assignments').delete().eq('team_id', selectedTeamId);
+                await supabaseClient.from('spotlight_assignments').insert([payload]);
+            } catch (e) {
+                console.debug('Supabase spotlight update exception:', e);
+            }
+
+            closeModal('spotlight-modal');
+            loadSpotlightAssignment();
+        }
+
+        async function clearSpotlightAssignment() {
+            localStorage.removeItem(`spotlight_${selectedTeamId}`);
+            try {
+                await supabaseClient.from('spotlight_assignments').delete().eq('team_id', selectedTeamId);
+            } catch (e) {
+                console.debug('Supabase spotlight clear exception:', e);
+            }
+            loadSpotlightAssignment();
         }
 
         function renderBadges() {
@@ -881,12 +1067,12 @@
                 badge.innerHTML = `<span>${m.avatar}</span> <span>${m.first_name}</span> <span style="cursor:pointer; margin-left:4px;" onclick="deleteMember('${m.id}')">×</span>`;
                 container.appendChild(badge);
             });
-        }
-
-        function selectAvatar(emoji) {
+        function selectAvatar(emoji, element) {
             selectedAvatar = emoji;
             document.querySelectorAll('#avatar-picker span').forEach(el => el.classList.remove('selected'));
-            event.target.classList.add('selected');
+            if (element) {
+                element.classList.add('selected');
+            }
         }
 
         async function addTeamMember() {

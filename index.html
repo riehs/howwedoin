@@ -870,7 +870,10 @@
             }
 
             supabaseClient.auth.onAuthStateChange(async (event, session) => {
-                if (session) {
+                if (event === 'SIGNED_OUT') {
+                    currentUser = null;
+                    showAuthScreen();
+                } else if (session) {
                     await checkAuthorization(session.user);
                 } else {
                     showAuthScreen();
@@ -891,6 +894,11 @@
                 showAuthScreen();
             } else {
                 currentUser = user;
+                // Clean up OAuth tokens from URL bar so subsequent logins are unaffected
+                if (window.history.replaceState && (window.location.search || window.location.hash)) {
+                    window.history.replaceState(null, document.title, window.location.pathname);
+                }
+                document.getElementById('auth-error').innerText = "";
                 document.getElementById('user-email-display').innerText = user.email;
                 document.getElementById('auth-screen').classList.add('hidden');
                 document.getElementById('app-screen').classList.remove('hidden');
@@ -909,10 +917,13 @@
                 document.getElementById('auth-error').innerText = "Supabase SDK not initialized.";
                 return;
             }
+            document.getElementById('auth-error').innerText = "";
+            // Use a clean URL without old query/hash parameters
+            const redirectUrl = window.location.origin + window.location.pathname;
             const { error } = await supabaseClient.auth.signInWithOAuth({
                 provider: 'google',
                 options: {
-                    redirectTo: window.location.href
+                    redirectTo: redirectUrl
                 }
             });
 
@@ -922,8 +933,14 @@
         }
 
         async function handleLogout() {
+            currentUser = null;
+            selectedTeamId = null;
+            if (window.history.replaceState) {
+                window.history.replaceState(null, document.title, window.location.pathname);
+            }
+            document.getElementById('auth-error').innerText = "";
             await supabaseClient.auth.signOut();
-            window.location.reload();
+            showAuthScreen();
         }
 
         function switchTab(tab) {

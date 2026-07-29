@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>How We Doin? | BC IR&P</title>
-    <!-- Google Fonts & Supabase JS -->
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
@@ -37,10 +37,8 @@
             padding-bottom: 60px;
         }
 
-        /* Typography */
         h1, h2, h3, h4, h5 { font-family: var(--font-heading); font-weight: 700; letter-spacing: -0.02em; }
 
-        /* Layout UI */
         header {
             background: var(--surface-color);
             border-bottom: 3px solid var(--border-color);
@@ -102,7 +100,6 @@
             position: relative;
         }
 
-        /* Buttons & Forms */
         .btn {
             background: var(--surface-color);
             border: 2px solid var(--border-color);
@@ -130,7 +127,6 @@
             background: #fff;
         }
 
-        /* Auth Container */
         #auth-screen {
             display: flex;
             flex-direction: column;
@@ -140,7 +136,6 @@
             text-align: center;
         }
 
-        /* Carousel Section */
         .carousel-box {
             background: #fff8eb;
             border: 3px solid var(--border-color);
@@ -158,7 +153,6 @@
         .member-name { font-family: var(--font-heading); font-size: 1.75rem; font-weight: 700; }
         .prompt-question { font-size: 1.25rem; font-style: italic; color: #333; margin: 1rem 0; max-width: 650px; }
 
-        /* Whiteboard */
         .whiteboard-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -181,7 +175,6 @@
             opacity: 0.7;
         }
 
-        /* Member Badges */
         .badge-list { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0.5rem 0 1rem 0; }
         .badge {
             background: #f0f0f0;
@@ -194,7 +187,6 @@
             gap: 0.3rem;
         }
 
-        /* Idea Cards */
         .ideas-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -221,7 +213,6 @@
             text-transform: uppercase;
         }
 
-        /* Modal Overlay */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -251,6 +242,18 @@
         }
         .avatar-picker span.selected { border-color: var(--border-color); background: var(--accent-pink); }
 
+        .toast-msg {
+            padding: 0.5rem;
+            margin-top: 0.5rem;
+            border: 2px solid var(--border-color);
+            font-weight: 600;
+            font-size: 0.85rem;
+            display: none;
+        }
+        .toast-msg.show { display: block; }
+        .toast-success { background: var(--accent-green); }
+        .toast-info { background: var(--accent-pink); }
+
         .hidden { display: none !important; }
     </style>
 </head>
@@ -267,7 +270,6 @@
         </div>
     </header>
 
-    <!-- AUTH SCREEN -->
     <div id="auth-screen" class="container">
         <div class="card" style="max-width: 450px;">
             <h2>Institutional Research & Planning</h2>
@@ -275,11 +277,10 @@
             <button class="btn btn-primary" style="width:100%; justify-content:center; padding: 0.8rem;" onclick="loginWithGoogle()">
                 🔑 Sign In with Google
             </button>
-            <div id="auth-error" style="color: red; margin-top: 1rem; font-size: 0.9rem;"></div>
+            <div id="auth-error" style="color: #8a100b; margin-top: 1rem; font-size: 0.9rem; font-weight: 600;"></div>
         </div>
     </div>
 
-    <!-- MAIN APP SCREEN -->
     <div id="app-screen" class="hidden">
         <div class="nav-tabs">
             <button class="tab-btn active" id="tab-checkin" onclick="switchTab('checkin')">🗣️ Team Check-ins</button>
@@ -333,7 +334,6 @@
                 </div>
             </div>
 
-            <!-- SECTION 2: BETTER OFFICE -->
             <div id="sec-office" class="hidden">
                 <div class="card" style="display:flex; justify-content:space-between; align-items:center;">
                     <div>
@@ -348,7 +348,6 @@
         </div>
     </div>
 
-    <!-- MODALS -->
     <!-- New Team Modal -->
     <div id="new-team-modal" class="modal-overlay">
         <div class="modal">
@@ -445,6 +444,7 @@
         <div class="modal" style="max-width:650px;">
             <h3 id="detail-idea-title">Idea Details</h3>
             <div id="detail-idea-body" style="margin: 1rem 0;"></div>
+            <div id="modal-toast" class="toast-msg"></div>
             <hr style="margin: 1rem 0;">
             <h4>Comments & Collaboration</h4>
             <div id="comments-list" style="max-height: 200px; overflow-y: auto; margin: 0.5rem 0;"></div>
@@ -460,11 +460,13 @@
     </div>
 
     <script>
-        // SUPABASE CONNECTION SETTINGS
         const SUPABASE_URL = "https://uqblyogrcsrbgxsncncu.supabase.co";
         const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVxYmx5b2dyY3NyYmd4c25jbmN1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIzMDEyNTMsImV4cCI6MjA5Nzg3NzI1M30.AKjE2io4qebY_jLHO5HakU6yZh1TdMne71F-muJGpLM";
 
-        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        // Initialize safely attached to global window object
+        const supabaseClient = (typeof window.supabase !== 'undefined' && window.supabase.createClient) 
+            ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) 
+            : null;
 
         // App State
         let currentUser = null;
@@ -474,7 +476,6 @@
         let selectedAvatar = '🎨';
         let currentOpenIdeaId = null;
 
-        // 30 Creative Random Questions for Check-ins
         const QUESTIONS = [
             "What do you need from us today?",
             "What's one small win you had this week?",
@@ -508,16 +509,25 @@
             "What’s your top priority for the next 24 hours?"
         ];
 
-        // INITIALIZATION
         window.addEventListener('DOMContentLoaded', async () => {
-            const { data: { session } } = await supabase.auth.getSession();
-            if (session) {
-                await checkAuthorization(session.user);
-            } else {
+            if (!supabaseClient) {
+                document.getElementById('auth-error').innerText = "Failed to load Supabase SDK. Check script import.";
+                return;
+            }
+
+            try {
+                const { data: { session } } = await supabaseClient.auth.getSession();
+                if (session) {
+                    await checkAuthorization(session.user);
+                } else {
+                    showAuthScreen();
+                }
+            } catch (err) {
+                console.error("Session fetch error:", err);
                 showAuthScreen();
             }
 
-            supabase.auth.onAuthStateChange(async (event, session) => {
+            supabaseClient.auth.onAuthStateChange(async (event, session) => {
                 if (session) {
                     await checkAuthorization(session.user);
                 } else {
@@ -527,16 +537,15 @@
         });
 
         async function checkAuthorization(user) {
-            // Validate user against allowed_users table
-            const { data, error } = await supabase
+            const { data, error } = await supabaseClient
                 .from('allowed_users')
                 .select('email')
                 .eq('email', user.email)
-                .single();
+                .maybeSingle();
 
             if (error || !data) {
                 document.getElementById('auth-error').innerText = "Access Denied: Your email (" + user.email + ") is not in the allowed_users whitelist.";
-                await supabase.auth.signOut();
+                await supabaseClient.auth.signOut();
                 showAuthScreen();
             } else {
                 currentUser = user;
@@ -554,14 +563,24 @@
         }
 
         async function loginWithGoogle() {
-            await supabase.auth.signInWithOAuth({
+            if (!supabaseClient) {
+                document.getElementById('auth-error').innerText = "Supabase SDK not initialized.";
+                return;
+            }
+            const { error } = await supabaseClient.auth.signInWithOAuth({
                 provider: 'google',
-                options: { redirectTo: window.location.href }
+                options: {
+                    redirectTo: window.location.href
+                }
             });
+
+            if (error) {
+                document.getElementById('auth-error').innerText = "Login failed: " + error.message;
+            }
         }
 
         async function handleLogout() {
-            await supabase.auth.signOut();
+            await supabaseClient.auth.signOut();
             window.location.reload();
         }
 
@@ -579,10 +598,8 @@
             }
         }
 
-        /* --- SECTION 1: TEAMS & CHECKINS --- */
-
         async function loadTeams() {
-            const { data: teams, error } = await supabase.from('teams').select('*').order('name');
+            const { data: teams, error } = await supabaseClient.from('teams').select('*').order('name');
             const select = document.getElementById('team-select');
             select.innerHTML = '';
 
@@ -606,7 +623,7 @@
         async function createTeam() {
             const name = document.getElementById('new-team-name').value.trim();
             if (!name) return;
-            const { data, error } = await supabase.from('teams').insert([{ name }]).select();
+            const { data, error } = await supabaseClient.from('teams').insert([{ name }]).select();
             if (!error && data) {
                 selectedTeamId = data[0].id;
                 closeModal('new-team-modal');
@@ -619,8 +636,7 @@
             selectedTeamId = document.getElementById('team-select').value;
             if (!selectedTeamId) return;
 
-            // Fetch team members
-            const { data: members } = await supabase
+            const { data: members } = await supabaseClient
                 .from('team_members')
                 .select('*')
                 .eq('team_id', selectedTeamId);
@@ -652,7 +668,7 @@
             const firstName = document.getElementById('member-firstname').value.trim();
             if (!firstName || !selectedTeamId) return;
 
-            await supabase.from('team_members').insert([{
+            await supabaseClient.from('team_members').insert([{
                 team_id: selectedTeamId,
                 first_name: firstName,
                 avatar: selectedAvatar
@@ -664,11 +680,10 @@
         }
 
         async function deleteMember(id) {
-            await supabase.from('team_members').delete().eq('id', id);
+            await supabaseClient.from('team_members').delete().eq('id', id);
             loadSelectedTeam();
         }
 
-        // CAROUSEL LOGIC
         function resetCarousel() {
             carouselIndex = 0;
             if (currentMembers.length === 0) {
@@ -703,9 +718,8 @@
             document.getElementById('carousel-question').innerText = `"${randomQuestion}"`;
         }
 
-        // WHITEBOARD LOGIC
         async function loadWhiteboard() {
-            const { data: items } = await supabase
+            const { data: items } = await supabaseClient
                 .from('whiteboard_items')
                 .select('*')
                 .eq('team_id', selectedTeamId)
@@ -719,7 +733,7 @@
                 note.className = `sticky-note ${item.is_addressed ? 'addressed' : ''}`;
                 note.innerHTML = `
                     <div>${item.content}</div>
-                    <div style="margin-top:0.5rem; display:flex; justify-size:space-between; align-items:center;">
+                    <div style="margin-top:0.5rem; display:flex; justify-content:space-between; align-items:center;">
                         <button class="btn btn-success" style="font-size:0.75rem; padding:0.2rem 0.4rem;" onclick="toggleAddressed('${item.id}', ${!item.is_addressed})">
                             ${item.is_addressed ? 'Undo' : '✔ Addressed'}
                         </button>
@@ -734,7 +748,7 @@
             const content = document.getElementById('whiteboard-content').value.trim();
             if (!content || !selectedTeamId) return;
 
-            await supabase.from('whiteboard_items').insert([{
+            await supabaseClient.from('whiteboard_items').insert([{
                 team_id: selectedTeamId,
                 content: content
             }]);
@@ -745,20 +759,17 @@
         }
 
         async function toggleAddressed(id, status) {
-            await supabase.from('whiteboard_items').update({ is_addressed: status }).eq('id', id);
+            await supabaseClient.from('whiteboard_items').update({ is_addressed: status }).eq('id', id);
             loadWhiteboard();
         }
 
         async function deleteWhiteboardItem(id) {
-            await supabase.from('whiteboard_items').delete().eq('id', id);
+            await supabaseClient.from('whiteboard_items').delete().eq('id', id);
             loadWhiteboard();
         }
 
-
-        /* --- SECTION 2: BETTER OFFICE --- */
-
         async function loadIdeas() {
-            const { data: ideas } = await supabase
+            const { data: ideas } = await supabaseClient
                 .from('office_ideas')
                 .select('*, idea_votes(user_email)')
                 .order('created_at', { ascending: false });
@@ -768,7 +779,7 @@
 
             (ideas || []).forEach(idea => {
                 const votes = idea.idea_votes || [];
-                const userVoted = votes.some(v => v.user_email === currentUser.email);
+                const userVoted = currentUser && votes.some(v => v.user_email === currentUser.email);
                 
                 const card = document.createElement('div');
                 card.className = `idea-card ${idea.is_implemented ? 'implemented' : ''}`;
@@ -815,9 +826,9 @@
 
             if (!title || !problem || !solution) return;
 
-            await supabase.from('office_ideas').insert([{
+            await supabaseClient.from('office_ideas').insert([{
                 title, problem, solution, effort, area,
-                created_by_email: currentUser.email
+                created_by_email: currentUser ? currentUser.email : ''
             }]);
 
             closeModal('add-idea-modal');
@@ -828,21 +839,22 @@
         }
 
         async function toggleVote(ideaId, hasVoted) {
+            if (!currentUser) return;
             if (hasVoted) {
-                await supabase.from('idea_votes').delete().match({ idea_id: ideaId, user_email: currentUser.email });
+                await supabaseClient.from('idea_votes').delete().match({ idea_id: ideaId, user_email: currentUser.email });
             } else {
-                await supabase.from('idea_votes').insert([{ idea_id: ideaId, user_email: currentUser.email }]);
+                await supabaseClient.from('idea_votes').insert([{ idea_id: ideaId, user_email: currentUser.email }]);
             }
             loadIdeas();
         }
 
         async function toggleImplemented(ideaId, status) {
-            await supabase.from('office_ideas').update({ is_implemented: status }).eq('id', ideaId);
+            await supabaseClient.from('office_ideas').update({ is_implemented: status }).eq('id', ideaId);
             loadIdeas();
         }
 
         async function deleteIdea(ideaId) {
-            await supabase.from('office_ideas').delete().eq('id', ideaId);
+            await supabaseClient.from('office_ideas').delete().eq('id', ideaId);
             loadIdeas();
         }
 
@@ -860,14 +872,14 @@
             const problem = document.getElementById('edit-idea-problem').value.trim();
             const solution = document.getElementById('edit-idea-solution').value.trim();
 
-            await supabase.from('office_ideas').update({ title, problem, solution }).eq('id', id);
+            await supabaseClient.from('office_ideas').update({ title, problem, solution }).eq('id', id);
             closeModal('edit-idea-modal');
             loadIdeas();
         }
 
         async function openIdeaDetail(ideaId) {
             currentOpenIdeaId = ideaId;
-            const { data: idea } = await supabase.from('office_ideas').select('*').eq('id', ideaId).single();
+            const { data: idea } = await supabaseClient.from('office_ideas').select('*').eq('id', ideaId).single();
             
             document.getElementById('detail-idea-title').innerText = "💡 " + idea.title;
             document.getElementById('detail-idea-body').innerHTML = `
@@ -876,12 +888,13 @@
                 <p style="margin-top:0.5rem; font-size:0.85rem;"><strong>Area:</strong> ${idea.area} | <strong>Effort:</strong> ${idea.effort}</p>
             `;
 
+            hideToast();
             loadComments(ideaId);
             openModal('idea-detail-modal');
         }
 
         async function loadComments(ideaId) {
-            const { data: comments } = await supabase
+            const { data: comments } = await supabaseClient
                 .from('idea_comments')
                 .select('*')
                 .eq('idea_id', ideaId)
@@ -892,16 +905,16 @@
             (comments || []).forEach(c => {
                 const div = document.createElement('div');
                 div.style.cssText = "background:#f9f9f9; border:1px solid #121212; padding:0.5rem; margin-bottom:0.5rem; font-size:0.85rem;";
-                div.innerHTML = `<strong>${c.author_email.split('@')[0]}:</strong> ${c.comment}`;
+                div.innerHTML = `<strong>${c.author_email ? c.author_email.split('@')[0] : 'User'}:</strong> ${c.comment}`;
                 list.appendChild(div);
             });
         }
 
         async function postComment() {
             const comment = document.getElementById('new-comment').value.trim();
-            if (!comment || !currentOpenIdeaId) return;
+            if (!comment || !currentOpenIdeaId || !currentUser) return;
 
-            await supabase.from('idea_comments').insert([{
+            await supabaseClient.from('idea_comments').insert([{
                 idea_id: currentOpenIdeaId,
                 comment: comment,
                 author_email: currentUser.email
@@ -912,23 +925,36 @@
         }
 
         async function volunteerForIdea() {
-            if (!currentOpenIdeaId) return;
-            const { data: idea } = await supabase.from('office_ideas').select('volunteers').eq('id', currentOpenIdeaId).single();
+            if (!currentOpenIdeaId || !currentUser) return;
+            const { data: idea } = await supabaseClient.from('office_ideas').select('volunteers').eq('id', currentOpenIdeaId).single();
             let vols = idea.volunteers || [];
             const userShort = currentUser.email.split('@')[0];
 
             if (!vols.includes(userShort)) {
                 vols.push(userShort);
-                await supabase.from('office_ideas').update({ volunteers: vols }).eq('id', currentOpenIdeaId);
-                alert("Thanks for volunteering!");
+                await supabaseClient.from('office_ideas').update({ volunteers: vols }).eq('id', currentOpenIdeaId);
+                showToast("Thanks for volunteering!", "toast-success");
                 loadIdeas();
                 openIdeaDetail(currentOpenIdeaId);
             } else {
-                alert("You're already on the volunteer list!");
+                showToast("You're already on the volunteer list!", "toast-info");
             }
         }
 
-        // Helpers
+        // Helper functions
+        function showToast(msg, type) {
+            const toast = document.getElementById('modal-toast');
+            toast.className = `toast-msg show ${type}`;
+            toast.innerText = msg;
+            setTimeout(() => { hideToast(); }, 3000);
+        }
+
+        function hideToast() {
+            const toast = document.getElementById('modal-toast');
+            toast.className = 'toast-msg';
+            toast.innerText = '';
+        }
+
         function openModal(id) { document.getElementById(id).style.display = 'flex'; }
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
         function escapeHtml(text) { return text.replace(/'/g, "\\'").replace(/"/g, "&quot;"); }

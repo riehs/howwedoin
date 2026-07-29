@@ -780,6 +780,9 @@
             (ideas || []).forEach(idea => {
                 const votes = idea.idea_votes || [];
                 const userVoted = currentUser && votes.some(v => v.user_email === currentUser.email);
+                const userShort = currentUser ? currentUser.email.split('@')[0] : '';
+                const volunteers = idea.volunteers || [];
+                const isVolunteered = volunteers.includes(userShort);
                 
                 const card = document.createElement('div');
                 card.className = `idea-card ${idea.is_implemented ? 'implemented' : ''}`;
@@ -792,15 +795,20 @@
                         <h3 style="margin: 0.5rem 0;">💡 ${idea.title}</h3>
                         <p style="font-size:0.9rem;"><strong>Problem:</strong> ${idea.problem}</p>
                         <p style="font-size:0.9rem; margin-top:0.3rem;"><strong>Solution:</strong> ${idea.solution}</p>
-                        ${idea.volunteers && idea.volunteers.length > 0 ? `<div style="margin-top:0.5rem; font-size:0.8rem; color:#2e7d32;"><strong>Volunteers:</strong> ${idea.volunteers.join(', ')}</div>` : ''}
+                        <div style="margin-top:0.5rem; font-size:0.8rem; color:#2e7d32;">
+                            <strong>Volunteers (${volunteers.length}):</strong> ${volunteers.length > 0 ? volunteers.join(', ') : 'None yet'}
+                        </div>
                     </div>
                     
                     <div style="margin-top: 1rem; border-top: 2px solid var(--border-color); padding-top: 0.75rem;">
-                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <div style="display:flex; gap:0.5rem; align-items:center; flex-wrap:wrap;">
                             <button class="vote-btn ${userVoted ? 'voted' : ''}" onclick="toggleVote('${idea.id}', ${userVoted})">
                                 👍 ${votes.length}
                             </button>
-                            <button class="btn" style="font-size:0.8rem;" onclick="openIdeaDetail('${idea.id}')">💬 Details / Comments</button>
+                            <button class="btn ${isVolunteered ? 'btn-success' : ''}" style="font-size:0.8rem; padding:0.3rem 0.6rem;" onclick="toggleVolunteer('${idea.id}')">
+                                🙋 ${isVolunteered ? 'Volunteered' : 'Volunteer'}
+                            </button>
+                            <button class="btn" style="font-size:0.8rem; padding:0.3rem 0.6rem; margin-left:auto;" onclick="openIdeaDetail('${idea.id}')">💬 Comments</button>
                         </div>
                         <div style="display:flex; justify-content:space-between; margin-top:0.5rem;">
                             <button class="btn ${idea.is_implemented ? '' : 'btn-success'}" style="font-size:0.75rem; width:100%; justify-content:center;" onclick="toggleImplemented('${idea.id}', ${!idea.is_implemented})">
@@ -815,6 +823,25 @@
                 `;
                 container.appendChild(card);
             });
+        }
+
+        async function toggleVolunteer(ideaId) {
+            if (!currentUser) return;
+            const userShort = currentUser.email.split('@')[0];
+            const { data: idea } = await supabaseClient.from('office_ideas').select('volunteers').eq('id', ideaId).single();
+            let vols = idea.volunteers || [];
+
+            if (vols.includes(userShort)) {
+                vols = vols.filter(v => v !== userShort);
+            } else {
+                vols.push(userShort);
+            }
+
+            await supabaseClient.from('office_ideas').update({ volunteers: vols }).eq('id', ideaId);
+            loadIdeas();
+            if (currentOpenIdeaId === ideaId) {
+                openIdeaDetail(ideaId);
+            }
         }
 
         async function createIdea() {
@@ -925,20 +952,8 @@
         }
 
         async function volunteerForIdea() {
-            if (!currentOpenIdeaId || !currentUser) return;
-            const { data: idea } = await supabaseClient.from('office_ideas').select('volunteers').eq('id', currentOpenIdeaId).single();
-            let vols = idea.volunteers || [];
-            const userShort = currentUser.email.split('@')[0];
-
-            if (!vols.includes(userShort)) {
-                vols.push(userShort);
-                await supabaseClient.from('office_ideas').update({ volunteers: vols }).eq('id', currentOpenIdeaId);
-                showToast("Thanks for volunteering!", "toast-success");
-                loadIdeas();
-                openIdeaDetail(currentOpenIdeaId);
-            } else {
-                showToast("You're already on the volunteer list!", "toast-info");
-            }
+            if (!currentOpenIdeaId) return;
+            await toggleVolunteer(currentOpenIdeaId);
         }
 
         // Helper functions

@@ -455,6 +455,17 @@
                         </div>
                     </div>
 
+                    <!-- Spotlight Assignment Section -->
+                    <div class="card" style="background: linear-gradient(135deg, #f0f7ff 0%, #e1f0ff 100%);">
+                        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-bottom: 0.75rem;">
+                            <h3 style="display:flex; align-items:center; gap:0.5rem;">🎯 Active Spotlight Assignment</h3>
+                            <button class="btn btn-primary" onclick="openSpotlightModal()">✏️ Set / Edit Assignment</button>
+                        </div>
+                        <div id="spotlight-assignment-display">
+                            <p style="color:var(--text-muted); font-style:italic;">No active spotlight assignment for this team.</p>
+                        </div>
+                    </div>
+
                     <!-- Virtual Whiteboard -->
                     <div class="card">
                         <div style="display:flex; justify-content:space-between; align-items:center;">
@@ -611,6 +622,27 @@
 
             <div style="display:flex; justify-content:flex-end; margin-top:1rem;">
                 <button class="btn" onclick="closeModal('manage-users-modal')">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Spotlight Assignment Modal -->
+    <div id="spotlight-modal" class="modal-overlay">
+        <div class="modal">
+            <h3>🎯 Set Spotlight Assignment</h3>
+            <p style="font-size:0.85rem; color:var(--text-muted); margin-top:0.25rem; margin-bottom:1rem;">
+                Assign a single key action item or focus area to one team member. Only 1 spotlight assignment can exist per team at a time.
+            </p>
+            
+            <label style="font-weight:600;">Assignee:</label>
+            <select id="spotlight-member-select"></select>
+
+            <label style="font-weight:600;">Action Item / Focus Task:</label>
+            <textarea id="spotlight-task-input" rows="3" placeholder="e.g. Lead the Q3 Student Survey findings presentation..."></textarea>
+
+            <div style="display:flex; gap:0.5rem; justify-content:flex-end;">
+                <button class="btn" onclick="closeModal('spotlight-modal')">Cancel</button>
+                <button class="btn btn-primary" onclick="saveSpotlightAssignment()">Save Spotlight</button>
             </div>
         </div>
     </div>
@@ -869,6 +901,7 @@
             currentMembers = members || [];
             renderBadges();
             resetCarousel();
+            loadSpotlightAssignment();
             loadWhiteboard();
         }
 
@@ -907,6 +940,98 @@
         async function deleteMember(id) {
             await supabaseClient.from('team_members').delete().eq('id', id);
             loadSelectedTeam();
+        }
+
+        async function loadSpotlightAssignment() {
+            if (!selectedTeamId) return;
+            const container = document.getElementById('spotlight-assignment-display');
+            
+            const { data: assignment, error } = await supabaseClient
+                .from('spotlight_assignments')
+                .select('*')
+                .eq('team_id', selectedTeamId)
+                .maybeSingle();
+
+            if (assignment) {
+                const member = currentMembers.find(m => m.id === assignment.assigned_member_id);
+                const avatar = member ? member.avatar : '👤';
+                container.innerHTML = `
+                    <div style="background:#fff; border:2px solid var(--border-color); padding:1rem; border-radius:6px; box-shadow:2px 2px 0px #121212; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
+                        <div style="display:flex; align-items:center; gap:0.75rem;">
+                            <span style="font-size:2rem; background:#fff0f0; padding:0.2rem 0.5rem; border:2px solid var(--border-color); border-radius:8px;">${avatar}</span>
+                            <div>
+                                <div style="font-weight:800; font-family:var(--font-heading); font-size:1.1rem; color:var(--bc-maroon);">${escapeHtml(assignment.assigned_member_name)}</div>
+                                <div style="font-size:0.95rem; font-weight:600; margin-top:0.2rem;">${escapeHtml(assignment.task_description)}</div>
+                                ${assignment.assigned_by ? `<div style="font-size:0.75rem; color:var(--text-muted); margin-top:0.2rem;">Assigned by ${escapeHtml(assignment.assigned_by.split('@')[0])}</div>` : ''}
+                            </div>
+                        </div>
+                        <div>
+                            <button class="btn btn-success" style="font-size:0.85rem;" onclick="clearSpotlightAssignment()">✔ Mark Complete</button>
+                        </div>
+                    </div>
+                `;
+            } else {
+                container.innerHTML = `<p style="color:var(--text-muted); font-style:italic;">No active spotlight assignment for this team. Click "Set / Edit Assignment" above to assign one!</p>`;
+            }
+        }
+
+        function openSpotlightModal() {
+            const select = document.getElementById('spotlight-member-select');
+            select.innerHTML = '';
+            if (!currentMembers || currentMembers.length === 0) {
+                const opt = document.createElement('option');
+                opt.value = '';
+                opt.textContent = 'No team members available';
+                select.appendChild(opt);
+            } else {
+                currentMembers.forEach(m => {
+                    const opt = document.createElement('option');
+                    opt.value = m.id;
+                    opt.textContent = `${m.avatar} ${m.first_name}`;
+                    select.appendChild(opt);
+                });
+            }
+            document.getElementById('spotlight-task-input').value = '';
+            openModal('spotlight-modal');
+        }
+
+        async function saveSpotlightAssignment() {
+            const memberId = document.getElementById('spotlight-member-select').value;
+            const task = document.getElementById('spotlight-task-input').value.trim();
+            if (!task || !memberId || !selectedTeamId) return;
+
+            const member = currentMembers.find(m => m.id === memberId);
+            const memberName = member ? member.first_name : 'Team Member';
+
+            const payload = {
+                team_id: selectedTeamId,
+                assigned_member_id: memberId,
+                assigned_member_name: memberName,
+                task_description: task,
+                assigned_by: currentUser ? currentUser.email : 'Unknown',
+                updated_at: new Date().toISOString()
+            };
+
+            const { error } = await supabaseClient
+                .from('spotlight_assignments')
+                .upsert(payload, { onConflict: 'team_id' });
+
+            if (!error) {
+                closeModal('spotlight-modal');
+                loadSpotlightAssignment();
+            }
+        }
+
+        async function clearSpotlightAssignment() {
+            if (!selectedTeamId) return;
+            const { error } = await supabaseClient
+                .from('spotlight_assignments')
+                .delete()
+                .eq('team_id', selectedTeamId);
+
+            if (!error) {
+                loadSpotlightAssignment();
+            }
         }
 
         function resetCarousel() {

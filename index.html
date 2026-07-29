@@ -883,29 +883,6 @@
       });
     });
 
-    function toggleConfigInputs() {
-      const bar = document.getElementById('config-inputs-bar');
-      bar.classList.toggle('hidden');
-      if (!bar.classList.contains('hidden')) {
-        document.getElementById('input-supabase-url').value = isSupabaseConfigured() ? SUPABASE_URL : '';
-        document.getElementById('input-supabase-key').value = isSupabaseConfigured() ? SUPABASE_ANON_KEY : '';
-      }
-    }
-
-    function saveSupabaseCredentials() {
-      const url = document.getElementById('input-supabase-url').value.trim();
-      const key = document.getElementById('input-supabase-key').value.trim();
-
-      if (!url || !key) {
-        showNotification("Please enter both Supabase URL and Key.", "error");
-        return;
-      }
-
-      localStorage.setItem('bc_irp_supabase_url', url);
-      localStorage.setItem('bc_irp_supabase_key', key);
-      window.location.reload();
-    }
-
     // Render User Profile / Login status in Header
     function renderUserProfile() {
       const container = document.getElementById('user-profile-container');
@@ -1368,6 +1345,9 @@
         const hasUpvoted = idea.upvotes?.includes(userEmail);
         const isVolunteered = idea.volunteers?.some(v => v.user_email === userEmail);
 
+        const volunteerNamesList = (idea.volunteers || []).map(v => v.user_name || v.user_email).join(', ');
+        const volunteerTooltip = volunteerNamesList ? `Volunteers: ${volunteerNamesList}` : 'Be the first to volunteer!';
+
         const card = document.createElement('div');
         card.className = "art-card rounded-3xl p-6 bg-white flex flex-col justify-between space-y-5 relative overflow-hidden";
 
@@ -1423,6 +1403,7 @@
               </button>
 
               <button onclick="toggleVolunteer('${idea.id}')" 
+                      title="${escapeHtml(volunteerTooltip)}"
                       class="flex items-center space-x-1.5 px-4 py-2 rounded-2xl text-xs font-black art-button transition-all ${
                         isVolunteered 
                           ? 'bg-studio-mint text-white' 
@@ -1432,6 +1413,13 @@
                 <span>${isVolunteered ? 'Volunteered' : 'Volunteer'} (${idea.volunteers?.length || 0})</span>
               </button>
             </div>
+
+            ${(idea.volunteers && idea.volunteers.length > 0) ? `
+              <div class="text-[11px] text-emerald-900 bg-emerald-50 p-2.5 rounded-xl border border-emerald-200 flex items-center space-x-2">
+                <i data-lucide="users" class="w-3.5 h-3.5 flex-shrink-0 text-emerald-600"></i>
+                <span class="truncate"><strong>Volunteers:</strong> ${escapeHtml(volunteerNamesList)}</span>
+              </div>
+            ` : ''}
 
             <div class="flex items-center justify-between text-[11px] text-stone-500 pt-1 font-medium">
               <span>By <strong class="text-studio-ink">${escapeHtml(idea.author_name)}</strong></span>

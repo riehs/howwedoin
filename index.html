@@ -448,8 +448,8 @@
 
   <script>
     // Configuration & State
-    const SUPABASE_URL = "https://YOUR_SUPABASE_PROJECT_URL.supabase.co"; // Replace with actual URL
-    const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY"; // Replace with actual Key
+    const SUPABASE_URL = "https://uqblyogrcsrbgxsncncu.supabase.co"; // Replace with actual URL
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVxYmx5b2dyY3NyYmd4c25jbmN1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIzMDEyNTMsImV4cCI6MjA5Nzg3NzI1M30.AKjE2io4qebY_jLHO5HakU6yZh1TdMne71F-muJGpLM"; // Replace with actual Key
 
     let supabaseClient = null;
     if (SUPABASE_URL.includes("http") && !SUPABASE_ANON_KEY.includes("YOUR_")) {
@@ -504,56 +504,11 @@
       "What is one positive word that describes your mindset for this week?"
     ];
 
-    // Mock Data Fallbacks
-    let teams = [
-      { id: '1', name: 'Data Engineering & Analytics' },
-      { id: '2', name: 'Survey & Student Research' },
-      { id: '3', name: 'Reporting & Governance' }
-    ];
-
-    let teamMembers = [
-      { id: 'm1', team_id: '1', name: 'Alex Mercer', role: 'Senior Data Analyst' },
-      { id: 'm2', team_id: '1', name: 'Samantha Chen', role: 'Data Engineer' },
-      { id: 'm3', team_id: '2', name: 'David Ross', role: 'Research Associate' },
-      { id: 'm4', team_id: '2', name: 'Elena Rostova', role: 'Survey Analyst' },
-      { id: 'm5', team_id: '3', name: 'Marcus Vance', role: 'Governance Lead' },
-      { id: 'm6', team_id: '3', name: 'Priya Patel', role: 'IR Director' }
-    ];
-
-    let whiteboardPoints = [
-      { id: 'wp1', team_id: '1', content: 'Set up automated ETL monitoring alerts on Slack', author_name: 'Alex Mercer', is_addressed: false },
-      { id: 'wp2', team_id: '2', content: 'Review Fall Enrollment Survey questions with committee', author_name: 'David Ross', is_addressed: true },
-      { id: 'wp3', team_id: '3', content: 'Standardize data dictionary definitions for department codes', author_name: 'Marcus Vance', is_addressed: false }
-    ];
-
-    let ideas = [
-      {
-        id: 'i1',
-        title: 'Weekly Automated Pipeline Health Reports',
-        area: 'Technology',
-        effort: '1 hour',
-        problem: 'Team members are manually checking job logs every morning.',
-        solution: 'Send a automated summary to our Slack channel at 8:30 AM.',
-        author_name: 'Samantha Chen',
-        author_email: 'samantha.chen@bc.edu',
-        idea_upvotes: [{ user_email: 'samantha.chen@bc.edu' }],
-        idea_volunteers: [{ user_name: 'Alex Mercer', user_email: 'alex.mercer@bc.edu' }],
-        idea_comments: [{ author_name: 'Alex Mercer', comment: 'Great idea! I can help review the Slack webhook integration.' }]
-      },
-      {
-        id: 'i2',
-        title: 'Standing 15-Minute Agendas for Meetings',
-        area: 'Meetings',
-        effort: '5 min',
-        problem: 'Meetings tend to overrun without structured bullet points.',
-        solution: 'Enforce a 3-bullet agenda in the calendar invite descriptions.',
-        author_name: 'Marcus Vance',
-        author_email: 'marcus.vance@bc.edu',
-        idea_upvotes: [],
-        idea_volunteers: [],
-        idea_comments: []
-      }
-    ];
+    // Dynamic State Variables (Mock fallbacks removed)
+    let teams = [];
+    let teamMembers = [];
+    let whiteboardPoints = [];
+    let ideas = [];
 
     window.onload = async function() {
       initApp();
@@ -639,27 +594,38 @@
 
     async function fetchTeams() {
       if (!supabaseClient) return;
-      const { data, error } = await supabaseClient.from('teams').select('*, team_members(*)');
-      if (!error && data && data.length > 0) {
-        teams = data;
+      
+      const { data: teamsData, error: teamsError } = await supabaseClient.from('teams').select('*');
+      if (!teamsError && teamsData) {
+        teams = teamsData;
         renderWhiteboardSelect();
+      }
+
+      const { data: membersData, error: membersError } = await supabaseClient.from('team_members').select('*');
+      if (!membersError && membersData) {
+        teamMembers = membersData;
+        renderTeamCards();
       }
     }
 
     async function fetchWhiteboardPoints() {
       if (!supabaseClient) {
+        whiteboardPoints = [];
         renderWhiteboard();
         return;
       }
       const { data, error } = await supabaseClient.from('whiteboard_points').select('*').order('created_at', { ascending: false });
       if (!error && data) {
         whiteboardPoints = data;
-        renderWhiteboard();
+      } else {
+        whiteboardPoints = [];
       }
+      renderWhiteboard();
     }
 
     async function fetchIdeas() {
       if (!supabaseClient) {
+        ideas = [];
         renderIdeas();
         return;
       }
@@ -669,8 +635,10 @@
         .order('created_at', { ascending: false });
       if (!error && data) {
         ideas = data;
-        renderIdeas();
+      } else {
+        ideas = [];
       }
+      renderIdeas();
     }
 
     async function fetchAllowedUsers() {
@@ -704,6 +672,13 @@
 
     function renderTeamCards() {
       const container = document.getElementById('team-cards-container');
+      if (teamMembers.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-full py-8 text-center bg-white border-2 border-dashed border-stone-300 rounded-3xl">
+            <p class="text-xs font-bold text-stone-500">No team members found in database.</p>
+          </div>`;
+        return;
+      }
       container.innerHTML = teamMembers.map(member => `
         <button onclick="selectMember('${member.id}')" class="bg-white border-2 border-black p-4 rounded-2xl shadow-artistic-sm hover:shadow-artistic hover:-translate-y-0.5 transition flex flex-col items-center text-center space-y-2">
           <div class="w-12 h-12 rounded-full border-2 border-black bg-bcGold/30 text-bcMaroon font-black flex items-center justify-center text-lg">
@@ -787,31 +762,22 @@
 
     async function handleAddWhiteboardPoint(e) {
       e.preventDefault();
+      if (!supabaseClient) return showNotification("Supabase client not connected.", "error");
+
       const team_id = document.getElementById('whiteboard-team-select').value;
       const content = document.getElementById('whiteboard-content-input').value.trim();
       const author_name = currentUser ? currentUser.name : 'IR&P Team Member';
 
-      // Insert without author_email to prevent schema mismatch
-      if (supabaseClient) {
-        const { error } = await supabaseClient.from('whiteboard_points').insert([{
-          team_id,
-          content,
-          author_name,
-          is_addressed: false
-        }]);
+      const { error } = await supabaseClient.from('whiteboard_points').insert([{
+        team_id,
+        content,
+        author_name,
+        is_addressed: false
+      }]);
 
-        if (error) {
-          showNotification("Error adding note: " + error.message, "error");
-          return;
-        }
-      } else {
-        whiteboardPoints.unshift({
-          id: 'wp_' + Date.now(),
-          team_id,
-          content,
-          author_name,
-          is_addressed: false
-        });
+      if (error) {
+        showNotification("Error adding note: " + error.message, "error");
+        return;
       }
 
       showNotification("Whiteboard note posted!", "success");
@@ -821,12 +787,8 @@
     }
 
     async function toggleWhiteboardAddressed(pointId, isAddressed) {
-      if (supabaseClient) {
-        await supabaseClient.from('whiteboard_points').update({ is_addressed: isAddressed }).eq('id', pointId);
-      } else {
-        const item = whiteboardPoints.find(p => p.id === pointId);
-        if (item) item.is_addressed = isAddressed;
-      }
+      if (!supabaseClient) return;
+      await supabaseClient.from('whiteboard_points').update({ is_addressed: isAddressed }).eq('id', pointId);
       await fetchWhiteboardPoints();
     }
 
@@ -941,6 +903,8 @@
 
     async function handleCreateIdea(e) {
       e.preventDefault();
+      if (!supabaseClient) return showNotification("Supabase client not connected.", "error");
+
       const title = document.getElementById('create-idea-title').value.trim();
       const area = document.getElementById('create-idea-area').value;
       const effort = document.getElementById('create-idea-effort').value;
@@ -950,20 +914,13 @@
       const author_name = currentUser ? currentUser.name : 'IR&P Staff';
       const author_email = currentUser ? currentUser.email : 'staff@bc.edu';
 
-      if (supabaseClient) {
-        const { error } = await supabaseClient.from('ideas').insert([{
-          title, area, effort, problem, solution, author_name, author_email
-        }]);
-        if (error) {
-          showNotification("Error publishing idea: " + error.message, "error");
-          return;
-        }
-      } else {
-        ideas.unshift({
-          id: 'i_' + Date.now(),
-          title, area, effort, problem, solution, author_name, author_email,
-          idea_upvotes: [], idea_volunteers: [], idea_comments: []
-        });
+      const { error } = await supabaseClient.from('ideas').insert([{
+        title, area, effort, problem, solution, author_name, author_email
+      }]);
+
+      if (error) {
+        showNotification("Error publishing idea: " + error.message, "error");
+        return;
       }
 
       showNotification("Idea published successfully!", "success");
@@ -988,6 +945,7 @@
     async function handleEditIdea(e) {
       e.preventDefault();
       if (!editingIdeaId) return;
+      if (!supabaseClient) return showNotification("Supabase client not connected.", "error");
 
       const title = document.getElementById('edit-idea-title').value.trim();
       const area = document.getElementById('edit-idea-area').value;
@@ -995,20 +953,13 @@
       const problem = document.getElementById('edit-idea-problem').value.trim();
       const solution = document.getElementById('edit-idea-solution').value.trim();
 
-      if (supabaseClient) {
-        const { error } = await supabaseClient.from('ideas').update({
-          title, area, effort, problem, solution
-        }).eq('id', editingIdeaId);
+      const { error } = await supabaseClient.from('ideas').update({
+        title, area, effort, problem, solution
+      }).eq('id', editingIdeaId);
 
-        if (error) {
-          showNotification("Error updating idea: " + error.message, "error");
-          return;
-        }
-      } else {
-        const idx = ideas.findIndex(i => i.id === editingIdeaId);
-        if (idx !== -1) {
-          ideas[idx] = { ...ideas[idx], title, area, effort, problem, solution };
-        }
+      if (error) {
+        showNotification("Error updating idea: " + error.message, "error");
+        return;
       }
 
       showNotification("Idea updated successfully!", "success");
@@ -1028,15 +979,12 @@
 
     async function confirmDeleteIdea() {
       if (!deletingIdeaId) return;
+      if (!supabaseClient) return showNotification("Supabase client not connected.", "error");
 
-      if (supabaseClient) {
-        const { error } = await supabaseClient.from('ideas').delete().eq('id', deletingIdeaId);
-        if (error) {
-          showNotification("Error deleting idea: " + error.message, "error");
-          return;
-        }
-      } else {
-        ideas = ideas.filter(i => i.id !== deletingIdeaId);
+      const { error } = await supabaseClient.from('ideas').delete().eq('id', deletingIdeaId);
+      if (error) {
+        showNotification("Error deleting idea: " + error.message, "error");
+        return;
       }
 
       showNotification("Idea deleted successfully", "info");
@@ -1047,6 +995,7 @@
 
     async function handleUpvoteIdea(ideaId) {
       if (!currentUser) return showNotification("Please sign in to upvote.", "error");
+      if (!supabaseClient) return showNotification("Supabase client not connected.", "error");
 
       const idea = ideas.find(i => i.id === ideaId);
       if (!idea) return;
@@ -1054,18 +1003,10 @@
       const user_email = currentUser.email;
       const existing = (idea.idea_upvotes || []).find(u => u.user_email === user_email);
 
-      if (supabaseClient) {
-        if (existing) {
-          await supabaseClient.from('idea_upvotes').delete().match({ idea_id: ideaId, user_email });
-        } else {
-          await supabaseClient.from('idea_upvotes').insert([{ idea_id: ideaId, user_email }]);
-        }
+      if (existing) {
+        await supabaseClient.from('idea_upvotes').delete().match({ idea_id: ideaId, user_email });
       } else {
-        if (existing) {
-          idea.idea_upvotes = idea.idea_upvotes.filter(u => u.user_email !== user_email);
-        } else {
-          idea.idea_upvotes.push({ user_email });
-        }
+        await supabaseClient.from('idea_upvotes').insert([{ idea_id: ideaId, user_email }]);
       }
 
       await fetchIdeas();
@@ -1073,6 +1014,7 @@
 
     async function handleVolunteerIdea(ideaId) {
       if (!currentUser) return showNotification("Please sign in to volunteer.", "error");
+      if (!supabaseClient) return showNotification("Supabase client not connected.", "error");
 
       const idea = ideas.find(i => i.id === ideaId);
       if (!idea) return;
@@ -1081,18 +1023,10 @@
       const user_name = currentUser.name;
       const existing = (idea.idea_volunteers || []).find(v => v.user_email === user_email);
 
-      if (supabaseClient) {
-        if (existing) {
-          await supabaseClient.from('idea_volunteers').delete().match({ idea_id: ideaId, user_email });
-        } else {
-          await supabaseClient.from('idea_volunteers').insert([{ idea_id: ideaId, user_email, user_name }]);
-        }
+      if (existing) {
+        await supabaseClient.from('idea_volunteers').delete().match({ idea_id: ideaId, user_email });
       } else {
-        if (existing) {
-          idea.idea_volunteers = idea.idea_volunteers.filter(v => v.user_email !== user_email);
-        } else {
-          idea.idea_volunteers.push({ user_email, user_name });
-        }
+        await supabaseClient.from('idea_volunteers').insert([{ idea_id: ideaId, user_email, user_name }]);
       }
 
       await fetchIdeas();
@@ -1100,27 +1034,23 @@
 
     async function handleAddComment(e, ideaId) {
       e.preventDefault();
+      if (!supabaseClient) return showNotification("Supabase client not connected.", "error");
+
       const input = e.target.querySelector('input');
       const comment = input.value.trim();
       const author_name = currentUser ? currentUser.name : 'IR&P Staff';
 
       if (!comment) return;
 
-      if (supabaseClient) {
-        const { error } = await supabaseClient.from('idea_comments').insert([{
-          idea_id: ideaId,
-          comment,
-          author_name
-        }]);
-        if (error) {
-          showNotification("Error adding comment: " + error.message, "error");
-          return;
-        }
-      } else {
-        const idea = ideas.find(i => i.id === ideaId);
-        if (idea) {
-          idea.idea_comments.push({ author_name, comment });
-        }
+      const { error } = await supabaseClient.from('idea_comments').insert([{
+        idea_id: ideaId,
+        comment,
+        author_name
+      }]);
+
+      if (error) {
+        showNotification("Error adding comment: " + error.message, "error");
+        return;
       }
 
       input.value = '';
@@ -1148,13 +1078,15 @@
 
     async function handleAddAllowedUser(e) {
       e.preventDefault();
+      if (!supabaseClient) return showNotification("Supabase client not connected.", "error");
+
       const email = document.getElementById('whitelist-email-input').value.trim();
       if (!email) return;
 
-      if (supabaseClient) {
-        await supabaseClient.from('allowed_users').insert([{ email }]);
-      } else {
-        allowedUsersList.push({ id: 'u_' + Date.now(), email });
+      const { error } = await supabaseClient.from('allowed_users').insert([{ email }]);
+      if (error) {
+        showNotification("Error adding user: " + error.message, "error");
+        return;
       }
 
       document.getElementById('whitelist-email-input').value = '';
@@ -1163,10 +1095,11 @@
     }
 
     async function handleRemoveAllowedUser(id) {
-      if (supabaseClient) {
-        await supabaseClient.from('allowed_users').delete().eq('id', id);
-      } else {
-        allowedUsersList = allowedUsersList.filter(u => u.id !== id);
+      if (!supabaseClient) return;
+      const { error } = await supabaseClient.from('allowed_users').delete().eq('id', id);
+      if (error) {
+        showNotification("Error removing user: " + error.message, "error");
+        return;
       }
       showNotification("User removed", "info");
       await fetchAllowedUsers();

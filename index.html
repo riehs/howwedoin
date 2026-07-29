@@ -1065,13 +1065,11 @@
       if (!content) return;
 
       const authorName = currentUser?.user_metadata?.full_name || currentUser?.email || 'Anonymous';
-      const authorEmail = currentUser?.email || '';
 
       const { error } = await supabaseClient.from('whiteboard_points').insert([{
         team_id: currentTeam.id,
         content,
         author_name: authorName,
-        author_email: authorEmail,
         is_addressed: false
       }]);
 

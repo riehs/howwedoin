@@ -3,1314 +3,1538 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>How We Doin? | Institutional Research & Planning</title>
+    <title>How We Doin? | BC Institutional Research & Planning</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Supabase JS CDN -->
+    <!-- Supabase JS Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <!-- Google Fonts: Space Grotesk & Inter -->
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Google Fonts: Plus Jakarta Sans & Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
-    <!-- FontAwesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
     <style>
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: #FAF8F5;
-            color: #1A1A1A;
-            background-image: radial-gradient(#D8D3C8 1px, transparent 1px);
-            background-size: 24px 24px;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #faf9f6;
+            color: #18181b;
         }
-        .heading-font {
-            font-family: 'Space Grotesk', sans-serif;
+        .mono-font {
+            font-family: 'Space Mono', monospace;
         }
-        .bc-maroon {
-            color: #8A100B;
-        }
-        .bg-bc-maroon {
-            background-color: #8A100B;
-        }
-        .border-bc-maroon {
-            border-color: #8A100B;
-        }
-        .bc-gold {
-            color: #CBA052;
-        }
-        .bg-bc-gold {
-            background-color: #CBA052;
-        }
+        /* Studio Aesthetic Customizations */
         .studio-card {
-            background: #FFFFFF;
-            border: 2px solid #1A1A1A;
-            box-shadow: 4px 4px 0px #1A1A1A;
+            background-color: #ffffff;
+            border: 2px solid #18181b;
+            box-shadow: 4px 4px 0px #18181b;
             transition: all 0.15s ease-in-out;
         }
-        .studio-card-interactive:hover {
-            transform: translate(-2px, -2px);
-            box-shadow: 6px 6px 0px #1A1A1A;
+        .studio-card-sm {
+            background-color: #ffffff;
+            border: 1.5px solid #18181b;
+            box-shadow: 2px 2px 0px #18181b;
+        }
+        .studio-card:hover {
+            transform: translate(-1px, -1px);
+            box-shadow: 6px 6px 0px #18181b;
         }
         .studio-button {
-            border: 2px solid #1A1A1A;
-            box-shadow: 3px 3px 0px #1A1A1A;
+            background-color: #18181b;
+            color: #ffffff;
+            border: 2px solid #18181b;
+            font-weight: 600;
             transition: all 0.1s ease;
         }
         .studio-button:hover {
+            background-color: #800020; /* Boston College Burgundy */
+            border-color: #800020;
             transform: translate(-1px, -1px);
-            box-shadow: 4px 4px 0px #1A1A1A;
+            box-shadow: 3px 3px 0px #18181b;
         }
-        .studio-button:active {
-            transform: translate(2px, 2px);
-            box-shadow: 1px 1px 0px #1A1A1A;
+        .studio-button-secondary {
+            background-color: #ffffff;
+            color: #18181b;
+            border: 2px solid #18181b;
+            font-weight: 600;
+            transition: all 0.1s ease;
+        }
+        .studio-button-secondary:hover {
+            background-color: #f4f4f5;
+            transform: translate(-1px, -1px);
+            box-shadow: 3px 3px 0px #18181b;
         }
         .studio-input {
-            border: 2px solid #1A1A1A;
-            background-color: #FFFFFF;
+            border: 2px solid #18181b;
             outline: none;
+            transition: border-color 0.15s;
         }
         .studio-input:focus {
-            box-shadow: 3px 3px 0px #8A100B;
+            border-color: #800020;
+            box-shadow: 2px 2px 0px #800020;
         }
-        .sticky-note {
-            background-color: #FEF9C3;
-            border: 2px solid #1A1A1A;
-            box-shadow: 4px 4px 0px #1A1A1A;
+        .bc-accent-bg {
+            background-color: #800020;
         }
-        .sticky-note-addressed {
-            background-color: #F3F4F6;
-            border: 2px dashed #9CA3AF;
-            box-shadow: 2px 2px 0px #CBD5E1;
-            opacity: 0.7;
+        .bc-accent-text {
+            color: #800020;
         }
-        /* Custom scrollbars */
+        .gold-accent-bg {
+            background-color: #C5A059;
+        }
+        /* Custom scrollbar */
         ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
+            width: 6px;
+            height: 6px;
         }
         ::-webkit-scrollbar-track {
-            background: #FAF8F5;
+            background: #f1f1f1;
         }
         ::-webkit-scrollbar-thumb {
-            background: #1A1A1A;
+            background: #18181b;
+            border-radius: 0px;
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col antialiased selection:bg-red-100 selection:text-red-900">
+<body class="min-h-screen flex flex-col">
 
-    <!-- App Header -->
-    <header class="bg-white border-b-4 border-black sticky top-0 z-30 px-4 py-3 md:px-8">
-        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-            <!-- Brand / Title -->
-            <div class="flex items-center gap-3">
-                <div class="bg-bc-maroon text-white font-black px-3 py-1.5 border-2 border-black studio-button heading-font text-xl tracking-wider">
-                    BC <span class="text-amber-300">IRP</span>
+    <!-- Top Navigation Header -->
+    <header class="bg-white border-b-2 border-zinc-900 sticky top-0 z-30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <!-- Branding -->
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bc-accent-bg border-2 border-zinc-900 flex items-center justify-center font-bold text-white text-xl shadow-[2px_2px_0px_#18181b]">
+                        ?
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-extrabold tracking-tight text-zinc-900 flex items-center gap-2">
+                            How We Doin?
+                            <span class="text-xs px-2 py-0.5 bg-amber-100 border border-zinc-900 text-amber-900 font-mono rounded-none">IR&P HUB</span>
+                        </h1>
+                        <p class="text-xs text-zinc-500 font-medium hidden sm:block">Boston College Office of Institutional Research & Planning</p>
+                    </div>
                 </div>
-                <div>
-                    <h1 class="text-2xl font-bold heading-font tracking-tight text-slate-900 leading-none">
-                        How We Doin?
-                    </h1>
-                    <p class="text-xs font-semibold uppercase tracking-wider text-slate-500 mt-0.5">
-                        Boston College Institutional Research & Planning Studio
-                    </p>
-                </div>
-            </div>
 
-            <!-- Navigation Tabs -->
-            <nav id="app-nav" class="hidden flex items-center gap-2 bg-stone-100 p-1.5 border-2 border-black studio-card">
-                <button id="nav-checkins" onclick="switchSection('checkins')" class="px-4 py-2 font-bold text-sm studio-button bg-bc-maroon text-white transition-all flex items-center gap-2">
-                    <i class="fa-solid fa-users-rectangle"></i>
-                    Team Check-ins
-                </button>
-                <button id="nav-ideas" onclick="switchSection('ideas')" class="px-4 py-2 font-bold text-sm bg-white text-black hover:bg-stone-50 border-2 border-transparent transition-all flex items-center gap-2">
-                    <i class="fa-regular fa-lightbulb"></i>
-                    Better Office
-                </button>
-            </nav>
+                <!-- Navigation Tabs (Only visible when logged in & allowed) -->
+                <nav id="app-nav" class="hidden flex space-x-2 sm:space-x-4">
+                    <button id="nav-checkins-btn" onclick="switchTab('checkins')" class="px-4 py-2 border-2 border-zinc-900 font-bold text-sm bg-zinc-900 text-white shadow-[2px_2px_0px_#18181b] flex items-center gap-2">
+                        <i data-lucide="users" class="w-4 h-4"></i> Team Checkins
+                    </button>
+                    <button id="nav-ideas-btn" onclick="switchTab('ideas')" class="px-4 py-2 border-2 border-zinc-900 font-bold text-sm bg-white text-zinc-900 hover:bg-zinc-100 flex items-center gap-2">
+                        <i data-lucide="lightbulb" class="w-4 h-4"></i> Better Office
+                    </button>
+                </nav>
 
-            <!-- User Auth Bar -->
-            <div id="auth-bar" class="flex items-center gap-3">
-                <div id="user-info" class="hidden text-right">
-                    <div id="user-email" class="text-xs font-bold text-slate-800"></div>
-                    <span class="text-[10px] font-bold px-2 py-0.5 bg-emerald-100 text-emerald-800 border border-black uppercase tracking-wider">Authorized</span>
+                <!-- User Profile & Auth Status -->
+                <div id="user-nav-container" class="flex items-center space-x-3">
+                    <div id="user-badge" class="hidden items-center gap-2 bg-zinc-100 border-2 border-zinc-900 px-3 py-1.5 text-xs font-semibold">
+                        <span id="user-email-display" class="truncate max-w-[140px] sm:max-w-[200px]">...</span>
+                        <button onclick="handleSignOut()" title="Sign Out" class="text-zinc-500 hover:text-red-600 ml-1">
+                            <i data-lucide="log-out" class="w-4 h-4"></i>
+                        </button>
+                    </div>
                 </div>
-                <button id="btn-signout" onclick="handleSignOut()" class="hidden px-3 py-1.5 bg-stone-200 hover:bg-stone-300 text-black text-xs font-bold studio-button">
-                    <i class="fa-solid fa-right-from-bracket mr-1"></i> Sign Out
-                </button>
             </div>
         </div>
     </header>
 
-    <!-- Toast Notification Box -->
-    <div id="toast" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 ease-out studio-card p-4 bg-black text-white max-w-sm flex items-center gap-3">
-        <i id="toast-icon" class="fa-solid fa-circle-info text-yellow-400 text-lg"></i>
-        <div id="toast-message" class="text-sm font-medium">Notification message</div>
-    </div>
+    <!-- Main Content Container -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
-    <!-- MAIN CONTAINER -->
-    <main class="flex-grow max-w-7xl w-full mx-auto p-4 md:p-8">
+        <!-- 1. AUTHENTICATION & RESTRICTED ACCESS SCREENS -->
+        
+        <!-- Login Screen -->
+        <div id="screen-login" class="flex flex-col items-center justify-center py-16">
+            <div class="studio-card p-8 sm:p-12 max-w-md w-full text-center relative overflow-hidden">
+                <div class="absolute -right-8 -top-8 w-24 h-24 gold-accent-bg border-2 border-zinc-900 rounded-full opacity-30"></div>
+                
+                <div class="w-16 h-16 bc-accent-bg text-white border-2 border-zinc-900 mx-auto flex items-center justify-center text-3xl font-black mb-6 shadow-[3px_3px_0px_#18181b]">
+                    BC
+                </div>
+                
+                <h2 class="text-2xl font-black text-zinc-900 mb-2">Welcome Back</h2>
+                <p class="text-sm text-zinc-600 mb-8">Sign in with your Boston College Google account to access checkins and team collaboration.</p>
 
-        <!-- AUTH: SIGN IN VIEW -->
-        <section id="view-login" class="max-w-md mx-auto my-12 studio-card p-8 bg-white text-center">
-            <div class="w-16 h-16 bg-bc-maroon text-amber-300 rounded-none border-2 border-black flex items-center justify-center text-2xl mx-auto mb-4 studio-card">
-                <i class="fa-solid fa-university"></i>
+                <button onclick="handleGoogleSignIn()" class="w-full studio-button py-3 px-4 flex items-center justify-center gap-3 text-base">
+                    <svg class="w-5 h-5 bg-white rounded-full p-0.5" viewBox="0 0 24 24">
+                        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+                        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+                    </svg>
+                    Continue with Google
+                </button>
+
+                <div class="mt-8 pt-6 border-t border-zinc-200 text-xs text-zinc-500 font-mono">
+                    Restricted to authorized IR&P team members.
+                </div>
             </div>
-            <h2 class="text-2xl font-bold heading-font text-slate-900 mb-2">Office Portal Sign-In</h2>
-            <p class="text-stone-600 text-sm mb-6">
-                Welcome to Institutional Research & Planning. Sign in with your Google account to access team check-ins and office ideas.
-            </p>
-            <button onclick="handleGoogleSignIn()" class="w-full py-3.5 px-4 bg-white hover:bg-stone-50 text-slate-900 font-bold text-sm studio-button flex items-center justify-center gap-3 border-2 border-black">
-                <svg class="w-5 h-5" viewBox="0 0 24 24">
-                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
-                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
-                </svg>
-                Continue with Google
-            </button>
-            <p class="text-xs text-stone-400 mt-6 font-mono">
-                Access restricted to members in the <span class="underline">allowed_users</span> database.
-            </p>
-        </section>
+        </div>
 
-        <!-- AUTH: ACCESS DENIED VIEW -->
-        <section id="view-access-denied" class="hidden max-w-md mx-auto my-12 studio-card p-8 bg-red-50 text-center border-red-900">
-            <div class="w-16 h-16 bg-red-700 text-white border-2 border-black flex items-center justify-center text-2xl mx-auto mb-4 studio-card">
-                <i class="fa-solid fa-lock"></i>
+        <!-- Access Restricted Screen -->
+        <div id="screen-restricted" class="hidden flex flex-col items-center justify-center py-16">
+            <div class="studio-card p-8 sm:p-10 max-w-lg w-full text-center border-red-600">
+                <div class="w-16 h-16 bg-red-100 text-red-600 border-2 border-zinc-900 mx-auto flex items-center justify-center text-2xl mb-4 shadow-[3px_3px_0px_#18181b]">
+                    <i data-lucide="shield-alert" class="w-8 h-8"></i>
+                </div>
+                <h2 class="text-2xl font-black text-zinc-900 mb-2">Access Restricted</h2>
+                <p class="text-sm text-zinc-600 mb-4">
+                    Your account (<span id="restricted-email-display" class="font-bold text-zinc-900"></span>) is signed in, but you are not on the <code class="bg-zinc-100 px-1 py-0.5 border border-zinc-300 font-mono">allowed_users</code> list.
+                </p>
+                <div class="bg-amber-50 border-2 border-amber-900 p-4 mb-6 text-left text-xs text-amber-900">
+                    <p class="font-bold mb-1">How to fix this:</p>
+                    <p>Ask your database administrator to add your email address to the <code class="font-mono font-bold">allowed_users</code> table in Supabase.</p>
+                </div>
+                <button onclick="handleSignOut()" class="studio-button-secondary px-6 py-2">
+                    Sign Out & Try Another Account
+                </button>
             </div>
-            <h2 class="text-2xl font-bold heading-font text-red-950 mb-2">Access Denied</h2>
-            <p class="text-red-800 text-sm mb-4">
-                Your email <span id="denied-email" class="font-bold underline">user@bc.edu</span> is not authorized to access this studio environment.
-            </p>
-            <p class="text-xs text-red-700 mb-6 bg-red-100 p-3 border border-red-300">
-                Please contact the Institutional Research & Planning administrator to have your email added to the <code class="font-bold">allowed_users</code> table.
-            </p>
-            <button onclick="handleSignOut()" class="w-full py-3 bg-black text-white font-bold text-sm studio-button">
-                Sign Out / Switch Account
-            </button>
-        </section>
+        </div>
 
-        <!-- SECTION 1: TEAM CHECKINS -->
-        <section id="view-checkins" class="hidden space-y-8">
+        <!-- 2. SECTION 1: TEAM CHECKINS -->
+        <div id="tab-checkins" class="hidden space-y-8">
             
-            <!-- Team Switcher Header Bar -->
-            <div class="studio-card p-6 bg-white flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-l-8 border-l-bc-maroon">
-                <div>
-                    <label class="block text-xs font-bold uppercase tracking-wider text-stone-500 mb-1">Active Team Collaboration</label>
-                    <div class="flex items-center gap-3">
-                        <select id="team-select" onchange="handleTeamChange()" class="studio-input text-lg font-bold px-4 py-2 pr-8 text-slate-900 cursor-pointer min-w-[220px]">
-                            <!-- Populated dynamically -->
+            <!-- Team Switcher & Header Controls -->
+            <div class="studio-card p-6 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-amber-50/50">
+                <div class="flex flex-col sm:flex-row sm:items-center gap-3">
+                    <label for="team-select" class="text-xs font-bold uppercase tracking-wider text-zinc-700 font-mono">Current Team:</label>
+                    <div class="relative min-w-[220px]">
+                        <select id="team-select" onchange="handleTeamChange(this.value)" class="w-full studio-input bg-white px-4 py-2 pr-8 font-bold text-base cursor-pointer">
+                            <option value="" disabled selected>Loading Teams...</option>
                         </select>
-                        <button onclick="openCreateTeamModal()" class="studio-button px-3 py-2 bg-bc-maroon text-white font-bold text-sm hover:bg-red-900 flex items-center gap-1.5">
-                            <i class="fa-solid fa-plus"></i> New Team
-                        </button>
                     </div>
+                    <button onclick="openModal('modal-create-team')" class="studio-button px-4 py-2 text-sm flex items-center gap-1.5 self-start sm:self-auto">
+                        <i data-lucide="plus-circle" class="w-4 h-4"></i> New Team
+                    </button>
                 </div>
 
-                <!-- Team Members Badges Bar -->
-                <div class="w-full md:w-auto">
-                    <div class="flex items-center justify-between md:justify-end gap-2 mb-1.5">
-                        <span class="text-xs font-bold uppercase tracking-wider text-stone-500">Team Roster</span>
-                        <button onclick="openAddMemberModal()" class="text-xs font-bold text-bc-maroon hover:underline flex items-center gap-1">
-                            <i class="fa-solid fa-user-plus"></i> Add Member
-                        </button>
-                    </div>
-                    <div id="team-roster-badges" class="flex flex-wrap items-center gap-2">
-                        <!-- Populated dynamically -->
-                    </div>
+                <!-- Manage Members Toggle -->
+                <div class="flex items-center gap-2">
+                    <button onclick="toggleMemberManagement()" class="studio-button-secondary px-4 py-2 text-sm flex items-center gap-2">
+                        <i data-lucide="user-plus" class="w-4 h-4"></i> Manage Team Roster
+                    </button>
                 </div>
             </div>
 
-            <!-- Two Column Checkin Experience -->
+            <!-- Member Roster Drawer / Badge Bar -->
+            <div id="roster-panel" class="studio-card p-6 bg-white hidden">
+                <div class="flex items-center justify-between mb-4 border-b-2 border-zinc-900 pb-3">
+                    <h3 class="text-base font-extrabold text-zinc-900 flex items-center gap-2">
+                        <i data-lucide="users" class="w-5 h-5 text-zinc-700"></i>
+                        Team Members (<span id="member-count">0</span>)
+                    </h3>
+                    <button onclick="toggleMemberManagement()" class="text-zinc-500 hover:text-zinc-900 font-bold text-sm">✕ Close</button>
+                </div>
+
+                <!-- List of current members -->
+                <div id="member-badges-container" class="flex flex-wrap gap-2 mb-6">
+                    <!-- Badges populated dynamically -->
+                </div>
+
+                <!-- Add New Member Form -->
+                <div class="bg-zinc-50 border-2 border-zinc-900 p-4">
+                    <h4 class="text-xs font-bold uppercase tracking-wider text-zinc-700 mb-3 font-mono">+ Add Member to Team</h4>
+                    <form id="add-member-form" onsubmit="handleAddMember(event)" class="flex flex-wrap items-center gap-3">
+                        <input type="text" id="member-first-name" placeholder="First Name (e.g. Alex)" required class="studio-input px-3 py-1.5 text-sm flex-grow max-w-xs">
+                        
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs font-bold text-zinc-600">Avatar:</span>
+                            <select id="member-avatar" class="studio-input px-3 py-1.5 text-sm bg-white cursor-pointer font-mono">
+                                <option value="🦊">🦊 Fox</option>
+                                <option value="🦉">🦉 Owl</option>
+                                <option value="🚀">🚀 Rocket</option>
+                                <option value="🎨">🎨 Palette</option>
+                                <option value="☕">☕ Coffee</option>
+                                <option value="🔬">🔬 Microscope</option>
+                                <option value="📊">📊 Analytics</option>
+                                <option value="🎓">🎓 Grad Cap</option>
+                                <option value="🍕">🍕 Pizza</option>
+                                <option value="⚡">⚡ Lightning</option>
+                                <option value="🐻">🐻 Bear</option>
+                                <option value="🐼">🐼 Panda</option>
+                                <option value="🦁">🦁 Lion</option>
+                            </select>
+                        </div>
+
+                        <button type="submit" class="studio-button px-4 py-1.5 text-sm">Add to Roster</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Main Meeting Layout: Carousel + Virtual Whiteboard -->
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
                 
-                <!-- Left Column: Meeting Carousel -->
-                <div class="lg:col-span-7 studio-card p-6 md:p-8 bg-white flex flex-col justify-between relative overflow-hidden">
-                    <div class="absolute top-0 right-0 bg-stone-100 border-b-2 border-l-2 border-black px-3 py-1 text-xs font-bold heading-font text-stone-700">
-                        FEATURE 01 // MEETING CAROUSEL
-                    </div>
-
-                    <div>
-                        <div class="flex items-center justify-between mb-6">
-                            <div>
-                                <h3 class="text-xl font-bold heading-font text-slate-900">Check-in Spotlight</h3>
-                                <p class="text-xs text-stone-500">Randomized speaker spotlight and discussion prompts.</p>
+                <!-- Left: Meeting Carousel (7 Cols) -->
+                <div class="lg:col-span-7 space-y-6">
+                    <div class="studio-card p-6 bg-white relative overflow-hidden">
+                        <!-- Top Banner -->
+                        <div class="flex items-center justify-between border-b-2 border-zinc-900 pb-4 mb-6">
+                            <div class="flex items-center gap-2">
+                                <span class="w-3 h-3 bg-red-600 border border-zinc-900 inline-block"></span>
+                                <h3 class="font-extrabold text-lg text-zinc-900 uppercase tracking-wide">Checkin Rotator</h3>
                             </div>
-                            <button onclick="shuffleTeamRotation()" class="studio-button px-3 py-2 bg-stone-900 text-amber-300 text-xs font-bold flex items-center gap-2">
-                                <i class="fa-solid fa-shuffle"></i> Shuffle Order
+                            <button onclick="shuffleCarouselOrder()" class="studio-button-secondary px-3 py-1 text-xs flex items-center gap-1.5">
+                                <i data-lucide="shuffle" class="w-3.5 h-3.5"></i> Shuffle Order
                             </button>
                         </div>
 
-                        <!-- Carousel Member Display Card -->
-                        <div id="carousel-card-container" class="my-6 min-h-[260px] flex flex-col items-center justify-center text-center studio-card p-8 bg-amber-50/50 border-stone-900">
-                            <!-- Populated dynamically -->
-                        </div>
-                    </div>
-
-                    <!-- Carousel Controls -->
-                    <div class="flex items-center justify-between pt-4 border-t-2 border-stone-200">
-                        <button onclick="navigateCarousel(-1)" class="studio-button px-4 py-2 bg-white hover:bg-stone-100 text-slate-900 font-bold text-sm flex items-center gap-2">
-                            <i class="fa-solid fa-arrow-left"></i> Previous
-                        </button>
-
-                        <div id="carousel-indicator" class="text-xs font-mono font-bold text-stone-600 bg-stone-200 px-3 py-1 border border-black">
-                            0 / 0
+                        <!-- Carousel Content Display -->
+                        <div id="carousel-empty-state" class="text-center py-12 text-zinc-500">
+                            <i data-lucide="user-x" class="w-12 h-12 mx-auto mb-3 opacity-40"></i>
+                            <p class="font-bold text-base">No team members in this roster yet.</p>
+                            <p class="text-xs mt-1">Click "Manage Team Roster" above to add team members.</p>
                         </div>
 
-                        <button onclick="navigateCarousel(1)" class="studio-button px-4 py-2 bg-stone-900 text-white hover:bg-stone-800 font-bold text-sm flex items-center gap-2">
-                            Next Speaker <i class="fa-solid fa-arrow-right"></i>
-                        </button>
+                        <div id="carousel-active-state" class="hidden flex flex-col items-center text-center space-y-6 py-4">
+                            <!-- Avatar & Name Card -->
+                            <div class="relative">
+                                <div id="carousel-avatar" class="w-24 h-24 sm:w-28 sm:h-28 studio-card flex items-center justify-center text-5xl bg-amber-100 mx-auto">
+                                    🦊
+                                </div>
+                                <span id="carousel-index-badge" class="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-zinc-900 text-white font-mono text-xs px-2.5 py-0.5 border border-zinc-900 font-bold whitespace-nowrap">
+                                    Person 1 of 5
+                                </span>
+                            </div>
+
+                            <h2 id="carousel-member-name" class="text-3xl font-black text-zinc-900 tracking-tight pt-2">
+                                Alex
+                            </h2>
+
+                            <!-- Creative Icebreaker / Checkin Question Box -->
+                            <div class="w-full bg-zinc-900 text-white p-6 border-2 border-zinc-900 shadow-[4px_4px_0px_#C5A059] relative text-left">
+                                <div class="text-[10px] font-mono uppercase tracking-widest text-amber-400 font-bold mb-2 flex items-center justify-between">
+                                    <span>Checkin Prompt</span>
+                                    <button onclick="pickRandomQuestion()" class="hover:underline text-amber-300 flex items-center gap-1 text-[11px]">
+                                        <i data-lucide="refresh-cw" class="w-3 h-3"></i> New Prompt
+                                    </button>
+                                </div>
+                                <p id="carousel-question" class="text-lg sm:text-xl font-bold leading-relaxed text-zinc-100">
+                                    "What do you need from us today to make your week smoother?"
+                                </p>
+                            </div>
+
+                            <!-- Rotator Navigation Buttons -->
+                            <div class="flex items-center justify-between w-full pt-4">
+                                <button onclick="prevCarouselMember()" class="studio-button-secondary px-5 py-2.5 text-sm flex items-center gap-2">
+                                    <i data-lucide="arrow-left" class="w-4 h-4"></i> Previous
+                                </button>
+                                
+                                <button onclick="markMemberChecked()" id="btn-mark-checked" class="studio-button-secondary px-4 py-2.5 text-xs bg-emerald-50 text-emerald-900 border-emerald-900 flex items-center gap-1.5 font-bold">
+                                    <i data-lucide="check-circle" class="w-4 h-4 text-emerald-600"></i> Mark Done
+                                </button>
+
+                                <button onclick="nextCarouselMember()" class="studio-button px-5 py-2.5 text-sm flex items-center gap-2">
+                                    Next <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Right Column: Virtual Whiteboard -->
-                <div class="lg:col-span-5 studio-card p-6 md:p-8 bg-stone-100 flex flex-col">
-                    <div class="flex items-center justify-between mb-4">
+                <!-- Right: Virtual White Board (5 Cols) -->
+                <div class="lg:col-span-5 space-y-6">
+                    <div class="studio-card p-6 bg-white min-h-[500px] flex flex-col justify-between">
                         <div>
-                            <h3 class="text-xl font-bold heading-font text-slate-900">Virtual Whiteboard</h3>
-                            <p class="text-xs text-stone-500">Meeting topics & points attached to this team.</p>
+                            <!-- Header -->
+                            <div class="flex items-center justify-between border-b-2 border-zinc-900 pb-3 mb-4">
+                                <div class="flex items-center gap-2">
+                                    <i data-lucide="layout" class="w-5 h-5 text-zinc-800"></i>
+                                    <h3 class="font-extrabold text-lg text-zinc-900 uppercase tracking-wide">Virtual Whiteboard</h3>
+                                </div>
+                                <span class="text-xs font-mono bg-zinc-100 px-2 py-0.5 border border-zinc-900 font-bold" id="whiteboard-count">
+                                    0 items
+                                </span>
+                            </div>
+
+                            <p class="text-xs text-zinc-600 mb-4 font-medium">
+                                Add points, questions, or updates specifically for this team's meeting agenda.
+                            </p>
+
+                            <!-- Add New Point Form -->
+                            <form onsubmit="handleAddWhiteboardItem(event)" class="mb-6 space-y-2">
+                                <textarea id="whiteboard-input" rows="2" placeholder="Type a point to discuss at this meeting..." required class="w-full studio-input p-3 text-sm resize-none"></textarea>
+                                <button type="submit" class="w-full studio-button py-2 text-sm flex items-center justify-center gap-2">
+                                    <i data-lucide="plus" class="w-4 h-4"></i> Add to Whiteboard
+                                </button>
+                            </form>
+
+                            <!-- List of Points -->
+                            <div id="whiteboard-items-list" class="space-y-3 max-h-[360px] overflow-y-auto pr-1">
+                                <!-- Populated dynamically -->
+                            </div>
                         </div>
-                        <span class="text-xs font-mono bg-stone-200 px-2 py-1 border border-black font-bold" id="whiteboard-count">0 items</span>
-                    </div>
 
-                    <!-- Add Point Form -->
-                    <form onsubmit="handleAddWhiteboardPoint(event)" class="mb-6 flex gap-2">
-                        <input type="text" id="whiteboard-input" placeholder="Add a topic or note for discussion..." required class="studio-input flex-grow px-3 py-2 text-sm">
-                        <button type="submit" class="studio-button px-4 py-2 bg-bc-maroon text-white font-bold text-sm whitespace-nowrap">
-                            <i class="fa-solid fa-plus"></i> Add
-                        </button>
-                    </form>
-
-                    <!-- Sticky Notes Container -->
-                    <div id="whiteboard-items-container" class="space-y-3 max-h-[420px] overflow-y-auto pr-1">
-                        <!-- Populated dynamically -->
+                        <!-- Footer indicator -->
+                        <div class="pt-4 border-t border-zinc-200 text-[11px] font-mono text-zinc-400 text-center">
+                            ⚡ Realtime sync active for selected team
+                        </div>
                     </div>
                 </div>
 
             </div>
-        </section>
+        </div>
 
-        <!-- SECTION 2: BETTER OFFICE -->
-        <section id="view-ideas" class="hidden space-y-8">
+        <!-- 3. SECTION 2: BETTER OFFICE -->
+        <div id="tab-ideas" class="hidden space-y-8">
             
-            <!-- Header & Filter Bar -->
-            <div class="studio-card p-6 bg-white flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-l-8 border-l-amber-500">
-                <div>
-                    <h2 class="text-2xl font-bold heading-font text-slate-900">Better Office Studio</h2>
-                    <p class="text-sm text-stone-600">Submit, refine, volunteer for, and implement ideas that upgrade our working environment.</p>
+            <!-- Section Header Banner -->
+            <div class="studio-card p-6 sm:p-8 bg-zinc-900 text-white relative overflow-hidden">
+                <div class="max-w-3xl relative z-10 space-y-3">
+                    <div class="inline-block px-3 py-1 bg-amber-400 text-zinc-900 font-mono text-xs font-black uppercase tracking-wider">
+                        Continuous Office Improvement
+                    </div>
+                    <h2 class="text-3xl sm:text-4xl font-black tracking-tight">
+                        Better Office Innovation Engine
+                    </h2>
+                    <p class="text-zinc-300 text-sm sm:text-base leading-relaxed">
+                        A dedicated hub to turn everyday IR&P friction into structured solutions. Propose ideas, volunteer to build them, upvote priorities, and track implementation.
+                    </p>
                 </div>
-                
-                <button onclick="openCreateIdeaModal()" class="studio-button px-5 py-3 bg-stone-900 text-amber-300 font-bold text-sm flex items-center gap-2">
-                    <i class="fa-solid fa-lightbulb"></i> Propose New Idea
-                </button>
+                <!-- Action Button -->
+                <div class="mt-6">
+                    <button onclick="openModal('modal-create-idea')" class="px-6 py-3 bg-amber-400 text-zinc-900 border-2 border-white font-extrabold text-sm hover:bg-amber-300 transition-all shadow-[3px_3px_0px_#ffffff] flex items-center gap-2">
+                        <i data-lucide="sparkles" class="w-5 h-5"></i> Submit New Idea
+                    </button>
+                </div>
             </div>
 
-            <!-- Filters -->
-            <div class="flex flex-wrap items-center justify-between gap-4 bg-stone-100 p-4 studio-card">
-                <div class="flex flex-wrap items-center gap-3">
-                    <span class="text-xs font-bold uppercase tracking-wider text-stone-600"><i class="fa-solid fa-filter mr-1"></i> Filter By:</span>
-                    
-                    <select id="filter-area" onchange="renderIdeas()" class="studio-input text-xs font-bold px-3 py-1.5">
+            <!-- Filters & Search Toolbar -->
+            <div class="studio-card p-4 bg-white flex flex-col md:flex-row gap-4 items-stretch md:items-center justify-between">
+                
+                <!-- Search input -->
+                <div class="relative flex-grow max-w-xs">
+                    <i data-lucide="search" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400"></i>
+                    <input type="text" id="idea-search-input" oninput="renderIdeas()" placeholder="Search ideas..." class="w-full studio-input pl-9 pr-3 py-1.5 text-sm">
+                </div>
+
+                <!-- Filter Controls -->
+                <div class="flex flex-wrap items-center gap-2">
+                    <!-- Area Filter -->
+                    <select id="idea-filter-area" onchange="renderIdeas()" class="studio-input px-3 py-1.5 text-xs font-bold bg-white cursor-pointer">
                         <option value="ALL">All Areas</option>
                         <option value="Meetings">Meetings</option>
                         <option value="Technology">Technology</option>
                         <option value="Workspace">Workspace</option>
                         <option value="Communication">Communication</option>
                         <option value="Student Experience">Student Experience</option>
-                        <option value="Process & Workflow">Process & Workflow</option>
+                        <option value="Process & Data">Process & Data</option>
                     </select>
 
-                    <select id="filter-effort" onchange="renderIdeas()" class="studio-input text-xs font-bold px-3 py-1.5">
-                        <option value="ALL">All Effort Levels</option>
-                        <option value="5 min">5 min</option>
-                        <option value="1 hour">1 hour</option>
-                        <option value="1 day">1 day</option>
-                        <option value="project">Project</option>
-                    </select>
-
-                    <select id="filter-status" onchange="renderIdeas()" class="studio-input text-xs font-bold px-3 py-1.5">
+                    <!-- Status Filter -->
+                    <select id="idea-filter-status" onchange="renderIdeas()" class="studio-input px-3 py-1.5 text-xs font-bold bg-white cursor-pointer">
                         <option value="ALL">All Statuses</option>
-                        <option value="ACTIVE">Active Ideas</option>
-                        <option value="IMPLEMENTED">Implemented</option>
+                        <option value="Proposed">Proposed</option>
+                        <option value="In Progress">In Progress</option>
+                        <option value="Implemented">Implemented 🎉</option>
                     </select>
-                </div>
 
-                <div class="text-xs font-mono font-bold text-stone-500" id="ideas-count">
-                    Showing 0 ideas
+                    <!-- Sort Order -->
+                    <select id="idea-sort-order" onchange="renderIdeas()" class="studio-input px-3 py-1.5 text-xs font-bold bg-white cursor-pointer font-mono">
+                        <option value="votes">Sort: Top Voted</option>
+                        <option value="newest">Sort: Newest First</option>
+                    </select>
                 </div>
             </div>
 
             <!-- Ideas Grid -->
-            <div id="ideas-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Populated dynamically -->
+            <div id="ideas-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Dynamic cards populated here -->
             </div>
 
-        </section>
+            <!-- Empty State for Ideas -->
+            <div id="ideas-empty-state" class="hidden studio-card p-12 text-center bg-white space-y-3">
+                <i data-lucide="lightbulb-off" class="w-12 h-12 text-zinc-300 mx-auto"></i>
+                <h3 class="text-lg font-bold text-zinc-900">No ideas found</h3>
+                <p class="text-xs text-zinc-500 max-w-sm mx-auto">Be the first to submit an idea to make the IR&P office run smoother!</p>
+                <button onclick="openModal('modal-create-idea')" class="studio-button px-4 py-2 text-xs inline-block">Submit an Idea</button>
+            </div>
+
+        </div>
 
     </main>
 
-    <!-- MODAL CONTAINER (GENERIC) -->
+    <!-- MODALS CONTAINER -->
 
-    <!-- CREATE TEAM MODAL -->
-    <div id="modal-create-team" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4">
-        <div class="studio-card p-6 bg-white w-full max-w-md">
-            <div class="flex items-center justify-between mb-4 border-b-2 border-black pb-2">
-                <h3 class="text-lg font-bold heading-font">Create New Team</h3>
-                <button onclick="closeModal('modal-create-team')" class="text-stone-500 hover:text-black text-xl font-bold">&times;</button>
+    <!-- Modal 1: Create Team -->
+    <div id="modal-create-team" class="hidden fixed inset-0 z-50 bg-zinc-900/60 backdrop-blur-xs flex items-center justify-center p-4">
+        <div class="studio-card p-6 sm:p-8 max-w-md w-full bg-white relative animate-in fade-in zoom-in-95 duration-150">
+            <div class="flex justify-between items-center border-b-2 border-zinc-900 pb-3 mb-4">
+                <h3 class="text-lg font-black text-zinc-900">Create New Team</h3>
+                <button onclick="closeModal('modal-create-team')" class="text-zinc-500 font-bold hover:text-zinc-900">✕</button>
             </div>
+
             <form onsubmit="handleCreateTeam(event)" class="space-y-4">
                 <div>
-                    <label class="block text-xs font-bold uppercase mb-1">Team Name</label>
-                    <input type="text" id="new-team-name" placeholder="e.g. Data Analytics Group" required class="w-full studio-input px-3 py-2 text-sm">
+                    <label class="block text-xs font-bold uppercase tracking-wider text-zinc-700 mb-1 font-mono">Team Name</label>
+                    <input type="text" id="new-team-name" required placeholder="e.g. Data Analytics & Reporting" class="w-full studio-input p-2.5 text-sm">
                 </div>
+
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-zinc-700 mb-1 font-mono">Description (Optional)</label>
+                    <textarea id="new-team-desc" rows="2" placeholder="What does this group focus on?" class="w-full studio-input p-2.5 text-sm resize-none"></textarea>
+                </div>
+
                 <div class="flex justify-end gap-2 pt-2">
-                    <button type="button" onclick="closeModal('modal-create-team')" class="studio-button px-4 py-2 bg-stone-200 text-xs font-bold">Cancel</button>
-                    <button type="submit" class="studio-button px-4 py-2 bg-bc-maroon text-white text-xs font-bold">Create Team</button>
+                    <button type="button" onclick="closeModal('modal-create-team')" class="studio-button-secondary px-4 py-2 text-xs">Cancel</button>
+                    <button type="submit" class="studio-button px-5 py-2 text-xs">Create Team</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- ADD MEMBER MODAL -->
-    <div id="modal-add-member" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4">
-        <div class="studio-card p-6 bg-white w-full max-w-md">
-            <div class="flex items-center justify-between mb-4 border-b-2 border-black pb-2">
-                <h3 class="text-lg font-bold heading-font">Add Team Member</h3>
-                <button onclick="closeModal('modal-add-member')" class="text-stone-500 hover:text-black text-xl font-bold">&times;</button>
+    <!-- Modal 2: Create / Edit Idea -->
+    <div id="modal-create-idea" class="hidden fixed inset-0 z-50 bg-zinc-900/60 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
+        <div class="studio-card p-6 sm:p-8 max-w-lg w-full bg-white relative my-8">
+            <div class="flex justify-between items-center border-b-2 border-zinc-900 pb-3 mb-4">
+                <h3 id="modal-idea-title" class="text-lg font-black text-zinc-900">💡 Submit New Better Office Idea</h3>
+                <button onclick="closeModal('modal-create-idea')" class="text-zinc-500 font-bold hover:text-zinc-900">✕</button>
             </div>
-            <form onsubmit="handleAddMember(event)" class="space-y-4">
-                <div>
-                    <label class="block text-xs font-bold uppercase mb-1">First Name</label>
-                    <input type="text" id="new-member-name" placeholder="e.g. Sarah" required class="w-full studio-input px-3 py-2 text-sm">
-                </div>
-                <div>
-                    <label class="block text-xs font-bold uppercase mb-2">Select Avatar</label>
-                    <div id="avatar-picker" class="grid grid-cols-6 gap-2">
-                        <!-- Populated by JS -->
-                    </div>
-                </div>
-                <input type="hidden" id="selected-avatar-input" value="🎨">
-                <div class="flex justify-end gap-2 pt-2">
-                    <button type="button" onclick="closeModal('modal-add-member')" class="studio-button px-4 py-2 bg-stone-200 text-xs font-bold">Cancel</button>
-                    <button type="submit" class="studio-button px-4 py-2 bg-stone-900 text-amber-300 text-xs font-bold">Add Member</button>
-                </div>
-            </form>
-        </div>
-    </div>
 
-    <!-- CREATE IDEA MODAL -->
-    <div id="modal-create-idea" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4">
-        <div class="studio-card p-6 bg-white w-full max-w-lg max-h-[90vh] overflow-y-auto">
-            <div class="flex items-center justify-between mb-4 border-b-2 border-black pb-2">
-                <h3 id="idea-modal-title" class="text-lg font-bold heading-font">💡 Propose Office Idea</h3>
-                <button onclick="closeModal('modal-create-idea')" class="text-stone-500 hover:text-black text-xl font-bold">&times;</button>
-            </div>
             <form onsubmit="handleSaveIdea(event)" class="space-y-4">
-                <input type="hidden" id="idea-edit-id" value="">
+                <input type="hidden" id="idea-editing-id" value="">
+
                 <div>
-                    <label class="block text-xs font-bold uppercase mb-1">Idea Title</label>
-                    <input type="text" id="idea-title" placeholder="e.g. Weekly Data Visualization Critique Hour" required class="w-full studio-input px-3 py-2 text-sm">
+                    <label class="block text-xs font-bold uppercase tracking-wider text-zinc-700 mb-1 font-mono">Idea Title</label>
+                    <input type="text" id="idea-title" required placeholder="e.g. Automated Weekly Data Digest" class="w-full studio-input p-2.5 text-sm">
                 </div>
-                <div>
-                    <label class="block text-xs font-bold uppercase mb-1">Problem it's trying to solve</label>
-                    <textarea id="idea-problem" rows="2" placeholder="What inefficiency or frustration does this address?" required class="w-full studio-input px-3 py-2 text-sm"></textarea>
-                </div>
-                <div>
-                    <label class="block text-xs font-bold uppercase mb-1">Proposed Solution</label>
-                    <textarea id="idea-solution" rows="3" placeholder="How will we execute this idea effectively?" required class="w-full studio-input px-3 py-2 text-sm"></textarea>
-                </div>
+
                 <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-xs font-bold uppercase mb-1">Estimated Effort</label>
-                        <select id="idea-effort" class="w-full studio-input px-3 py-2 text-sm">
-                            <option value="5 min">5 min</option>
-                            <option value="1 hour">1 hour</option>
-                            <option value="1 day">1 day</option>
-                            <option value="project">Project</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold uppercase mb-1">Office Area</label>
-                        <select id="idea-area" class="w-full studio-input px-3 py-2 text-sm">
+                        <label class="block text-xs font-bold uppercase tracking-wider text-zinc-700 mb-1 font-mono">Area</label>
+                        <select id="idea-area" class="w-full studio-input p-2.5 text-sm bg-white cursor-pointer font-semibold">
                             <option value="Meetings">Meetings</option>
                             <option value="Technology">Technology</option>
                             <option value="Workspace">Workspace</option>
                             <option value="Communication">Communication</option>
                             <option value="Student Experience">Student Experience</option>
-                            <option value="Process & Workflow">Process & Workflow</option>
+                            <option value="Process & Data">Process & Data</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-zinc-700 mb-1 font-mono">Estimated Effort</label>
+                        <select id="idea-effort" class="w-full studio-input p-2.5 text-sm bg-white cursor-pointer font-semibold">
+                            <option value="5 min">⚡ 5 min quick fix</option>
+                            <option value="1 hour">⏳ 1 hour task</option>
+                            <option value="1 day">📅 1 day effort</option>
+                            <option value="Project">🚀 Multi-day project</option>
                         </select>
                     </div>
                 </div>
+
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-zinc-700 mb-1 font-mono">Problem it's trying to solve</label>
+                    <textarea id="idea-problem" rows="2" required placeholder="What friction or inefficiency are we experiencing?" class="w-full studio-input p-2.5 text-sm resize-none"></textarea>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-zinc-700 mb-1 font-mono">Proposed solution</label>
+                    <textarea id="idea-solution" rows="3" required placeholder="How do you propose we fix or improve it?" class="w-full studio-input p-2.5 text-sm resize-none"></textarea>
+                </div>
+
                 <div class="flex justify-end gap-2 pt-2">
-                    <button type="button" onclick="closeModal('modal-create-idea')" class="studio-button px-4 py-2 bg-stone-200 text-xs font-bold">Cancel</button>
-                    <button type="submit" class="studio-button px-4 py-2 bg-stone-900 text-white text-xs font-bold">Save Idea</button>
+                    <button type="button" onclick="closeModal('modal-create-idea')" class="studio-button-secondary px-4 py-2 text-xs">Cancel</button>
+                    <button type="submit" class="studio-button px-5 py-2 text-xs">Save & Publish Idea</button>
                 </div>
             </form>
         </div>
     </div>
 
+    <!-- Modal 3: Idea Comments Drawer -->
+    <div id="modal-comments" class="hidden fixed inset-0 z-50 bg-zinc-900/60 backdrop-blur-xs flex items-center justify-center p-4">
+        <div class="studio-card p-6 sm:p-8 max-w-xl w-full bg-white relative max-h-[90vh] flex flex-col justify-between">
+            <div>
+                <div class="flex justify-between items-center border-b-2 border-zinc-900 pb-3 mb-4">
+                    <h3 class="text-base font-black text-zinc-900 flex items-center gap-2">
+                        <i data-lucide="message-square" class="w-5 h-5 text-amber-600"></i>
+                        Discussion: <span id="modal-comments-idea-title" class="truncate max-w-[280px] font-bold"></span>
+                    </h3>
+                    <button onclick="closeModal('modal-comments')" class="text-zinc-500 font-bold hover:text-zinc-900">✕</button>
+                </div>
+
+                <!-- Scrollable Comments List -->
+                <div id="comments-list-container" class="space-y-3 max-h-[350px] overflow-y-auto pr-2 mb-4">
+                    <!-- Populated dynamically -->
+                </div>
+            </div>
+
+            <!-- New Comment Form -->
+            <form onsubmit="handleAddComment(event)" class="border-t-2 border-zinc-900 pt-4 flex gap-2">
+                <input type="hidden" id="comments-target-idea-id" value="">
+                <input type="text" id="comment-input-text" placeholder="Add a comment or perspective..." required class="flex-grow studio-input px-3 py-2 text-sm">
+                <button type="submit" class="studio-button px-4 py-2 text-xs whitespace-nowrap">Post</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Global Notification Toast -->
+    <div id="toast" class="fixed bottom-5 right-5 z-50 studio-card p-4 bg-zinc-900 text-white border-2 border-amber-400 hidden max-w-xs text-xs font-semibold shadow-lg">
+        <span id="toast-message">Notification</span>
+    </div>
+
+
     <script>
-        // SUPABASE CONFIGURATION (Connection variables)
+        /* ----------------------------------------------------
+         * 1. SUPABASE CLIENT CONFIGURATION & GLOBAL STATE
+         * ---------------------------------------------------- */
         const SUPABASE_URL = "https://uqblyogrcsrbgxsncncu.supabase.co";
-        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInRlZiI6InVxYmx5b2dyY3NyYmd4c25jbmN1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIzMDEyNTMsImV4cCI6MjA5Nzg3NzI1M30.AKjE2io4qebY_jLHO5HakU6yZh1TdMne71F-muJGpLM";
+        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVxYmx5b2dyY3NyYmd4c25jbmN1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIzMDEyNTMsImV4cCI6MjA5Nzg3NzI1M30.AKjE2io4qebY_jLHO5HakU6yZh1TdMne71F-muJGpLM";
 
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // APP STATE
+        // Application State
         let currentUser = null;
-        let activeSection = 'checkins'; // 'checkins' or 'ideas'
-        
-        // Teams & Checkin State
+        let isAllowed = false;
+        let activeTab = 'checkins'; // 'checkins' | 'ideas'
+
+        // Checkins State
         let teams = [];
         let selectedTeamId = null;
         let teamMembers = [];
+        let carouselIndices = []; // Order of member indices in carousel
+        let currentCarouselPointer = 0;
         let whiteboardItems = [];
-        let carouselOrder = [];
-        let carouselIndex = 0;
-        let currentQuestion = "";
 
         // Ideas State
         let ideas = [];
+        let ideaVotes = []; // Array of vote objects
+        let ideaVolunteers = []; // Array of volunteer objects
+        let ideaComments = []; // Array of comment objects
 
-        // Avatar presets
-        const AVATAR_OPTIONS = ['🎨', '📊', '🦉', '🚀', '💻', '☕', '🔬', '📐', '💡', '🧭', '🦅', '📚', '⚡', '🎓', '🎯', '⚙️'];
-
-        // 30 Creative Check-in Questions
-        const QUESTIONS = [
-            "What do you need from us today?",
-            "What’s a small win you had this past week?",
-            "What is currently consuming most of your mental bandwidth?",
-            "What’s one piece of advice or feedback you’d love right now?",
-            "What project are you most excited to tackle next?",
-            "If you could automate one daily task, what would it be?",
-            "What’s a highlight from your recent research or data work?",
-            "What is blocking your momentum today?",
-            "What’s a new tool or shortcut you discovered recently?",
-            "Who in our department deserves a shout-out this week?",
-            "What’s something surprising you learned from recent datasets?",
-            "How are you pacing yourself for upcoming deadlines?",
-            "What is one goal you want to finish before the weekend?",
-            "What topic would you love to brainstorm with the team?",
-            "What’s your current energizer or go-to coffee order?",
-            "What part of your workload feels most ambiguous right now?",
-            "What’s a decision we can help you make today?",
-            "If our office had a theme song for this week, what vibe would it have?",
-            "What process in our office feels overly complicated?",
-            "What’s a data insight or pattern that caught your eye lately?",
-            "What skill or knowledge gap would you love to fill this semester?",
-            "How can we make our next collaboration session even better?",
-            "What’s a low-hanging fruit idea we should execute right away?",
-            "What’s one thing making you feel proud of your work right now?",
-            "What’s your top priority for the next 48 hours?",
-            "What’s an assumption we’re making in our team that we should question?",
-            "If you had 2 extra hours today, how would you spend them?",
-            "What’s one thing you need clarity on from leadership?",
-            "What’s a creative solution you’ve been mulling over?",
-            "What’s bringing you joy outside of work this week?"
+        // 30+ Creative Icebreaker Questions for Academic IR&P Meetings
+        const CHECKIN_QUESTIONS = [
+            "What do you need from us today to make your week smoother?",
+            "What’s one piece of data or finding this week that surprised or excited you?",
+            "If you could automate one repetitive task in your workload, what would it be?",
+            "What’s a low-key victory you had this week that didn’t get a spotlight?",
+            "Which project on your plate right now needs the most collaborative brainstorming?",
+            "If our office was an institution-wide dashboard, what would our primary metric be?",
+            "What is one habit or routine that is keeping you grounded this month?",
+            "What’s an idea you’ve been hesitant to share because it feels too experimental?",
+            "If you could swap roles with anyone in the office for a day, who and why?",
+            "What’s one chart, table, or visualization technique you've been wanting to try?",
+            "Where do you feel stuck right now, and who can help untangle it?",
+            "What is a goal you have for this quarter outside of your daily task list?",
+            "If you could describe your current bandwidth in terms of weather, what is it?",
+            "What’s one resource or tool that saved you time or stress recently?",
+            "What is a piece of feedback or advice you received that resonated deeply?",
+            "If we could eliminate one unnecessary meeting or process, which would you target?",
+            "What topic are you currently curious about and want to learn more about?",
+            "What’s a question you wish leadership or decision-makers would ask us?",
+            "How can the team support your focused deep-work time this week?",
+            "What is something you’re looking forward to after work or this weekend?",
+            "What’s one thing about our team culture that you appreciate most right now?",
+            "If you could rewrite any official report title into a fun bestseller title, what would it be?",
+            "What is a workflow bottleneck you ran into recently?",
+            "What’s one skill you have that the rest of the team might not know about?",
+            "What was your favorite coffee/tea or snack fueling your work today?",
+            "If our team had a mascot, what would it be and why?",
+            "What’s a project you worked on recently that you're particularly proud of?",
+            "What’s one small improvement we could make to our office workspace or virtual setup?",
+            "What’s something you learned recently that changed your perspective?",
+            "If you had an extra 3 hours of free time at work tomorrow, how would you use it?",
+            "What’s one positive highlight from a recent stakeholder or campus partner interaction?",
+            "What is your go-to soundtrack or background noise when doing deep analytical work?"
         ];
 
-        // APP INITIALIZATION & AUTHENTICATION
+        /* ----------------------------------------------------
+         * 2. INITIALIZATION & AUTHENTICATION LOGIC
+         * ---------------------------------------------------- */
         window.addEventListener('DOMContentLoaded', async () => {
-            initAvatarPicker();
-            setupAuthListener();
-        });
-
-        function setupAuthListener() {
-            supabase.auth.onAuthStateChanged(async (event, session) => {
+            lucide.createIcons();
+            
+            // Listen for auth state changes
+            supabaseClient.auth.onAuthStateChange(async (event, session) => {
                 if (session && session.user) {
                     currentUser = session.user;
-                    const isAllowed = await verifyUserAllowed(currentUser.email);
-                    if (isAllowed) {
-                        showAppUI();
-                        await loadInitialData();
-                    } else {
-                        showAccessDeniedUI(currentUser.email);
-                    }
+                    await checkUserAccessAndInit();
                 } else {
-                    showLoginUI();
+                    currentUser = null;
+                    isAllowed = false;
+                    showScreen('login');
                 }
             });
-        }
 
-        async function verifyUserAllowed(email) {
-            try {
-                const { data, error } = await supabase
-                    .from('allowed_users')
-                    .select('email')
-                    .eq('email', email)
-                    .maybeSingle();
-                
-                if (error) {
-                    console.error("Error checking allowed users:", error);
-                    return false;
-                }
-                return !!data;
-            } catch (err) {
-                console.error("Verification error:", err);
-                return false;
+            // Initial session check
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            if (session && session.user) {
+                currentUser = session.user;
+                await checkUserAccessAndInit();
+            } else {
+                showScreen('login');
             }
-        }
+        });
 
         async function handleGoogleSignIn() {
             try {
-                const { error } = await supabase.auth.signInWithOAuth({
+                const { error } = await supabaseClient.auth.signInWithOAuth({
                     provider: 'google',
                     options: {
                         redirectTo: window.location.href
                     }
                 });
-                if (error) showToast("Sign in failed: " + error.message, "error");
+                if (error) throw error;
             } catch (err) {
-                showToast("Sign in error: " + err.message, "error");
+                showToast("Auth Error: " + err.message);
             }
         }
 
         async function handleSignOut() {
-            await supabase.auth.signOut();
-            showToast("Signed out successfully");
+            await supabaseClient.auth.signOut();
+            window.location.reload();
         }
 
-        // UI NAVIGATION & TOGGLES
-        function showLoginUI() {
-            document.getElementById('view-login').classList.remove('hidden');
-            document.getElementById('view-access-denied').classList.add('hidden');
-            document.getElementById('view-checkins').classList.add('hidden');
-            document.getElementById('view-ideas').classList.add('hidden');
-            document.getElementById('app-nav').classList.add('hidden');
-            document.getElementById('user-info').classList.add('hidden');
-            document.getElementById('btn-signout').classList.add('hidden');
-        }
-
-        function showAccessDeniedUI(email) {
-            document.getElementById('view-login').classList.add('hidden');
-            document.getElementById('view-access-denied').classList.remove('hidden');
-            document.getElementById('view-checkins').classList.add('hidden');
-            document.getElementById('view-ideas').classList.add('hidden');
-            document.getElementById('app-nav').classList.add('hidden');
-            document.getElementById('user-info').classList.add('hidden');
-            document.getElementById('btn-signout').classList.remove('hidden');
-            document.getElementById('denied-email').textContent = email;
-        }
-
-        function showAppUI() {
-            document.getElementById('view-login').classList.add('hidden');
-            document.getElementById('view-access-denied').classList.add('hidden');
-            document.getElementById('app-nav').classList.remove('hidden');
-            document.getElementById('user-info').classList.remove('hidden');
-            document.getElementById('btn-signout').classList.remove('hidden');
-            document.getElementById('user-email').textContent = currentUser.email;
+        async function checkUserAccessAndInit() {
+            const userEmail = currentUser.email?.toLowerCase().trim();
             
-            switchSection(activeSection);
-        }
+            try {
+                const { data, error } = await supabaseClient
+                    .from('allowed_users')
+                    .select('*')
+                    .ilike('email', userEmail);
 
-        function switchSection(section) {
-            activeSection = section;
-            const navCheckins = document.getElementById('nav-checkins');
-            const navIdeas = document.getElementById('nav-ideas');
-            const viewCheckins = document.getElementById('view-checkins');
-            const viewIdeas = document.getElementById('view-ideas');
+                if (error) throw error;
 
-            if (section === 'checkins') {
-                viewCheckins.classList.remove('hidden');
-                viewIdeas.classList.add('hidden');
-                navCheckins.className = "px-4 py-2 font-bold text-sm studio-button bg-bc-maroon text-white flex items-center gap-2";
-                navIdeas.className = "px-4 py-2 font-bold text-sm bg-white text-black hover:bg-stone-50 border-2 border-transparent flex items-center gap-2";
-            } else {
-                viewCheckins.classList.add('hidden');
-                viewIdeas.classList.remove('hidden');
-                navIdeas.className = "px-4 py-2 font-bold text-sm studio-button bg-stone-900 text-amber-300 flex items-center gap-2";
-                navCheckins.className = "px-4 py-2 font-bold text-sm bg-white text-black hover:bg-stone-50 border-2 border-transparent flex items-center gap-2";
-                renderIdeas();
+                if (data && data.length > 0) {
+                    isAllowed = true;
+                    document.getElementById('user-email-display').innerText = userEmail;
+                    document.getElementById('user-badge').classList.remove('hidden');
+                    document.getElementById('user-badge').classList.add('flex');
+                    document.getElementById('app-nav').classList.remove('hidden');
+
+                    showScreen('app');
+                    await loadAppData();
+                    setupRealtimeSubscriptions();
+                } else {
+                    isAllowed = false;
+                    document.getElementById('restricted-email-display').innerText = userEmail;
+                    showScreen('restricted');
+                }
+            } catch (err) {
+                console.error("Access verification or RLS policy error:", err);
+                showToast("RLS Permission Error: " + (err.message || "Could not verify permissions."));
+                document.getElementById('restricted-email-display').innerText = userEmail;
+                showScreen('restricted');
             }
         }
 
-        // DATA LOADERS
-        async function loadInitialData() {
+        function showScreen(screen) {
+            document.getElementById('screen-login').classList.add('hidden');
+            document.getElementById('screen-restricted').classList.add('hidden');
+            document.getElementById('tab-checkins').classList.add('hidden');
+            document.getElementById('tab-ideas').classList.add('hidden');
+
+            if (screen === 'login') {
+                document.getElementById('screen-login').classList.remove('hidden');
+                document.getElementById('app-nav').classList.add('hidden');
+                document.getElementById('user-badge').classList.add('hidden');
+            } else if (screen === 'restricted') {
+                document.getElementById('screen-restricted').classList.remove('hidden');
+            } else if (screen === 'app') {
+                switchTab(activeTab);
+            }
+        }
+
+        function switchTab(tab) {
+            activeTab = tab;
+            document.getElementById('tab-checkins').classList.add('hidden');
+            document.getElementById('tab-ideas').classList.add('hidden');
+
+            // Button styling
+            const btnCheckins = document.getElementById('nav-checkins-btn');
+            const btnIdeas = document.getElementById('nav-ideas-btn');
+
+            if (tab === 'checkins') {
+                document.getElementById('tab-checkins').classList.remove('hidden');
+                btnCheckins.className = "px-4 py-2 border-2 border-zinc-900 font-bold text-sm bg-zinc-900 text-white shadow-[2px_2px_0px_#18181b] flex items-center gap-2";
+                btnIdeas.className = "px-4 py-2 border-2 border-zinc-900 font-bold text-sm bg-white text-zinc-900 hover:bg-zinc-100 flex items-center gap-2";
+            } else {
+                document.getElementById('tab-ideas').classList.remove('hidden');
+                btnIdeas.className = "px-4 py-2 border-2 border-zinc-900 font-bold text-sm bg-zinc-900 text-white shadow-[2px_2px_0px_#18181b] flex items-center gap-2";
+                btnCheckins.className = "px-4 py-2 border-2 border-zinc-900 font-bold text-sm bg-white text-zinc-900 hover:bg-zinc-100 flex items-center gap-2";
+                renderIdeas();
+            }
+            lucide.createIcons();
+        }
+
+        /* ----------------------------------------------------
+         * 3. DATA LOADING & REALTIME SUBSCRIPTIONS
+         * ---------------------------------------------------- */
+        async function loadAppData() {
             await fetchTeams();
-            await fetchIdeas();
+            await fetchIdeasData();
         }
 
+        function setupRealtimeSubscriptions() {
+            // Subscribe to all changes in our tables
+            supabaseClient
+                .channel('public-db-changes')
+                .on('postgres_changes', { event: '*', schema: 'public', table: 'teams' }, () => fetchTeams())
+                .on('postgres_changes', { event: '*', schema: 'public', table: 'team_members' }, () => fetchTeamMembers())
+                .on('postgres_changes', { event: '*', schema: 'public', table: 'whiteboard_items' }, () => fetchWhiteboardItems())
+                .on('postgres_changes', { event: '*', schema: 'public', table: 'ideas' }, () => fetchIdeasData())
+                .on('postgres_changes', { event: '*', schema: 'public', table: 'idea_votes' }, () => fetchIdeasData())
+                .on('postgres_changes', { event: '*', schema: 'public', table: 'idea_volunteers' }, () => fetchIdeasData())
+                .on('postgres_changes', { event: '*', schema: 'public', table: 'idea_comments' }, () => {
+                    fetchIdeasData();
+                    const commentsIdeaId = document.getElementById('comments-target-idea-id').value;
+                    if (commentsIdeaId) renderCommentsForIdea(commentsIdeaId);
+                })
+                .subscribe();
+        }
+
+        /* ----------------------------------------------------
+         * 4. SECTION 1: TEAM CHECKINS LOGIC
+         * ---------------------------------------------------- */
         async function fetchTeams() {
-            const { data, error } = await supabase
-                .from('teams')
-                .select('*')
-                .order('created_at', { ascending: true });
+            try {
+                const { data, error } = await supabaseClient
+                    .from('teams')
+                    .select('*')
+                    .order('created_at', { ascending: true });
 
-            if (error) {
-                showToast("Failed to fetch teams", "error");
-                return;
+                if (error) throw error;
+
+                teams = data || [];
+                renderTeamSelectDropdown();
+
+                if (teams.length > 0) {
+                    if (!selectedTeamId || !teams.find(t => t.id === selectedTeamId)) {
+                        selectedTeamId = teams[0].id;
+                    }
+                    document.getElementById('team-select').value = selectedTeamId;
+                    await fetchTeamMembers();
+                    await fetchWhiteboardItems();
+                } else {
+                    selectedTeamId = null;
+                    teamMembers = [];
+                    whiteboardItems = [];
+                    renderCarousel();
+                    renderWhiteboard();
+                }
+            } catch (err) {
+                console.error("Error fetching teams:", err);
+                showToast("Failed to fetch teams.");
             }
+        }
 
-            teams = data || [];
-            const teamSelect = document.getElementById('team-select');
-            teamSelect.innerHTML = '';
-
+        function renderTeamSelectDropdown() {
+            const selectEl = document.getElementById('team-select');
             if (teams.length === 0) {
-                // Auto create default team if empty
-                await createTeam("IRP Analytics Team");
+                selectEl.innerHTML = `<option value="" disabled selected>No Teams Created Yet</option>`;
                 return;
             }
 
-            teams.forEach(t => {
-                const opt = document.createElement('option');
-                opt.value = t.id;
-                opt.textContent = t.name;
-                teamSelect.appendChild(opt);
-            });
-
-            if (!selectedTeamId || !teams.some(t => t.id === selectedTeamId)) {
-                selectedTeamId = teams[0].id;
-            }
-            teamSelect.value = selectedTeamId;
-            await loadTeamDetails();
+            selectEl.innerHTML = teams.map(t => 
+                `<option value="${t.id}">${t.name}</option>`
+            ).join('');
         }
 
-        async function handleTeamChange() {
-            selectedTeamId = document.getElementById('team-select').value;
-            await loadTeamDetails();
-        }
-
-        async function loadTeamDetails() {
-            if (!selectedTeamId) return;
-            await Promise.all([
-                fetchTeamMembers(),
-                fetchWhiteboardItems()
-            ]);
-        }
-
-        // TEAM MEMBERS & ROTATION CAROUSEL
-        async function fetchTeamMembers() {
-            const { data, error } = await supabase
-                .from('team_members')
-                .select('*')
-                .eq('team_id', selectedTeamId)
-                .order('created_at', { ascending: true });
-
-            if (error) {
-                showToast("Error loading members", "error");
-                return;
-            }
-
-            teamMembers = data || [];
-            renderRosterBadges();
-            
-            // Initialize rotation order
-            carouselOrder = [...teamMembers];
-            carouselIndex = 0;
-            currentQuestion = getRandomQuestion();
-            renderCarousel();
-        }
-
-        function renderRosterBadges() {
-            const container = document.getElementById('team-roster-badges');
-            container.innerHTML = '';
-
-            if (teamMembers.length === 0) {
-                container.innerHTML = `<span class="text-xs text-stone-400 italic">No members added yet.</span>`;
-                return;
-            }
-
-            teamMembers.forEach(m => {
-                const badge = document.createElement('div');
-                badge.className = "px-2.5 py-1 bg-white border-2 border-black studio-card text-xs font-bold flex items-center gap-1.5";
-                badge.innerHTML = `
-                    <span>${m.avatar}</span>
-                    <span>${escapeHtml(m.first_name)}</span>
-                    <button onclick="removeTeamMember('${m.id}')" class="text-stone-400 hover:text-red-700 ml-1 font-black">&times;</button>
-                `;
-                container.appendChild(badge);
-            });
-        }
-
-        function getRandomQuestion() {
-            return QUESTIONS[Math.floor(Math.random() * QUESTIONS.length)];
-        }
-
-        function shuffleTeamRotation() {
-            if (carouselOrder.length <= 1) return;
-            // Fisher-Yates shuffle algorithm
-            for (let i = carouselOrder.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [carouselOrder[i], carouselOrder[j]] = [carouselOrder[j], carouselOrder[i]];
-            }
-            carouselIndex = 0;
-            currentQuestion = getRandomQuestion();
-            renderCarousel();
-            showToast("Meeting rotation shuffled!");
-        }
-
-        function navigateCarousel(direction) {
-            if (carouselOrder.length === 0) return;
-            carouselIndex += direction;
-            
-            if (carouselIndex >= carouselOrder.length) carouselIndex = 0;
-            if (carouselIndex < 0) carouselIndex = carouselOrder.length - 1;
-
-            currentQuestion = getRandomQuestion();
-            renderCarousel();
-        }
-
-        function renderCarousel() {
-            const card = document.getElementById('carousel-card-container');
-            const indicator = document.getElementById('carousel-indicator');
-
-            if (carouselOrder.length === 0) {
-                indicator.textContent = "0 / 0";
-                card.innerHTML = `
-                    <div class="text-stone-400 text-sm font-medium">
-                        <i class="fa-solid fa-users text-3xl mb-2 block"></i>
-                        No team members added to this team yet.<br>
-                        Click "Add Member" to build your roster!
-                    </div>
-                `;
-                return;
-            }
-
-            const currentMember = carouselOrder[carouselIndex];
-            indicator.textContent = `${carouselIndex + 1} / ${carouselOrder.length}`;
-
-            card.innerHTML = `
-                <div class="w-20 h-20 bg-white border-2 border-black text-4xl flex items-center justify-center studio-card mb-4">
-                    ${currentMember.avatar}
-                </div>
-                <h4 class="text-2xl font-bold heading-font text-slate-900 mb-2">
-                    ${escapeHtml(currentMember.first_name)}
-                </h4>
-                <div class="max-w-md bg-white border-2 border-black p-4 studio-card my-2">
-                    <p class="text-xs font-bold uppercase tracking-wider text-stone-400 mb-1">Check-in Question</p>
-                    <p class="text-base md:text-lg font-bold text-bc-maroon leading-snug">
-                        "${currentQuestion}"
-                    </p>
-                </div>
-            `;
-        }
-
-        // VIRTUAL WHITEBOARD
-        async function fetchWhiteboardItems() {
-            const { data, error } = await supabase
-                .from('whiteboard_items')
-                .select('*')
-                .eq('team_id', selectedTeamId)
-                .order('created_at', { ascending: false });
-
-            if (error) {
-                showToast("Error loading whiteboard", "error");
-                return;
-            }
-
-            whiteboardItems = data || [];
-            renderWhiteboard();
-        }
-
-        function renderWhiteboard() {
-            const container = document.getElementById('whiteboard-items-container');
-            const countEl = document.getElementById('whiteboard-count');
-            container.innerHTML = '';
-            countEl.textContent = `${whiteboardItems.length} items`;
-
-            if (whiteboardItems.length === 0) {
-                container.innerHTML = `
-                    <div class="p-6 text-center text-xs text-stone-400 border-2 border-dashed border-stone-300">
-                        Whiteboard is clear! Add points or discussion topics above.
-                    </div>
-                `;
-                return;
-            }
-
-            whiteboardItems.forEach(item => {
-                const note = document.createElement('div');
-                note.className = item.is_addressed ? "sticky-note-addressed p-3.5 flex items-start justify-between gap-3" : "sticky-note p-3.5 flex items-start justify-between gap-3";
-                
-                note.innerHTML = `
-                    <div class="flex items-start gap-2 flex-grow">
-                        <button onclick="toggleAddressWhiteboard('${item.id}', ${!item.is_addressed})" class="mt-0.5 text-slate-800 hover:text-emerald-700">
-                            <i class="${item.is_addressed ? 'fa-solid fa-square-check text-emerald-700 text-base' : 'fa-regular fa-square text-base'}"></i>
-                        </button>
-                        <span class="text-sm font-medium ${item.is_addressed ? 'line-through text-stone-500' : 'text-slate-900'}">
-                            ${escapeHtml(item.content)}
-                        </span>
-                    </div>
-                    <button onclick="deleteWhiteboardItem('${item.id}')" class="text-stone-400 hover:text-red-700 text-xs font-bold">
-                        <i class="fa-solid fa-trash-can"></i>
-                    </button>
-                `;
-                container.appendChild(note);
-            });
-        }
-
-        async function handleAddWhiteboardPoint(e) {
-            e.preventDefault();
-            const input = document.getElementById('whiteboard-input');
-            const content = input.value.trim();
-            if (!content || !selectedTeamId) return;
-
-            const { error } = await supabase
-                .from('whiteboard_items')
-                .insert({
-                    team_id: selectedTeamId,
-                    content: content,
-                    created_by: currentUser.email
-                });
-
-            if (error) {
-                showToast("Failed to add point", "error");
-            } else {
-                input.value = '';
-                await fetchWhiteboardItems();
-            }
-        }
-
-        async function toggleAddressWhiteboard(id, status) {
-            const { error } = await supabase
-                .from('whiteboard_items')
-                .update({ is_addressed: status })
-                .eq('id', id);
-
-            if (error) {
-                showToast("Failed to update status", "error");
-            } else {
-                await fetchWhiteboardItems();
-            }
-        }
-
-        async function deleteWhiteboardItem(id) {
-            const { error } = await supabase
-                .from('whiteboard_items')
-                .delete()
-                .eq('id', id);
-
-            if (error) {
-                showToast("Failed to delete item", "error");
-            } else {
-                await fetchWhiteboardItems();
-            }
-        }
-
-        // SECTION 2: BETTER OFFICE IDEAS
-        async function fetchIdeas() {
-            const { data, error } = await supabase
-                .from('office_ideas')
-                .select(`
-                    *,
-                    idea_votes (*),
-                    idea_volunteers (*),
-                    idea_comments (*)
-                `)
-                .order('created_at', { ascending: false });
-
-            if (error) {
-                showToast("Error loading office ideas", "error");
-                return;
-            }
-
-            ideas = data || [];
-            if (activeSection === 'ideas') {
-                renderIdeas();
-            }
-        }
-
-        function renderIdeas() {
-            const container = document.getElementById('ideas-grid');
-            const countEl = document.getElementById('ideas-count');
-            const areaFilter = document.getElementById('filter-area').value;
-            const effortFilter = document.getElementById('filter-effort').value;
-            const statusFilter = document.getElementById('filter-status').value;
-
-            // Apply Filters
-            let filtered = ideas.filter(i => {
-                if (areaFilter !== 'ALL' && i.area !== areaFilter) return false;
-                if (effortFilter !== 'ALL' && i.effort !== effortFilter) return false;
-                if (statusFilter === 'ACTIVE' && i.is_implemented) return false;
-                if (statusFilter === 'IMPLEMENTED' && !i.is_implemented) return false;
-                return true;
-            });
-
-            countEl.textContent = `Showing ${filtered.length} of ${ideas.length} ideas`;
-            container.innerHTML = '';
-
-            if (filtered.length === 0) {
-                container.innerHTML = `
-                    <div class="col-span-full studio-card p-12 text-center bg-white">
-                        <i class="fa-regular fa-lightbulb text-4xl text-amber-400 mb-3 block"></i>
-                        <h3 class="text-lg font-bold text-slate-800">No ideas found</h3>
-                        <p class="text-stone-500 text-sm mt-1">Be the first to submit a proposal for office improvement!</p>
-                    </div>
-                `;
-                return;
-            }
-
-            filtered.forEach(idea => {
-                const userVoted = (idea.idea_votes || []).some(v => v.user_email === currentUser.email);
-                const userVolunteered = (idea.idea_volunteers || []).some(v => v.user_email === currentUser.email);
-                const votesCount = (idea.idea_votes || []).length;
-                const volunteers = idea.idea_volunteers || [];
-                const comments = idea.idea_comments || [];
-
-                const card = document.createElement('div');
-                card.className = `studio-card p-6 bg-white flex flex-col justify-between ${idea.is_implemented ? 'border-emerald-700 bg-emerald-50/20' : ''}`;
-                
-                card.innerHTML = `
-                    <div>
-                        <!-- Header / Status Badges -->
-                        <div class="flex items-center justify-between gap-2 mb-3">
-                            <div class="flex items-center gap-2">
-                                <span class="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider bg-stone-900 text-amber-300 border border-black">
-                                    ${escapeHtml(idea.area)}
-                                </span>
-                                <span class="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider bg-stone-200 text-stone-800 border border-black">
-                                    ⏱ ${escapeHtml(idea.effort)}
-                                </span>
-                            </div>
-
-                            ${idea.is_implemented ? 
-                                `<span class="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider bg-emerald-700 text-white border border-black"><i class="fa-solid fa-check mr-1"></i> Implemented</span>` : 
-                                `<span class="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider bg-amber-100 text-amber-900 border border-black">Active Proposal</span>`
-                            }
-                        </div>
-
-                        <!-- Title & Problem / Solution -->
-                        <h3 class="text-xl font-bold heading-font text-slate-900 mb-2 leading-snug">
-                            💡 ${escapeHtml(idea.title)}
-                        </h3>
-
-                        <div class="space-y-2 text-xs mb-4">
-                            <div class="p-2.5 bg-stone-50 border border-stone-200">
-                                <span class="font-bold text-slate-800 uppercase text-[10px] tracking-wider block mb-0.5">Problem:</span>
-                                <p class="text-stone-700">${escapeHtml(idea.problem)}</p>
-                            </div>
-                            <div class="p-2.5 bg-amber-50/50 border border-amber-200">
-                                <span class="font-bold text-bc-maroon uppercase text-[10px] tracking-wider block mb-0.5">Proposed Solution:</span>
-                                <p class="text-slate-800 font-medium">${escapeHtml(idea.solution)}</p>
-                            </div>
-                        </div>
-
-                        <!-- Volunteer Badges list -->
-                        ${volunteers.length > 0 ? `
-                            <div class="mb-4">
-                                <span class="text-[10px] font-bold uppercase text-stone-500 block mb-1">Volunteers Helping:</span>
-                                <div class="flex flex-wrap gap-1">
-                                    ${volunteers.map(v => `<span class="px-2 py-0.5 text-[10px] bg-stone-100 border border-stone-300 font-bold">${escapeHtml(v.user_name || v.user_email.split('@')[0])}</span>`).join('')}
-                                </div>
-                            </div>
-                        ` : ''}
-                    </div>
-
-                    <!-- Actions Footer -->
-                    <div class="pt-4 border-t-2 border-stone-200 flex flex-col gap-3">
-                        <div class="flex flex-wrap items-center justify-between gap-2">
-                            <!-- Left controls: Upvote & Volunteer -->
-                            <div class="flex items-center gap-2">
-                                <button onclick="toggleUpvote('${idea.id}', ${userVoted})" class="studio-button px-3 py-1.5 text-xs font-bold flex items-center gap-1.5 ${userVoted ? 'bg-bc-maroon text-white' : 'bg-white hover:bg-stone-100'}">
-                                    <i class="fa-solid fa-thumbs-up"></i>
-                                    <span>${votesCount}</span>
-                                </button>
-
-                                <button onclick="toggleVolunteer('${idea.id}', ${userVolunteered})" class="studio-button px-3 py-1.5 text-xs font-bold flex items-center gap-1.5 ${userVolunteered ? 'bg-emerald-700 text-white' : 'bg-stone-100 hover:bg-stone-200'}">
-                                    <i class="fa-solid fa-hand-sparkles"></i>
-                                    <span>${userVolunteered ? 'Volunteered' : 'Volunteer'}</span>
-                                </button>
-                            </div>
-
-                            <!-- Right actions: Edit / Delete / Implemented -->
-                            <div class="flex items-center gap-1">
-                                <button onclick="toggleImplemented('${idea.id}', ${!idea.is_implemented})" title="Toggle Implemented Status" class="p-1.5 text-stone-500 hover:text-emerald-700 font-bold">
-                                    <i class="fa-solid fa-circle-check text-base"></i>
-                                </button>
-                                <button onclick="openEditIdeaModal('${idea.id}')" title="Edit Idea" class="p-1.5 text-stone-500 hover:text-black font-bold">
-                                    <i class="fa-solid fa-pen-to-square text-base"></i>
-                                </button>
-                                <button onclick="deleteIdea('${idea.id}')" title="Delete Idea" class="p-1.5 text-stone-500 hover:text-red-700 font-bold">
-                                    <i class="fa-solid fa-trash-can text-base"></i>
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- Comments Toggle Section -->
-                        <div class="mt-2 pt-2 border-t border-stone-100">
-                            <details class="group">
-                                <summary class="cursor-pointer text-xs font-bold text-stone-600 hover:text-black flex items-center justify-between">
-                                    <span><i class="fa-regular fa-comments mr-1"></i> Comments (${comments.length})</span>
-                                    <span class="text-[10px] group-open:rotate-180 transition-transform">▼</span>
-                                </summary>
-                                <div class="mt-3 space-y-2">
-                                    <div class="space-y-1.5 max-h-36 overflow-y-auto">
-                                        ${comments.map(c => `
-                                            <div class="p-2 bg-stone-50 border border-stone-200 text-xs">
-                                                <div class="font-bold text-slate-800">${escapeHtml(c.user_name)}:</div>
-                                                <div class="text-stone-700">${escapeHtml(c.comment)}</div>
-                                            </div>
-                                        `).join('')}
-                                    </div>
-                                    <form onsubmit="handleAddComment(event, '${idea.id}')" class="flex gap-1.5 mt-2">
-                                        <input type="text" placeholder="Write a comment..." required class="studio-input flex-grow px-2 py-1 text-xs">
-                                        <button type="submit" class="studio-button px-2.5 py-1 bg-stone-900 text-white text-xs font-bold">Send</button>
-                                    </form>
-                                </div>
-                            </details>
-                        </div>
-                    </div>
-                `;
-                container.appendChild(card);
-            });
-        }
-
-        // IDEA ACTION HANDLERS
-        async function handleSaveIdea(e) {
-            e.preventDefault();
-            const editId = document.getElementById('idea-edit-id').value;
-            const title = document.getElementById('idea-title').value.trim();
-            const problem = document.getElementById('idea-problem').value.trim();
-            const solution = document.getElementById('idea-solution').value.trim();
-            const effort = document.getElementById('idea-effort').value;
-            const area = document.getElementById('idea-area').value;
-
-            const userName = currentUser.email.split('@')[0];
-
-            if (editId) {
-                // Update
-                const { error } = await supabase
-                    .from('office_ideas')
-                    .update({ title, problem, solution, effort, area })
-                    .eq('id', editId);
-
-                if (error) showToast("Failed to update idea", "error");
-                else showToast("Idea updated successfully!");
-            } else {
-                // Insert
-                const { error } = await supabase
-                    .from('office_ideas')
-                    .insert({
-                        title, problem, solution, effort, area,
-                        created_by_email: currentUser.email,
-                        created_by_name: userName
-                    });
-
-                if (error) showToast("Failed to submit idea", "error");
-                else showToast("Idea proposed successfully!");
-            }
-
-            closeModal('modal-create-idea');
-            await fetchIdeas();
-        }
-
-        async function toggleUpvote(ideaId, currentHasVoted) {
-            if (currentHasVoted) {
-                await supabase
-                    .from('idea_votes')
-                    .delete()
-                    .match({ idea_id: ideaId, user_email: currentUser.email });
-            } else {
-                await supabase
-                    .from('idea_votes')
-                    .insert({ idea_id: ideaId, user_email: currentUser.email });
-            }
-            await fetchIdeas();
-        }
-
-        async function toggleVolunteer(ideaId, currentHasVolunteered) {
-            if (currentHasVolunteered) {
-                await supabase
-                    .from('idea_volunteers')
-                    .delete()
-                    .match({ idea_id: ideaId, user_email: currentUser.email });
-            } else {
-                const userName = currentUser.email.split('@')[0];
-                await supabase
-                    .from('idea_volunteers')
-                    .insert({ 
-                        idea_id: ideaId, 
-                        user_email: currentUser.email,
-                        user_name: userName 
-                    });
-            }
-            await fetchIdeas();
-        }
-
-        async function toggleImplemented(ideaId, newStatus) {
-            const { error } = await supabase
-                .from('office_ideas')
-                .update({ is_implemented: newStatus })
-                .eq('id', ideaId);
-
-            if (error) showToast("Failed to update status", "error");
-            else await fetchIdeas();
-        }
-
-        async function handleAddComment(e, ideaId) {
-            e.preventDefault();
-            const input = e.target.querySelector('input');
-            const commentText = input.value.trim();
-            if (!commentText) return;
-
-            const userName = currentUser.email.split('@')[0];
-
-            const { error } = await supabase
-                .from('idea_comments')
-                .insert({
-                    idea_id: ideaId,
-                    user_email: currentUser.email,
-                    user_name: userName,
-                    comment: commentText
-                });
-
-            if (error) showToast("Failed to post comment", "error");
-            else {
-                input.value = '';
-                await fetchIdeas();
-            }
-        }
-
-        async function deleteIdea(ideaId) {
-            const { error } = await supabase
-                .from('office_ideas')
-                .delete()
-                .eq('id', ideaId);
-
-            if (error) showToast("Failed to delete idea", "error");
-            else await fetchIdeas();
-        }
-
-        // MODAL MANAGEMENT
-        function openModal(modalId) {
-            document.getElementById(modalId).classList.remove('hidden');
-        }
-
-        function closeModal(modalId) {
-            document.getElementById(modalId).classList.add('hidden');
-        }
-
-        function openCreateTeamModal() {
-            document.getElementById('new-team-name').value = '';
-            openModal('modal-create-team');
+        async function handleTeamChange(teamId) {
+            selectedTeamId = teamId;
+            currentCarouselPointer = 0;
+            await fetchTeamMembers();
+            await fetchWhiteboardItems();
         }
 
         async function handleCreateTeam(e) {
             e.preventDefault();
             const name = document.getElementById('new-team-name').value.trim();
+            const desc = document.getElementById('new-team-desc').value.trim();
+
             if (!name) return;
 
-            await createTeam(name);
-            closeModal('modal-create-team');
-        }
+            try {
+                const { data, error } = await supabaseClient
+                    .from('teams')
+                    .insert([{ name, description: desc, created_by: currentUser.email }])
+                    .select();
 
-        async function createTeam(name) {
-            const { data, error } = await supabase
-                .from('teams')
-                .insert({ name, created_by: currentUser.email })
-                .select();
+                if (error) throw error;
 
-            if (error) {
-                showToast("Failed to create team", "error");
-            } else if (data && data.length > 0) {
-                selectedTeamId = data[0].id;
+                showToast("Team created successfully!");
+                closeModal('modal-create-team');
+                document.getElementById('new-team-name').value = '';
+                document.getElementById('new-team-desc').value = '';
+
+                if (data && data[0]) {
+                    selectedTeamId = data[0].id;
+                }
                 await fetchTeams();
-                showToast(`Team "${name}" created!`);
+            } catch (err) {
+                showToast("Error creating team: " + err.message);
             }
         }
 
-        function openAddMemberModal() {
-            document.getElementById('new-member-name').value = '';
-            openModal('modal-add-member');
+        function toggleMemberManagement() {
+            const panel = document.getElementById('roster-panel');
+            panel.classList.toggle('hidden');
         }
 
-        function initAvatarPicker() {
-            const container = document.getElementById('avatar-picker');
-            container.innerHTML = '';
-            AVATAR_OPTIONS.forEach((av, idx) => {
-                const btn = document.createElement('button');
-                btn.type = 'button';
-                btn.className = `p-2 text-xl studio-button border-2 border-black ${idx === 0 ? 'bg-amber-200' : 'bg-white'}`;
-                btn.textContent = av;
-                btn.onclick = () => {
-                    document.querySelectorAll('#avatar-picker button').forEach(b => b.className = 'p-2 text-xl studio-button border-2 border-black bg-white');
-                    btn.className = 'p-2 text-xl studio-button border-2 border-black bg-amber-200';
-                    document.getElementById('selected-avatar-input').value = av;
-                };
-                container.appendChild(btn);
-            });
+        async function fetchTeamMembers() {
+            if (!selectedTeamId) return;
+
+            try {
+                const { data, error } = await supabaseClient
+                    .from('team_members')
+                    .select('*')
+                    .eq('team_id', selectedTeamId)
+                    .order('created_at', { ascending: true });
+
+                if (error) throw error;
+
+                teamMembers = data || [];
+                // Reset carousel rotation
+                carouselIndices = teamMembers.map((_, i) => i);
+                currentCarouselPointer = 0;
+
+                renderMemberBadges();
+                renderCarousel();
+            } catch (err) {
+                console.error("Error fetching members:", err);
+            }
+        }
+
+        function renderMemberBadges() {
+            const container = document.getElementById('member-badges-container');
+            document.getElementById('member-count').innerText = teamMembers.length;
+
+            if (teamMembers.length === 0) {
+                container.innerHTML = `<span class="text-xs text-zinc-400 italic">No members in this team yet.</span>`;
+                return;
+            }
+
+            container.innerHTML = teamMembers.map(m => `
+                <div class="studio-card-sm px-2.5 py-1 flex items-center gap-1.5 bg-amber-50">
+                    <span class="text-base">${m.avatar || '🦊'}</span>
+                    <span class="text-xs font-bold text-zinc-900">${escapeHtml(m.first_name)}</span>
+                    <button onclick="handleDeleteMember('${m.id}')" title="Remove" class="text-zinc-400 hover:text-red-600 ml-1 font-bold text-xs">✕</button>
+                </div>
+            `).join('');
         }
 
         async function handleAddMember(e) {
             e.preventDefault();
-            const name = document.getElementById('new-member-name').value.trim();
-            const avatar = document.getElementById('selected-avatar-input').value;
+            if (!selectedTeamId) {
+                showToast("Please create or select a team first.");
+                return;
+            }
 
-            if (!name || !selectedTeamId) return;
+            const firstName = document.getElementById('member-first-name').value.trim();
+            const avatar = document.getElementById('member-avatar').value;
 
-            const { error } = await supabase
-                .from('team_members')
-                .insert({
-                    team_id: selectedTeamId,
-                    first_name: name,
-                    avatar: avatar
-                });
+            if (!firstName) return;
 
-            if (error) {
-                showToast("Failed to add member", "error");
-            } else {
-                closeModal('modal-add-member');
+            try {
+                const { error } = await supabaseClient
+                    .from('team_members')
+                    .insert([{ team_id: selectedTeamId, first_name: firstName, avatar }]);
+
+                if (error) throw error;
+
+                document.getElementById('member-first-name').value = '';
+                showToast(`Added ${firstName} to team!`);
                 await fetchTeamMembers();
-                showToast(`Added ${name} to team!`);
+            } catch (err) {
+                showToast("Error adding member: " + err.message);
             }
         }
 
-        async function removeTeamMember(id) {
-            const { error } = await supabase
-                .from('team_members')
-                .delete()
-                .eq('id', id);
+        async function handleDeleteMember(memberId) {
+            try {
+                const { error } = await supabaseClient
+                    .from('team_members')
+                    .delete()
+                    .eq('id', memberId);
 
-            if (error) showToast("Failed to remove member", "error");
-            else await fetchTeamMembers();
+                if (error) throw error;
+
+                showToast("Member removed");
+                await fetchTeamMembers();
+            } catch (err) {
+                showToast("Error deleting member: " + err.message);
+            }
         }
 
-        function openCreateIdeaModal() {
-            document.getElementById('idea-modal-title').textContent = "💡 Propose Office Idea";
-            document.getElementById('idea-edit-id').value = "";
-            document.getElementById('idea-title').value = "";
-            document.getElementById('idea-problem').value = "";
-            document.getElementById('idea-solution').value = "";
-            document.getElementById('idea-effort').value = "5 min";
-            document.getElementById('idea-area').value = "Meetings";
-            openModal('modal-create-idea');
+        /* ----------------------------------------------------
+         * 5. MEETING CAROUSEL & QUESTION ROTATOR
+         * ---------------------------------------------------- */
+        function renderCarousel() {
+            const emptyState = document.getElementById('carousel-empty-state');
+            const activeState = document.getElementById('carousel-active-state');
+
+            if (teamMembers.length === 0) {
+                emptyState.classList.remove('hidden');
+                activeState.classList.add('hidden');
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+            activeState.classList.remove('hidden');
+
+            const actualIndex = carouselIndices[currentCarouselPointer] || 0;
+            const member = teamMembers[actualIndex];
+
+            if (member) {
+                document.getElementById('carousel-avatar').innerText = member.avatar || '🦊';
+                document.getElementById('carousel-member-name').innerText = member.first_name;
+                document.getElementById('carousel-index-badge').innerText = `Person ${currentCarouselPointer + 1} of ${teamMembers.length}`;
+
+                // Set initial random question if empty
+                if (!document.getElementById('carousel-question').innerText.trim()) {
+                    pickRandomQuestion();
+                }
+            }
         }
 
-        function openEditIdeaModal(ideaId) {
+        function pickRandomQuestion() {
+            const randomIndex = Math.floor(Math.random() * CHECKIN_QUESTIONS.length);
+            document.getElementById('carousel-question').innerText = `"${CHECKIN_QUESTIONS[randomIndex]}"`;
+        }
+
+        function shuffleCarouselOrder() {
+            if (teamMembers.length <= 1) return;
+            
+            // Fisher-Yates shuffle
+            for (let i = carouselIndices.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [carouselIndices[i], carouselIndices[j]] = [carouselIndices[j], carouselIndices[i]];
+            }
+            currentCarouselPointer = 0;
+            pickRandomQuestion();
+            renderCarousel();
+            showToast("Shuffled meeting order!");
+        }
+
+        function nextCarouselMember() {
+            if (teamMembers.length === 0) return;
+            currentCarouselPointer = (currentCarouselPointer + 1) % teamMembers.length;
+            pickRandomQuestion();
+            renderCarousel();
+        }
+
+        function prevCarouselMember() {
+            if (teamMembers.length === 0) return;
+            currentCarouselPointer = (currentCarouselPointer - 1 + teamMembers.length) % teamMembers.length;
+            pickRandomQuestion();
+            renderCarousel();
+        }
+
+        function markMemberChecked() {
+            showToast(`Marked ${teamMembers[carouselIndices[currentCarouselPointer]]?.first_name} as done!`);
+            nextCarouselMember();
+        }
+
+        /* ----------------------------------------------------
+         * 6. VIRTUAL WHITEBOARD LOGIC
+         * ---------------------------------------------------- */
+        async function fetchWhiteboardItems() {
+            if (!selectedTeamId) return;
+
+            try {
+                const { data, error } = await supabaseClient
+                    .from('whiteboard_items')
+                    .select('*')
+                    .eq('team_id', selectedTeamId)
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                whiteboardItems = data || [];
+                renderWhiteboard();
+            } catch (err) {
+                console.error("Error fetching whiteboard items:", err);
+            }
+        }
+
+        function renderWhiteboard() {
+            const container = document.getElementById('whiteboard-items-list');
+            document.getElementById('whiteboard-count').innerText = `${whiteboardItems.length} items`;
+
+            if (whiteboardItems.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-8 border-2 border-dashed border-zinc-200">
+                        <p class="text-xs text-zinc-400 font-mono">No agenda points on the whiteboard yet.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = whiteboardItems.map(item => `
+                <div class="studio-card-sm p-3 flex items-start justify-between gap-3 ${item.is_addressed ? 'bg-zinc-100 opacity-60' : 'bg-amber-50/60'}">
+                    <div class="flex items-start gap-2.5">
+                        <button onclick="toggleWhiteboardAddressed('${item.id}', ${!item.is_addressed})" class="mt-0.5 text-zinc-700 hover:text-emerald-700">
+                            <i data-lucide="${item.is_addressed ? 'check-square' : 'square'}" class="w-4 h-4"></i>
+                        </button>
+                        <div>
+                            <p class="text-xs font-bold text-zinc-900 ${item.is_addressed ? 'line-through text-zinc-500' : ''}">${escapeHtml(item.content)}</p>
+                            <span class="text-[10px] text-zinc-400 font-mono">Added by ${escapeHtml(item.author_name || item.author_email || 'Anonymous')}</span>
+                        </div>
+                    </div>
+                    <button onclick="deleteWhiteboardItem('${item.id}')" class="text-zinc-400 hover:text-red-600 font-bold text-xs p-1">
+                        <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                    </button>
+                </div>
+            `).join('');
+
+            lucide.createIcons();
+        }
+
+        async function handleAddWhiteboardItem(e) {
+            e.preventDefault();
+            if (!selectedTeamId) {
+                showToast("Select or create a team first.");
+                return;
+            }
+
+            const input = document.getElementById('whiteboard-input');
+            const content = input.value.trim();
+
+            if (!content) return;
+
+            try {
+                const { error } = await supabaseClient
+                    .from('whiteboard_items')
+                    .insert([{
+                        team_id: selectedTeamId,
+                        content,
+                        author_name: currentUser.user_metadata?.full_name || currentUser.email.split('@')[0],
+                        author_email: currentUser.email,
+                        is_addressed: false
+                    }]);
+
+                if (error) throw error;
+
+                input.value = '';
+                showToast("Point added to whiteboard!");
+                await fetchWhiteboardItems();
+            } catch (err) {
+                showToast("Error adding whiteboard item: " + err.message);
+            }
+        }
+
+        async function toggleWhiteboardAddressed(itemId, isAddressed) {
+            try {
+                const { error } = await supabaseClient
+                    .from('whiteboard_items')
+                    .update({ is_addressed: isAddressed })
+                    .eq('id', itemId);
+
+                if (error) throw error;
+
+                await fetchWhiteboardItems();
+            } catch (err) {
+                showToast("Error updating item: " + err.message);
+            }
+        }
+
+        async function deleteWhiteboardItem(itemId) {
+            try {
+                const { error } = await supabaseClient
+                    .from('whiteboard_items')
+                    .delete()
+                    .eq('id', itemId);
+
+                if (error) throw error;
+
+                showToast("Item removed");
+                await fetchWhiteboardItems();
+            } catch (err) {
+                showToast("Error removing item: " + err.message);
+            }
+        }
+
+        /* ----------------------------------------------------
+         * 7. SECTION 2: BETTER OFFICE LOGIC
+         * ---------------------------------------------------- */
+        async function fetchIdeasData() {
+            try {
+                // Fetch ideas
+                const { data: ideasData, error: ideasErr } = await supabaseClient
+                    .from('ideas')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (ideasErr) throw ideasErr;
+                ideas = ideasData || [];
+
+                // Fetch votes
+                const { data: votesData } = await supabaseClient.from('idea_votes').select('*');
+                ideaVotes = votesData || [];
+
+                // Fetch volunteers
+                const { data: volData } = await supabaseClient.from('idea_volunteers').select('*');
+                ideaVolunteers = volData || [];
+
+                // Fetch comments
+                const { data: commData } = await supabaseClient.from('idea_comments').select('*');
+                ideaComments = commData || [];
+
+                if (activeTab === 'ideas') {
+                    renderIdeas();
+                }
+            } catch (err) {
+                console.error("Error fetching ideas data:", err);
+            }
+        }
+
+        function renderIdeas() {
+            const grid = document.getElementById('ideas-grid');
+            const emptyState = document.getElementById('ideas-empty-state');
+
+            const searchQuery = document.getElementById('idea-search-input').value.toLowerCase();
+            const areaFilter = document.getElementById('idea-filter-area').value;
+            const statusFilter = document.getElementById('idea-filter-status').value;
+            const sortOrder = document.getElementById('idea-sort-order').value;
+
+            // Filter logic
+            let filtered = ideas.filter(idea => {
+                const matchesSearch = idea.title.toLowerCase().includes(searchQuery) ||
+                                     idea.problem.toLowerCase().includes(searchQuery) ||
+                                     idea.solution.toLowerCase().includes(searchQuery);
+                const matchesArea = areaFilter === 'ALL' || idea.area === areaFilter;
+                const matchesStatus = statusFilter === 'ALL' || idea.status === statusFilter;
+
+                return matchesSearch && matchesArea && matchesStatus;
+            });
+
+            // Sort logic
+            filtered.sort((a, b) => {
+                if (sortOrder === 'votes') {
+                    const votesA = ideaVotes.filter(v => v.idea_id === a.id).length;
+                    const votesB = ideaVotes.filter(v => v.idea_id === b.id).length;
+                    return votesB - votesA;
+                } else {
+                    return new Date(b.created_at) - new Date(a.created_at);
+                }
+            });
+
+            if (filtered.length === 0) {
+                grid.innerHTML = '';
+                emptyState.classList.remove('hidden');
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+
+            grid.innerHTML = filtered.map(idea => {
+                const votesCount = ideaVotes.filter(v => v.idea_id === idea.id).length;
+                const userHasVoted = ideaVotes.some(v => v.idea_id === idea.id && v.user_email === currentUser.email);
+                
+                const volunteers = ideaVolunteers.filter(v => v.idea_id === idea.id);
+                const userIsVolunteer = volunteers.some(v => v.user_email === currentUser.email);
+
+                const commentCount = ideaComments.filter(c => c.idea_id === idea.id).length;
+
+                // Status Badge Color
+                let statusBadgeClass = "bg-amber-100 text-amber-900 border-amber-900";
+                if (idea.status === 'In Progress') statusBadgeClass = "bg-blue-100 text-blue-900 border-blue-900";
+                if (idea.status === 'Implemented') statusBadgeClass = "bg-emerald-100 text-emerald-900 border-emerald-900";
+
+                return `
+                    <div class="studio-card p-6 bg-white flex flex-col justify-between space-y-4">
+                        <div>
+                            <!-- Top Area & Status Bar -->
+                            <div class="flex items-center justify-between text-xs font-mono mb-3">
+                                <span class="px-2 py-0.5 bg-zinc-100 border border-zinc-900 font-bold text-zinc-700">
+                                    ${escapeHtml(idea.area)}
+                                </span>
+                                <span class="px-2 py-0.5 border border-zinc-900 font-bold ${statusBadgeClass}">
+                                    ${escapeHtml(idea.status)}
+                                </span>
+                            </div>
+
+                            <!-- Title -->
+                            <h3 class="text-lg font-extrabold text-zinc-900 leading-snug mb-2">
+                                💡 ${escapeHtml(idea.title)}
+                            </h3>
+
+                            <div class="text-[11px] font-mono text-zinc-500 mb-4">
+                                By ${escapeHtml(idea.author_name || idea.author_email.split('@')[0])} • Effort: <span class="font-bold text-zinc-800">${escapeHtml(idea.effort)}</span>
+                            </div>
+
+                            <!-- Problem & Solution Box -->
+                            <div class="space-y-2 text-xs">
+                                <div class="bg-red-50/70 border-l-2 border-red-800 p-2 text-red-950">
+                                    <span class="font-bold uppercase tracking-wider text-[10px] block text-red-900">Problem:</span>
+                                    ${escapeHtml(idea.problem)}
+                                </div>
+
+                                <div class="bg-emerald-50/70 border-l-2 border-emerald-800 p-2 text-emerald-950">
+                                    <span class="font-bold uppercase tracking-wider text-[10px] block text-emerald-900">Proposed Solution:</span>
+                                    ${escapeHtml(idea.solution)}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Volunteer Badges Display -->
+                        ${volunteers.length > 0 ? `
+                            <div class="pt-2 border-t border-zinc-100">
+                                <span class="text-[10px] font-mono font-bold text-zinc-500 block mb-1">Volunteers Helping:</span>
+                                <div class="flex flex-wrap gap-1">
+                                    ${volunteers.map(v => `<span class="bg-zinc-100 border border-zinc-800 px-1.5 py-0.5 text-[10px] font-bold">✋ ${escapeHtml(v.user_name)}</span>`).join('')}
+                                </div>
+                            </div>
+                        ` : ''}
+
+                        <!-- Action Toolbar -->
+                        <div class="pt-4 border-t-2 border-zinc-900 flex flex-wrap items-center justify-between gap-2">
+                            <!-- Left Actions: Upvote, Volunteer, Comments -->
+                            <div class="flex items-center gap-1.5">
+                                <button onclick="toggleUpvote('${idea.id}')" class="${userHasVoted ? 'bg-amber-400 text-zinc-900' : 'studio-button-secondary'} px-2.5 py-1 text-xs font-bold flex items-center gap-1">
+                                    👍 <span>${votesCount}</span>
+                                </button>
+
+                                <button onclick="toggleVolunteer('${idea.id}')" class="${userIsVolunteer ? 'bg-purple-200 text-purple-950 border-purple-900' : 'studio-button-secondary'} px-2.5 py-1 text-xs font-bold flex items-center gap-1 border-2 border-zinc-900">
+                                    ✋ <span>${userIsVolunteer ? 'Helping' : 'Help'}</span>
+                                </button>
+
+                                <button onclick="openCommentsModal('${idea.id}')" class="studio-button-secondary px-2.5 py-1 text-xs font-bold flex items-center gap-1">
+                                    💬 <span>${commentCount}</span>
+                                </button>
+                            </div>
+
+                            <!-- Right Actions: Status & Manage -->
+                            <div class="flex items-center gap-1">
+                                <select onchange="updateIdeaStatus('${idea.id}', this.value)" class="text-[11px] font-bold border border-zinc-900 px-1 py-1 bg-white cursor-pointer">
+                                    <option value="Proposed" ${idea.status === 'Proposed' ? 'selected' : ''}>Proposed</option>
+                                    <option value="In Progress" ${idea.status === 'In Progress' ? 'selected' : ''}>In Progress</option>
+                                    <option value="Implemented" ${idea.status === 'Implemented' ? 'selected' : ''}>Implemented 🎉</option>
+                                </select>
+
+                                ${idea.author_email === currentUser.email ? `
+                                    <button onclick="deleteIdea('${idea.id}')" title="Delete Idea" class="text-zinc-400 hover:text-red-600 p-1 font-bold">✕</button>
+                                ` : ''}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            lucide.createIcons();
+        }
+
+        async function handleSaveIdea(e) {
+            e.preventDefault();
+            const ideaId = document.getElementById('idea-editing-id').value;
+            const title = document.getElementById('idea-title').value.trim();
+            const area = document.getElementById('idea-area').value;
+            const effort = document.getElementById('idea-effort').value;
+            const problem = document.getElementById('idea-problem').value.trim();
+            const solution = document.getElementById('idea-solution').value.trim();
+
+            if (!title || !problem || !solution) return;
+
+            try {
+                if (ideaId) {
+                    // Update existing
+                    const { error } = await supabaseClient
+                        .from('ideas')
+                        .update({ title, area, effort, problem, solution })
+                        .eq('id', ideaId);
+                    if (error) throw error;
+                    showToast("Idea updated!");
+                } else {
+                    // Create new
+                    const { error } = await supabaseClient
+                        .from('ideas')
+                        .insert([{
+                            title,
+                            area,
+                            effort,
+                            problem,
+                            solution,
+                            status: 'Proposed',
+                            author_email: currentUser.email,
+                            author_name: currentUser.user_metadata?.full_name || currentUser.email.split('@')[0]
+                        }]);
+                    if (error) throw error;
+                    showToast("New idea published!");
+                }
+
+                closeModal('modal-create-idea');
+                // Reset form
+                document.getElementById('idea-editing-id').value = '';
+                document.getElementById('idea-title').value = '';
+                document.getElementById('idea-problem').value = '';
+                document.getElementById('idea-solution').value = '';
+
+                await fetchIdeasData();
+            } catch (err) {
+                showToast("Error saving idea: " + err.message);
+            }
+        }
+
+        async function toggleUpvote(ideaId) {
+            const userEmail = currentUser.email;
+            const existingVote = ideaVotes.find(v => v.idea_id === ideaId && v.user_email === userEmail);
+
+            try {
+                if (existingVote) {
+                    const { error } = await supabaseClient
+                        .from('idea_votes')
+                        .delete()
+                        .eq('id', existingVote.id);
+                    if (error) throw error;
+                } else {
+                    const { error } = await supabaseClient
+                        .from('idea_votes')
+                        .insert([{ idea_id: ideaId, user_email: userEmail }]);
+                    if (error) throw error;
+                }
+                await fetchIdeasData();
+            } catch (err) {
+                showToast("Error toggling vote: " + err.message);
+            }
+        }
+
+        async function toggleVolunteer(ideaId) {
+            const userEmail = currentUser.email;
+            const userName = currentUser.user_metadata?.full_name || currentUser.email.split('@')[0];
+            const existingVol = ideaVolunteers.find(v => v.idea_id === ideaId && v.user_email === userEmail);
+
+            try {
+                if (existingVol) {
+                    const { error } = await supabaseClient
+                        .from('idea_volunteers')
+                        .delete()
+                        .eq('id', existingVol.id);
+                    if (error) throw error;
+                    showToast("Removed from volunteer list");
+                } else {
+                    const { error } = await supabaseClient
+                        .from('idea_volunteers')
+                        .insert([{ idea_id: ideaId, user_email: userEmail, user_name: userName }]);
+                    if (error) throw error;
+                    showToast("Awesome! You volunteered for this idea!");
+                }
+                await fetchIdeasData();
+            } catch (err) {
+                showToast("Error toggling volunteer state: " + err.message);
+            }
+        }
+
+        async function updateIdeaStatus(ideaId, newStatus) {
+            try {
+                const { error } = await supabaseClient
+                    .from('ideas')
+                    .update({ status: newStatus })
+                    .eq('id', ideaId);
+
+                if (error) throw error;
+
+                showToast(`Status changed to ${newStatus}`);
+                await fetchIdeasData();
+            } catch (err) {
+                showToast("Error updating status: " + err.message);
+            }
+        }
+
+        async function deleteIdea(ideaId) {
+            try {
+                const { error } = await supabaseClient
+                    .from('ideas')
+                    .delete()
+                    .eq('id', ideaId);
+
+                if (error) throw error;
+
+                showToast("Idea deleted");
+                await fetchIdeasData();
+            } catch (err) {
+                showToast("Error deleting idea: " + err.message);
+            }
+        }
+
+        /* ----------------------------------------------------
+         * 8. IDEA COMMENTS LOGIC
+         * ---------------------------------------------------- */
+        function openCommentsModal(ideaId) {
             const idea = ideas.find(i => i.id === ideaId);
             if (!idea) return;
 
-            document.getElementById('idea-modal-title').textContent = "✏️ Edit Office Idea";
-            document.getElementById('idea-edit-id').value = idea.id;
-            document.getElementById('idea-title').value = idea.title;
-            document.getElementById('idea-problem').value = idea.problem;
-            document.getElementById('idea-solution').value = idea.solution;
-            document.getElementById('idea-effort').value = idea.effort;
-            document.getElementById('idea-area').value = idea.area;
-            openModal('modal-create-idea');
+            document.getElementById('modal-comments-idea-title').innerText = idea.title;
+            document.getElementById('comments-target-idea-id').value = ideaId;
+
+            renderCommentsForIdea(ideaId);
+            openModal('modal-comments');
         }
 
-        // UTILITY FUNCTIONS
-        function showToast(message, type = "info") {
-            const toast = document.getElementById('toast');
-            const toastMsg = document.getElementById('toast-message');
-            const toastIcon = document.getElementById('toast-icon');
+        function renderCommentsForIdea(ideaId) {
+            const container = document.getElementById('comments-list-container');
+            const filteredComments = ideaComments.filter(c => c.idea_id === ideaId);
 
-            toastMsg.textContent = message;
-            if (type === "error") {
-                toastIcon.className = "fa-solid fa-circle-exclamation text-red-500 text-lg";
-            } else {
-                toastIcon.className = "fa-solid fa-circle-info text-amber-400 text-lg";
+            if (filteredComments.length === 0) {
+                container.innerHTML = `
+                    <p class="text-xs text-zinc-400 font-mono text-center py-6">No comments yet. Start the conversation!</p>
+                `;
+                return;
             }
 
-            toast.classList.remove('translate-y-20', 'opacity-0');
+            container.innerHTML = filteredComments.map(c => `
+                <div class="studio-card-sm p-3 bg-zinc-50">
+                    <div class="flex items-center justify-between mb-1">
+                        <span class="text-xs font-bold text-zinc-900">${escapeHtml(c.author_name || c.author_email.split('@')[0])}</span>
+                        <span class="text-[10px] text-zinc-400 font-mono">${new Date(c.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                    </div>
+                    <p class="text-xs text-zinc-700">${escapeHtml(c.comment)}</p>
+                </div>
+            `).join('');
+        }
+
+        async function handleAddComment(e) {
+            e.preventDefault();
+            const ideaId = document.getElementById('comments-target-idea-id').value;
+            const input = document.getElementById('comment-input-text');
+            const comment = input.value.trim();
+
+            if (!ideaId || !comment) return;
+
+            try {
+                const { error } = await supabaseClient
+                    .from('idea_comments')
+                    .insert([{
+                        idea_id: ideaId,
+                        comment,
+                        author_email: currentUser.email,
+                        author_name: currentUser.user_metadata?.full_name || currentUser.email.split('@')[0]
+                    }]);
+
+                if (error) throw error;
+
+                input.value = '';
+                await fetchIdeasData();
+                renderCommentsForIdea(ideaId);
+            } catch (err) {
+                showToast("Error adding comment: " + err.message);
+            }
+        }
+
+        /* ----------------------------------------------------
+         * 9. HELPERS & UTILITY FUNCTIONS
+         * ---------------------------------------------------- */
+        function openModal(modalId) {
+            document.getElementById(modalId)?.classList.remove('hidden');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId)?.classList.add('hidden');
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-message').innerText = msg;
+            toast.classList.remove('hidden');
             setTimeout(() => {
-                toast.classList.add('translate-y-20', 'opacity-0');
+                toast.classList.add('hidden');
             }, 3000);
         }
 
         function escapeHtml(str) {
             if (!str) return '';
-            return str
+            return String(str)
                 .replace(/&/g, "&amp;")
                 .replace(/</g, "&lt;")
                 .replace(/>/g, "&gt;")

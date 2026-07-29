@@ -430,6 +430,12 @@
             <button class="btn btn-primary" style="width:100%; justify-content:center; padding: 0.8rem;" onclick="loginWithGoogle()">
                 🔑 Sign In with Google
             </button>
+            <div style="margin-top: 1.25rem; border-top: 2px dashed var(--border-color); padding-top: 1rem; text-align: center;">
+                <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:0.5rem; font-weight:600;">Testing in Preview / Sandbox Mode?</p>
+                <button class="btn" style="width:100%; justify-content:center; background: var(--bc-gold); color: #121212; font-size:0.9rem;" onclick="loginAsDemoUser()">
+                    ⚡ Quick Demo Login (Skip OAuth)
+                </button>
+            </div>
             <div id="auth-error" style="color: #8a100b; margin-top: 1rem; font-size: 0.9rem; font-weight: 600;"></div>
         </div>
     </div>
@@ -692,6 +698,55 @@
         let selectedAvatar = '🎨';
         let currentOpenIdeaId = null;
         let soundEnabled = true;
+
+        async function loginWithGoogle() {
+            const errorDiv = document.getElementById('auth-error');
+            errorDiv.style.color = '#8a100b';
+            errorDiv.innerText = "Connecting to Google Sign-In...";
+
+            const activeClient = (typeof window.supabase !== 'undefined' && window.supabase.createClient) 
+                ? (supabaseClient || window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY))
+                : supabaseClient;
+
+            if (!activeClient) {
+                errorDiv.innerText = "Supabase SDK uninitialized. Click 'Quick Demo Login' above to test in preview mode.";
+                return;
+            }
+
+            try {
+                const { error } = await activeClient.auth.signInWithOAuth({
+                    provider: 'google',
+                    options: {
+                        redirectTo: window.location.href
+                    }
+                });
+
+                if (error) {
+                    errorDiv.innerText = "Login failed: " + error.message + ". If running in an iframe, use 'Quick Demo Login'.";
+                }
+            } catch (err) {
+                console.error("Google Auth Exception:", err);
+                errorDiv.innerText = "OAuth redirect error: " + err.message + ". Click 'Quick Demo Login' below to bypass.";
+            }
+        }
+
+        function loginAsDemoUser() {
+            const demoUser = { email: "staff@bc.edu", id: "demo-user-123" };
+            currentUser = demoUser;
+            document.getElementById('user-email-display').innerText = demoUser.email + " (Demo)";
+            document.getElementById('auth-screen').classList.add('hidden');
+            document.getElementById('app-screen').classList.remove('hidden');
+            loadTeams();
+            loadIdeas();
+        }
+
+        async function handleLogout() {
+            if (supabaseClient) {
+                try { await supabaseClient.auth.signOut(); } catch(e){}
+            }
+            currentUser = null;
+            showAuthScreen();
+        }
 
         // Color Theme Controller
         function setTheme(theme) {

@@ -1,1443 +1,1631 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full bg-[#f4f1ea]">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>How We Doin? | Creative Office Workspace</title>
-    <!-- Tailwind CSS for utility styling -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Font for that retro college look -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
-    <!-- Supabase JS Client CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Plus Jakarta Sans', 'sans-serif'],
-                        display: ['Space Grotesk', 'sans-serif'],
-                    },
-                    boxShadow: {
-                        'neo': '4px 4px 0px 0px #000000',
-                        'neo-lg': '8px 8px 0px 0px #000000',
-                        'neo-sm': '2px 2px 0px 0px #000000',
-                    }
-                }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>How We Doin? — BC IR&P Check-ins & Innovation</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            studio: {
+              bg: '#FAF6F0',
+              canvas: '#FFFFFF',
+              plum: '#2D1537',
+              coral: '#FF6B6B',
+              terracotta: '#E05A47',
+              sun: '#F59E0B',
+              teal: '#0D9488',
+              lavender: '#8B5CF6',
+              mint: '#10B981',
+              rose: '#F43F5E',
+              paper: '#FFFDF9',
+              ink: '#1E1B18'
             }
+          },
+          fontFamily: {
+            sans: ['Space Grotesk', 'Plus Jakarta Sans', 'sans-serif'],
+            serif: ['Playfair Display', 'serif'],
+            hand: ['Caveat', 'cursive']
+          }
         }
-    </script>
-    <style>
-        /* Custom aesthetics for Neo-Brutalist campus look */
-        .sketch-border {
-            border: 3px solid #000000;
-        }
-        .sketch-border-thick {
-            border: 4px solid #000000;
-        }
-        .bg-grid-pattern {
-            background-size: 20px 20px;
-            background-image: radial-gradient(circle, #cbc6ba 1px, transparent 1px);
-        }
-        /* Sticky Note colors */
-        .sticky-yellow { background-color: #fef08a; } /* yellow-200 */
-        .sticky-pink { background-color: #fbcfe8; }   /* pink-200 */
-        .sticky-blue { background-color: #bfdbfe; }   /* blue-200 */
-        .sticky-green { background-color: #bbf7d0; }  /* green-200 */
-        .sticky-purple { background-color: #e9d5ff; } /* purple-200 */
-    </style>
+      }
+    }
+  </script>
+
+  <!-- Google Fonts: Space Grotesk, Playfair Display & Caveat for hand-drawn artistic accents -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Supabase JS Client v2 -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <!-- Custom CSS for artistic textures, polaroids, washi tape & floating animations -->
+  <style>
+    body {
+      background-color: #FAF6F0;
+      color: #1E1B18;
+      font-family: 'Space Grotesk', sans-serif;
+      background-image: 
+        radial-gradient(rgba(224, 90, 71, 0.06) 1.5px, transparent 1.5px),
+        radial-gradient(rgba(139, 92, 246, 0.06) 1.5px, transparent 1.5px);
+      background-size: 28px 28px;
+      background-position: 0 0, 14px 14px;
+    }
+
+    /* Artistic Glass & Card Elevation */
+    .art-card {
+      background: #FFFFFF;
+      border: 2.5px solid #1E1B18;
+      box-shadow: 5px 5px 0px #1E1B18;
+      transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .art-card:hover {
+      transform: translateY(-4px) rotate(-0.3deg);
+      box-shadow: 8px 8px 0px #1E1B18;
+    }
+
+    .art-button {
+      border: 2px solid #1E1B18;
+      box-shadow: 3px 3px 0px #1E1B18;
+      transition: all 0.15s ease;
+    }
+    .art-button:hover {
+      transform: translate(-1px, -1px);
+      box-shadow: 5px 5px 0px #1E1B18;
+    }
+    .art-button:active {
+      transform: translate(2px, 2px);
+      box-shadow: 1px 1px 0px #1E1B18;
+    }
+
+    /* Washi Tape Effect for Sticky Notes */
+    .washi-tape {
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%) rotate(-1.5deg);
+      width: 90px;
+      height: 24px;
+      background: rgba(255, 235, 170, 0.85);
+      border: 1px dashed rgba(180, 140, 50, 0.4);
+      backdrop-filter: blur(2px);
+      z-index: 10;
+    }
+
+    /* Polaroid Frame Avatar */
+    .polaroid-frame {
+      background: #FFFFFF;
+      padding: 10px 10px 22px 10px;
+      border: 2px solid #1E1B18;
+      box-shadow: 4px 4px 0px rgba(30,27,24,0.15);
+      transform: rotate(-2deg);
+      transition: transform 0.3s ease;
+    }
+    .polaroid-frame:hover {
+      transform: rotate(1deg) scale(1.03);
+    }
+
+    /* Gradient Mesh Textures */
+    .art-gradient-1 {
+      background: linear-gradient(135deg, #FF6B6B 0%, #FF8E53 50%, #F59E0B 100%);
+    }
+    .art-gradient-2 {
+      background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 50%, #FF6B6B 100%);
+    }
+
+    /* Floating Background Blobs */
+    @keyframes floatBlob {
+      0%, 100% { transform: translateY(0px) scale(1); }
+      50% { transform: translateY(-18px) scale(1.05); }
+    }
+    .animate-blob-1 { animation: floatBlob 7s infinite ease-in-out; }
+    .animate-blob-2 { animation: floatBlob 9s infinite ease-in-out 2s; }
+
+    /* Custom Scrollbars */
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: #FAF6F0; }
+    ::-webkit-scrollbar-thumb { background: #E05A47; border-radius: 99px; }
+    ::-webkit-scrollbar-thumb:hover { background: #FF6B6B; }
+  </style>
 </head>
-<body class="h-full font-sans text-stone-900 bg-[#f4f1ea] bg-grid-pattern overflow-x-hidden flex flex-col">
+<body class="min-h-screen flex flex-col selection:bg-studio-coral selection:text-white relative overflow-x-hidden">
 
-    <!-- TOP HEADER BAR -->
-    <header class="w-full bg-[#fbfbf9] border-b-4 border-black p-4 sticky top-0 z-40">
-        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-            <!-- Brand -->
-            <div class="flex items-center gap-3">
-                <div class="bg-amber-400 text-black font-display font-bold text-2xl px-4 py-2 sketch-border shadow-neo transform -rotate-1">
-                    ✏️ How We Doin?
-                </div>
-                <div class="hidden sm:block text-xs font-semibold bg-violet-200 text-violet-800 px-2 py-1 sketch-border rounded-full transform rotate-2">
-                    An IR&P Production
-                </div>
-            </div>
+  <!-- Floating Artistic Background Blobs -->
+  <div class="fixed top-10 left-[-60px] w-72 h-72 bg-studio-coral/15 rounded-full blur-3xl pointer-events-none animate-blob-1"></div>
+  <div class="fixed bottom-10 right-[-60px] w-96 h-96 bg-studio-lavender/15 rounded-full blur-3xl pointer-events-none animate-blob-2"></div>
 
-            <!-- Supabase Status Indicator -->
-            <div id="status-indicator" class="flex items-center gap-2 text-xs font-bold px-3 py-1.5 sketch-border bg-stone-100 text-stone-600 rounded">
-                <span class="w-2.5 h-2.5 rounded-full bg-stone-400 animate-pulse"></span>
-                <span>Connecting...</span>
+  <!-- Top Navigation Header -->
+  <header class="bg-studio-plum text-white border-b-4 border-studio-ink sticky top-0 z-40 shadow-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-20">
+        
+        <!-- Logo & Office Branding -->
+        <div class="flex items-center space-x-3 cursor-pointer group" onclick="switchSection('checkins')">
+          <div class="w-12 h-12 rounded-2xl art-gradient-1 border-2 border-studio-ink flex items-center justify-center font-serif text-2xl font-black text-studio-ink shadow-md group-hover:rotate-6 transition-transform">
+            ✨
+          </div>
+          <div>
+            <div class="flex items-center space-x-2">
+              <span class="font-serif font-bold text-2xl tracking-tight text-white">How We Doin?</span>
+              <span class="text-xs bg-studio-coral/30 text-amber-200 border border-studio-coral/50 px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider">BC IR&P</span>
             </div>
-
-            <!-- Navigation & Auth Controls -->
-            <div class="flex items-center gap-3 flex-wrap">
-                <!-- User Profile / Login -->
-                <div id="auth-controls" class="flex items-center gap-2">
-                    <button id="btn-login" onclick="handleLogin()" class="bg-[#f06292] hover:bg-[#e91e63] text-white px-4 py-2 font-display font-bold sketch-border shadow-neo text-sm transition-all active:translate-x-0.5 active:translate-y-0.5 active:shadow-neo-sm">
-                        🔑 Sign in with Google
-                    </button>
-                    <div id="user-profile" class="hidden flex items-center gap-3 bg-white p-1.5 pr-3 sketch-border rounded-full">
-                        <span id="user-avatar" class="w-8 h-8 rounded-full bg-indigo-200 text-black flex items-center justify-center font-bold text-sm border-2 border-black">U</span>
-                        <span id="user-email" class="text-xs font-bold max-w-[120px] truncate">user@school.edu</span>
-                        <button onclick="handleLogout()" class="text-xs text-red-600 hover:underline font-bold">Logout</button>
-                    </div>
-                </div>
-            </div>
+            <p class="text-xs text-stone-300 font-medium tracking-wide">Institutional Research & Planning Studio</p>
+          </div>
         </div>
-    </header>
 
-    <!-- CUSTOM TOAST NOTIFICATION WINDOW -->
-    <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none max-w-sm">
-        <div class="bg-amber-100 border-4 border-black p-4 shadow-neo flex items-start gap-3">
-            <span id="toast-icon" class="text-2xl">💡</span>
-            <div>
-                <h4 id="toast-title" class="font-display font-bold text-sm">Notification</h4>
-                <p id="toast-msg" class="text-xs text-stone-700 mt-1">Hello, welcome to workspace!</p>
-            </div>
+        <!-- Navigation Tabs -->
+        <nav class="hidden md:flex items-center space-x-3 bg-white/10 p-1.5 rounded-2xl border-2 border-white/20">
+          <button id="nav-checkins" onclick="switchSection('checkins')" 
+                  class="flex items-center space-x-2 px-5 py-2.5 rounded-xl font-bold text-sm transition-all art-button bg-studio-sun text-studio-ink">
+            <i data-lucide="sparkles" class="w-4 h-4"></i>
+            <span>Team Check-ins</span>
+          </button>
+
+          <button id="nav-ideas" onclick="switchSection('ideas')" 
+                  class="flex items-center space-x-2 px-5 py-2.5 rounded-xl font-bold text-sm transition-all text-white/90 hover:text-white hover:bg-white/15">
+            <i data-lucide="palette" class="w-4 h-4"></i>
+            <span>Better Office</span>
+            <span id="idea-count-badge" class="bg-studio-coral text-white text-xs px-2 py-0.5 rounded-full font-black border border-white/40 ml-1">0</span>
+          </button>
+        </nav>
+
+        <!-- Right Action Menu & Auth -->
+        <div class="flex items-center space-x-3">
+          <button id="access-btn" onclick="openAccessModal()" class="hidden sm:flex items-center space-x-1.5 px-3 py-1.5 text-xs bg-white/10 hover:bg-white/20 text-stone-200 border border-white/20 rounded-xl transition-colors font-semibold">
+            <i data-lucide="shield-check" class="w-3.5 h-3.5 text-studio-sun"></i>
+            <span>Access Control</span>
+          </button>
+
+          <!-- User Profile / Login status -->
+          <div id="user-profile-container" class="flex items-center pl-2 border-l border-white/20">
+            <!-- Dynamically populated via JS -->
+          </div>
         </div>
+
+      </div>
     </div>
 
-    <!-- CUSTOM CONFIRM MODAL (Iframe Safe alternative to confirm()) -->
-    <div id="confirm-modal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-        <div class="bg-white sketch-border-thick p-6 max-w-sm w-full shadow-neo text-center space-y-4">
-            <span class="text-4xl block">❓</span>
-            <h3 class="font-display font-bold text-lg" id="confirm-title">Are you sure?</h3>
-            <p class="text-xs text-stone-600" id="confirm-msg">This action cannot be undone.</p>
-            <div class="flex justify-center gap-3">
-                <button id="confirm-yes-btn" class="bg-red-500 hover:bg-red-600 text-white font-display font-bold px-4 py-2 sketch-border shadow-neo text-xs transition-all active:translate-y-0.5">
-                    Yes, Delete
-                </button>
-                <button onclick="closeConfirmModal()" class="bg-stone-200 hover:bg-stone-300 text-stone-800 font-display font-semibold px-4 py-2 sketch-border text-xs">
-                    Cancel
-                </button>
-            </div>
-        </div>
+    <!-- Mobile Nav Bar -->
+    <div class="md:hidden flex border-t border-white/10 bg-studio-ink">
+      <button onclick="switchSection('checkins')" class="flex-1 py-3 text-center text-sm font-bold border-r border-white/10 flex items-center justify-center space-x-2 text-studio-sun">
+        <i data-lucide="sparkles" class="w-4 h-4"></i>
+        <span>Check-ins</span>
+      </button>
+      <button onclick="switchSection('ideas')" class="flex-1 py-3 text-center text-sm font-bold flex items-center justify-center space-x-2 text-white">
+        <i data-lucide="palette" class="w-4 h-4"></i>
+        <span>Better Office</span>
+      </button>
     </div>
+  </header>
 
-    <!-- MAIN BODY SECTION -->
-    <main id="main-content" class="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6 space-y-8 pb-20">
+  <!-- Main Container -->
+  <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10">
 
-        <!-- INITIAL ASYNC SESSION LOADING OVERLAY (Shown on page load) -->
-        <div id="loading-overlay" class="bg-indigo-100 border-4 border-black p-8 shadow-neo text-center space-y-4 max-w-xl mx-auto my-12">
-            <div class="flex items-center justify-center gap-2">
-                <span class="w-4 h-4 rounded-full bg-indigo-600 animate-bounce" style="animation-delay: 0.1s"></span>
-                <span class="w-4 h-4 rounded-full bg-indigo-600 animate-bounce" style="animation-delay: 0.2s"></span>
-                <span class="w-4 h-4 rounded-full bg-indigo-600 animate-bounce" style="animation-delay: 0.3s"></span>
-            </div>
-            <h2 class="font-display font-bold text-xl text-stone-900">Verifying Session...</h2>
-            <p class="text-xs text-stone-600 max-w-md mx-auto">
-                Checking login status and verifying workspace whitelist access. Please hold on.
-            </p>
+    <!-- ================================================================= -->
+    <!-- SECTION 1: TEAM CHECK-INS                                         -->
+    <!-- ================================================================= -->
+    <section id="section-checkins" class="space-y-8">
+      
+      <!-- Team Header & Switcher Bar -->
+      <div class="art-card rounded-3xl p-6 bg-white flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div class="flex items-center space-x-4">
+          <div class="w-14 h-14 rounded-2xl art-gradient-2 border-2 border-studio-ink flex items-center justify-center text-white text-2xl font-bold shadow-md">
+            🎯
+          </div>
+          <div>
+            <span class="text-xs font-bold uppercase tracking-wider text-studio-terracotta">Check-in Command Center</span>
+            <h1 class="text-2xl font-bold font-serif text-studio-ink flex items-center space-x-3">
+              <span id="current-team-title">Select or Create a Team</span>
+            </h1>
+          </div>
         </div>
 
-        <!-- LOG IN REQUIRED OVERLAY (Hidden by default, shown if unauthenticated) -->
-        <div id="auth-gate-overlay" class="hidden bg-yellow-100 border-4 border-black p-8 shadow-neo text-center space-y-4 max-w-xl mx-auto my-12">
-            <span class="text-6xl block">🔒</span>
-            <h2 class="font-display font-bold text-2xl text-stone-900">Sign-In Required</h2>
-            <p id="auth-gate-msg" class="text-sm text-stone-600 max-w-md mx-auto">
-                Please log in with your Boston College Google account to view and update the board.
-            </p>
-            <button onclick="handleLogin()" class="bg-[#f06292] hover:bg-[#e91e63] text-white px-6 py-3 font-display font-bold text-lg sketch-border shadow-neo transition-all active:translate-x-0.5">
-                🔑 Sign in with Google
-            </button>
+        <div class="flex flex-wrap items-center gap-3">
+          <!-- Team Select Dropdown -->
+          <div class="relative">
+            <select id="team-select" onchange="handleTeamChange(this.value)" class="appearance-none bg-stone-100 hover:bg-stone-200 border-2 border-studio-ink text-studio-ink text-sm font-bold rounded-2xl px-4 py-2.5 pr-9 focus:outline-none cursor-pointer">
+              <!-- Dynamically populated -->
+            </select>
+            <i data-lucide="chevron-down" class="w-4 h-4 absolute right-3 top-3.5 text-studio-ink pointer-events-none"></i>
+          </div>
+
+          <button onclick="openManageTeamsModal()" class="flex items-center space-x-1.5 px-4 py-2.5 bg-stone-100 hover:bg-stone-200 text-studio-ink font-bold text-sm rounded-2xl art-button">
+            <i data-lucide="settings" class="w-4 h-4"></i>
+            <span>Manage Teams</span>
+          </button>
+
+          <button onclick="openPresenterModal()" class="flex items-center space-x-2 px-5 py-2.5 art-gradient-1 text-studio-ink font-black text-sm rounded-2xl art-button">
+            <i data-lucide="presentation" class="w-4 h-4"></i>
+            <span>Meeting Mode</span>
+          </button>
         </div>
+      </div>
 
-        <!-- APP CONTENT SUITE (Hidden by default until authenticated) -->
-        <div id="app-workspace" class="hidden space-y-8">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-                
-                <!-- MODULE 1: WHO'S NEXT? ROUND-ROBIN CHECK-IN (7 cols) -->
-                <section class="lg:col-span-7 bg-[#ffebd6] sketch-border-thick p-6 shadow-neo-lg relative overflow-hidden flex flex-col h-full min-h-[580px]">
-                    <!-- Background decor -->
-                    <div class="absolute right-3 top-3 text-7xl opacity-10 font-bold select-none rotate-12">❓</div>
-                    
-                    <h2 class="font-display font-bold text-2xl text-stone-900 border-b-4 border-black pb-3 mb-6 flex items-center gap-2">
-                        🎲 Who's Next? Check-In Carousel
-                    </h2>
+      <!-- Grid Layout: Meeting Carousel & Virtual Whiteboard -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
 
-                    <!-- Main Active Checkin Deck -->
-                    <div class="flex-1 flex flex-col justify-between">
-                        <!-- Carousel Display Box -->
-                        <div id="carousel-empty" class="bg-white p-8 sketch-border shadow-neo rounded text-center my-auto">
-                            <p class="text-4xl mb-4">✨</p>
-                            <h3 class="font-display font-bold text-xl mb-2">Ready to run a check-in?</h3>
-                            <p class="text-sm text-stone-600 mb-6 max-w-md mx-auto">
-                                Load your office team roster or type some names below, then spin the selector wheel!
-                            </p>
-                            <button onclick="spinCarousel()" class="bg-[#4caf50] hover:bg-[#43a047] text-white px-6 py-3 font-display font-bold text-lg sketch-border shadow-neo transition-all active:translate-x-0.5">
-                                🚀 Start Round Robin
-                            </button>
-                        </div>
-
-                        <div id="carousel-active" class="hidden space-y-6">
-                            <!-- Active Team Member Card -->
-                            <div class="bg-white sketch-border shadow-neo p-6 relative transform rotate-1">
-                                <span class="absolute -top-4 -right-2 bg-indigo-500 text-white font-mono text-xs px-2.5 py-1 sketch-border rounded shadow-neo">
-                                    UP NEXT!
-                                </span>
-                                
-                                <div class="flex items-center gap-4 mb-4">
-                                    <div id="active-member-emoji" class="text-5xl p-2 bg-[#ffecb3] sketch-border rounded-full shadow-neo">🧑‍💻</div>
-                                    <div>
-                                        <h3 id="active-member-name" class="font-display font-bold text-2xl text-stone-900">Name Loading...</h3>
-                                        <p class="text-xs text-stone-500 font-semibold uppercase tracking-wider">Presenting to the room</p>
-                                    </div>
-                                </div>
-
-                                <!-- Randomly selected question bubble -->
-                                <div class="bg-amber-100 p-4 sketch-border border-dashed rounded relative">
-                                    <div class="absolute -top-3 left-6 bg-amber-400 text-black text-xs font-bold px-2 py-0.5 sketch-border">
-                                        THE PROMPT:
-                                    </div>
-                                    <p id="active-prompt" class="font-display text-lg font-bold mt-1 text-stone-800">"What do you need from the team this week?"</p>
-                                </div>
-                            </div>
-
-                            <!-- PM Response Entry Box -->
-                            <div class="bg-[#e8f5e9] sketch-border p-4 shadow-neo">
-                                <label class="block text-xs font-bold uppercase text-emerald-800 mb-2">✍️ Log response for team notes (saves automatically on Spin Next):</label>
-                                <div class="flex gap-2">
-                                    <input id="pm-input-answer" type="text" placeholder="Type quick summary here (saves automatically on spin/restart)..." class="w-full px-3 py-2 sketch-border font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm">
-                                </div>
-                            </div>
-
-                            <!-- Carousel Controls -->
-                            <div class="flex items-center justify-between gap-2 pt-2">
-                                <button onclick="spinCarousel()" class="flex-1 bg-amber-400 hover:bg-amber-500 text-black font-display font-bold py-3 px-3 sketch-border shadow-neo text-center transition-all active:translate-y-0.5 text-sm">
-                                    🎲 Spin Next
-                                </button>
-                                <button onclick="skipMember()" class="bg-[#f06292] hover:bg-[#e91e63] text-white font-display font-bold py-3 px-4 sketch-border shadow-neo text-center transition-all active:translate-y-0.5 text-sm" title="Skip this person for this meeting session">
-                                    ⏭️ Skip
-                                </button>
-                                <button onclick="resetCarousel()" class="bg-stone-200 hover:bg-stone-300 text-stone-800 font-display font-semibold py-3 px-3 sketch-border text-xs">
-                                    Restart
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Drawer Container for Roster & Access Management -->
-                    <div class="mt-8 border-t-2 border-dashed border-black/40 pt-6 space-y-6">
-                        <!-- Section A: Team Roster -->
-                        <div>
-                            <h3 class="font-display font-bold text-base mb-3 flex items-center justify-between">
-                                <span>👥 Team Roster (<span id="roster-count">0</span> members)</span>
-                                <button onclick="toggleRosterView()" class="text-xs bg-white text-stone-800 px-2 py-1 sketch-border shadow-neo font-bold">Edit Roster</button>
-                            </h3>
-
-                            <!-- Quick Add Member Form -->
-                            <div id="roster-editor" class="hidden mb-4 p-3 bg-white sketch-border">
-                                <h4 class="text-xs font-bold mb-2">Add New Team Member:</h4>
-                                <div class="flex gap-2">
-                                    <select id="new-member-emoji" class="bg-stone-100 p-2 sketch-border text-lg focus:outline-none">
-                                        <option>🧑‍💻</option><option>👩‍🎨</option><option>🧙‍♂️</option><option>🚀</option><option>👽</option>
-                                        <option>🦊</option><option>🤖</option><option>🍕</option><option>🎨</option><option>🦖</option>
-                                    </select>
-                                    <input id="new-member-name" type="text" placeholder="Member's Name..." class="flex-1 px-3 py-1 sketch-border text-sm focus:outline-none">
-                                    <button onclick="addTeamMember()" class="bg-indigo-500 text-white px-3 py-1 font-display font-bold text-xs sketch-border shadow-neo">
-                                        Add
-                                    </button>
-                                </div>
-                            </div>
-
-                            <!-- Tiny Chips Container -->
-                            <div id="roster-chips" class="flex flex-wrap gap-2 max-h-24 overflow-y-auto">
-                                <!-- Chips loaded programmatically -->
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- MODULE 2: SMALL PROJECTS & BUG FIXES BOARD (5 cols) -->
-                <section class="lg:col-span-5 bg-[#e3f2fd] sketch-border-thick p-6 shadow-neo-lg flex flex-col h-full min-h-[580px]">
-                    <h2 class="font-display font-bold text-2xl text-stone-900 border-b-4 border-black pb-3 mb-6 flex items-center gap-2">
-                        📋 Task & Bug Tracker
-                    </h2>
-
-                    <!-- Project Quick Add Form -->
-                    <div class="bg-white p-4 sketch-border shadow-neo mb-6">
-                        <h3 class="text-xs font-bold uppercase tracking-wide text-blue-800 mb-3">📍 Add Task / Report</h3>
-                        <div class="space-y-3">
-                            <input id="new-project-title" type="text" placeholder="Fix UI spacing, Draft monthly report..." class="w-full px-3 py-2 sketch-border text-sm focus:outline-none">
-                            
-                            <div class="flex gap-2">
-                                <select id="new-project-cat" class="flex-1 px-3 py-2 sketch-border text-xs bg-stone-50 font-bold focus:outline-none">
-                                    <option value="Bug Fix">🐛 Bug Fix</option>
-                                    <option value="New Report">📊 New Report</option>
-                                    <option value="Small Project">🚀 Small Project</option>
-                                    <option value="Other">💡 Other Idea</option>
-                                </select>
-                                <button onclick="addProjectItem()" class="bg-[#29b6f6] hover:bg-[#039be5] text-black font-display font-bold px-4 py-2 text-xs sketch-border shadow-neo">
-                                    Add to List
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Filters & Counters -->
-                    <div class="flex items-center justify-between text-xs font-bold mb-3 px-1">
-                        <div class="flex gap-2">
-                            <button onclick="filterProjects('all')" id="btn-filter-all" class="bg-black text-white px-2.5 py-1 sketch-border">All</button>
-                            <button onclick="filterProjects('pending')" id="btn-filter-pending" class="bg-white text-stone-800 px-2.5 py-1 sketch-border shadow-neo">Active</button>
-                            <button onclick="filterProjects('completed')" id="btn-filter-completed" class="bg-white text-stone-800 px-2.5 py-1 sketch-border shadow-neo">Done</button>
-                        </div>
-                        <span id="project-stats" class="text-stone-600">0 Items</span>
-                    </div>
-
-                    <!-- Projects List Container -->
-                    <div class="flex-1 overflow-y-auto space-y-3 pr-1 max-h-[350px]" id="projects-list-container">
-                        <!-- Project rows inject here -->
-                    </div>
-                </section>
+        <!-- LEFT: MEETING CAROUSEL (7 Cols) -->
+        <div class="lg:col-span-7 space-y-4">
+          <div class="art-card rounded-3xl p-6 sm:p-8 bg-studio-paper relative">
+            
+            <div class="flex items-center justify-between mb-6">
+              <div class="flex items-center space-x-2">
+                <span class="w-3.5 h-3.5 rounded-full bg-studio-mint border border-studio-ink animate-pulse"></span>
+                <h2 class="font-serif font-bold text-studio-ink text-xl">Meeting Stage</h2>
+              </div>
+              <span id="carousel-counter" class="text-xs font-bold px-3 py-1 bg-studio-sun/20 border-2 border-studio-ink rounded-full text-studio-ink">
+                0 / 0 Members
+              </span>
             </div>
 
-            <!-- MODULE 3: BRAINSTORMING CANVAS AREA (Full Width) -->
-            <section class="bg-[#f3e5f5] sketch-border-thick p-6 shadow-neo-lg">
-                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b-4 border-black pb-3 mb-6">
-                    <div>
-                        <h2 class="font-display font-bold text-2xl text-stone-900 flex items-center gap-2">
-                            🎨 The Creative Canvas
-                        </h2>
-                        <p class="text-xs text-indigo-900 font-semibold mt-0.5">Drag, double-click to edit, and add sticky notes to brainstorm your wildest concepts!</p>
-                    </div>
-                    
-                    <!-- Quick Controls -->
-                    <div class="flex gap-2 items-center flex-wrap">
-                        <span class="text-xs font-bold">Pick Note Color:</span>
-                        <div class="flex gap-1.5 mr-2">
-                            <button onclick="setStickyColorChoice('yellow')" class="w-6 h-6 rounded-full bg-yellow-200 border-2 border-black focus:ring-2 focus:ring-black" title="Yellow"></button>
-                            <button onclick="setStickyColorChoice('pink')" class="w-6 h-6 rounded-full bg-pink-200 border-2 border-black focus:ring-2 focus:ring-black" title="Pink"></button>
-                            <button onclick="setStickyColorChoice('blue')" class="w-6 h-6 rounded-full bg-blue-200 border-2 border-black focus:ring-2 focus:ring-black" title="Blue"></button>
-                            <button onclick="setStickyColorChoice('green')" class="w-6 h-6 rounded-full bg-green-200 border-2 border-black focus:ring-2 focus:ring-black" title="Green"></button>
-                            <button onclick="setStickyColorChoice('purple')" class="w-6 h-6 rounded-full bg-purple-200 border-2 border-black focus:ring-2 focus:ring-black" title="Purple"></button>
-                        </div>
+            <!-- CAROUSEL DISPLAY CARD -->
+            <div id="carousel-card-container" class="min-h-[340px] flex flex-col justify-between bg-gradient-to-b from-amber-50/50 to-white rounded-2xl p-6 sm:p-8 border-2 border-dashed border-stone-300 relative">
+              
+              <!-- Empty state if no team/members -->
+              <div id="carousel-empty-state" class="my-auto text-center py-12 space-y-3">
+                <i data-lucide="user-plus" class="w-12 h-12 mx-auto text-stone-300"></i>
+                <h3 class="font-bold text-stone-700 text-lg">No Members Selected</h3>
+                <p class="text-sm text-stone-500 max-w-sm mx-auto">Select a team with active members or add members in Team Settings to launch the check-in carousel.</p>
+                <button onclick="openManageTeamsModal()" class="mt-2 text-xs font-bold text-studio-terracotta underline hover:text-studio-coral">Add Team Members</button>
+              </div>
 
-                        <button onclick="spawnStickyNote()" class="bg-[#ab47bc] hover:bg-[#8e24aa] text-white px-4 py-2 font-display font-bold text-sm sketch-border shadow-neo">
-                            📌 Sticky Note!
-                        </button>
-                        <button onclick="clearCanvas()" class="text-xs bg-white text-red-600 hover:bg-red-50 sketch-border font-bold px-3 py-2">
-                            Wipe Canvas
-                        </button>
+              <!-- Active Carousel Content -->
+              <div id="carousel-content" class="hidden space-y-6">
+                <!-- Member Polaroid Card -->
+                <div class="flex items-center space-x-5">
+                  <div class="polaroid-frame flex-shrink-0">
+                    <div id="carousel-avatar" class="w-16 h-16 art-gradient-2 text-white font-serif font-bold text-2xl flex items-center justify-center border border-studio-ink">
+                      --
                     </div>
+                  </div>
+                  <div>
+                    <h3 id="carousel-member-name" class="text-2xl sm:text-3xl font-serif font-bold text-studio-ink">Member Name</h3>
+                    <span id="carousel-member-role" class="inline-block mt-1 text-xs font-bold uppercase tracking-wider text-white bg-studio-lavender border border-studio-ink px-2.5 py-0.5 rounded-full">Role Title</span>
+                  </div>
                 </div>
 
-                <!-- Canvas Grid Workspace -->
-                <div id="canvas-workspace" class="relative bg-white sketch-border h-[450px] overflow-hidden rounded shadow-inner bg-grid-pattern cursor-crosshair">
-                    <!-- Helper prompt -->
-                    <div class="absolute inset-0 flex items-center justify-center pointer-events-none select-none opacity-20">
-                        <div class="text-center">
-                            <span class="text-6xl block">⚡</span>
-                            <p class="font-display font-bold text-lg text-black mt-2">Workspace Canvas Board</p>
-                        </div>
-                    </div>
-
-                    <!-- Sticky notes spawned programmatically -->
-                </div>
-            </section>
-
-            <!-- MODULE 4: ARCHIVED / RECENT CHECKINS -->
-            <section class="bg-white sketch-border-thick p-6 shadow-neo-lg space-y-4">
-                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b-2 border-black pb-2">
-                    <h2 class="font-display font-bold text-xl text-stone-900 flex items-center gap-2">
-                        📋 Logged Responses History
-                    </h2>
-                    <span class="text-xs font-bold text-stone-500 bg-amber-100 border-2 border-black px-2 py-1" id="history-filter-indicator">
-                        Showing recent 2 days of activity
+                <!-- Random Question Highlight Card -->
+                <div class="bg-studio-sun/15 border-2 border-studio-ink p-6 rounded-2xl relative space-y-3 shadow-sm">
+                  <div class="flex items-center justify-between">
+                    <span class="text-xs font-black text-studio-terracotta uppercase tracking-wider flex items-center space-x-1">
+                      <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+                      <span>Reflection Question</span>
                     </span>
-                </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left text-sm font-medium">
-                        <thead class="bg-stone-100 sketch-border border-l-0 border-r-0 border-t-0">
-                            <tr>
-                                <th class="p-3 font-display font-bold">Team Member</th>
-                                <th class="p-3 font-display font-bold">Prompt Logged</th>
-                                <th class="p-3 font-display font-bold">Logged Response</th>
-                                <th class="p-3 font-display font-bold">Date & Time</th>
-                                <th class="p-3 font-display font-bold text-center">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody id="checkins-table-body" class="divide-y divide-stone-200">
-                            <tr>
-                                <td colspan="5" class="p-4 text-center text-stone-500">No responses logged for this meeting session yet.</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="flex justify-center pt-2">
-                    <button id="history-toggle-btn" onclick="toggleHistoryExpansion()" class="hidden bg-white text-stone-800 font-display font-bold px-4 py-2 sketch-border shadow-neo transition-all hover:bg-stone-50 active:translate-x-0.5 active:translate-y-0.5 active:shadow-neo-sm text-xs">
-                        Show All History
+                    <button onclick="rerollQuestion()" class="text-xs font-bold text-stone-600 hover:text-studio-terracotta flex items-center space-x-1 transition-colors bg-white px-2.5 py-1 rounded-lg border border-studio-ink">
+                      <i data-lucide="refresh-cw" class="w-3 h-3"></i>
+                      <span>New Prompt</span>
                     </button>
+                  </div>
+                  <p id="carousel-question" class="text-xl sm:text-2xl font-serif italic font-medium text-studio-ink leading-relaxed">
+                    "What do you need from us today?"
+                  </p>
                 </div>
-            </section>
+              </div>
 
-            <!-- MODULE 5: WORKSPACE ACCESS CONTROL WHITELIST (Moved from Roster panel to bottom of page) -->
-            <section class="bg-yellow-50 sketch-border-thick p-6 shadow-neo-lg space-y-4">
-                <div class="flex items-center justify-between border-b-2 border-black pb-2">
-                    <h2 class="font-display font-bold text-xl text-stone-900 flex items-center gap-2">
-                        🔐 Workspace Access Whitelist (<span id="auth-users-count">0</span>)
-                    </h2>
-                    <button onclick="toggleAuthUsersView()" class="text-xs bg-white text-stone-800 px-3 py-1.5 sketch-border shadow-neo font-bold">Edit Whitelist</button>
-                </div>
+              <!-- Carousel Navigation Buttons -->
+              <div id="carousel-controls" class="hidden flex items-center justify-between pt-6 border-t-2 border-stone-200 mt-6">
+                <button onclick="prevMember()" class="flex items-center space-x-2 px-5 py-2.5 bg-stone-100 hover:bg-stone-200 text-studio-ink font-bold text-sm rounded-2xl art-button">
+                  <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                  <span>Previous</span>
+                </button>
 
-                <p class="text-xs text-stone-600 font-medium">
-                    💡 If empty, <strong>any</strong> BC Google account can login. Once you add at least one email, access is locked strictly to listed users.
-                </p>
+                <button onclick="shuffleMembers()" class="p-2.5 text-studio-ink hover:bg-stone-100 rounded-2xl border-2 border-studio-ink transition-colors" title="Shuffle Carousel Order">
+                  <i data-lucide="shuffle" class="w-5 h-5"></i>
+                </button>
 
-                <!-- Access Editor panel -->
-                <div id="auth-users-editor" class="hidden mb-4 p-4 bg-white sketch-border max-w-xl">
-                    <h4 class="text-xs font-bold mb-2">Authorize Email Address:</h4>
-                    <div class="flex gap-2">
-                        <input id="new-auth-email" type="email" placeholder="student@bc.edu" class="flex-1 px-3 py-2 sketch-border text-sm focus:outline-none">
-                        <button onclick="addAuthorizedUser()" class="bg-emerald-500 text-white px-4 py-2 font-display font-bold text-xs sketch-border shadow-neo active:translate-y-0.5">
-                            Add Email
-                        </button>
-                    </div>
-                </div>
+                <button onclick="nextMember()" class="flex items-center space-x-2 px-6 py-2.5 art-gradient-1 text-studio-ink font-black text-sm rounded-2xl art-button">
+                  <span>Next Person</span>
+                  <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </button>
+              </div>
 
-                <!-- Whitelisted emails container -->
-                <div id="auth-users-chips" class="flex flex-wrap gap-2 max-h-36 overflow-y-auto">
-                    <!-- Loaded dynamically -->
-                </div>
-            </section>
+            </div>
+          </div>
         </div>
 
-    </main>
+        <!-- RIGHT: VIRTUAL WHITEBOARD (5 Cols) -->
+        <div class="lg:col-span-5 space-y-4">
+          <div class="art-card rounded-3xl p-6 sm:p-8 bg-white flex flex-col h-full">
+            
+            <div class="flex items-center justify-between mb-4">
+              <div class="flex items-center space-x-2">
+                <i data-lucide="pen-tool" class="w-5 h-5 text-studio-coral"></i>
+                <h2 class="font-serif font-bold text-studio-ink text-xl">Whiteboard Canvas</h2>
+              </div>
+              <span id="whiteboard-count" class="text-xs bg-studio-lavender/20 text-studio-plum font-bold px-3 py-1 rounded-full border border-studio-plum/30">
+                0 Topics
+              </span>
+            </div>
 
-    <!-- FOOTER -->
-    <footer class="bg-black text-white p-6 border-t-4 border-black text-center text-xs mt-auto">
-        <p class="font-semibold">Designed for university labs, high-energy startups, & agile design crews.</p>
-    </footer>
+            <p class="text-xs text-stone-500 mb-4 font-medium">
+              Post notes, bottlenecks, or key topics for the team check-in meeting.
+            </p>
 
-    <!-- STICKY DRAGGING CONTROL & MAIN APPLICATION LOGIC -->
-    <script>
-        // ====================================================================
-        // 1. SUPABASE CONFIGURATION (Placeholders to switch out)
-        // ====================================================================
-        const SUPABASE_URL = "https://uqblyogrcsrbgxsncncu.supabase.co"; // Replace with your URL
-        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVxYmx5b2dyY3NyYmd4c25jbmN1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIzMDEyNTMsImV4cCI6MjA5Nzg3NzI1M30.AKjE2io4qebY_jLHO5HakU6yZh1TdMne71F-muJGpLM";         // Replace with your Service Key
+            <!-- Add Point Form -->
+            <form onsubmit="handleAddWhiteboardPoint(event)" class="mb-6 space-y-2">
+              <div class="flex items-center gap-2">
+                <input type="text" id="wb-input-content" required placeholder="Add a point to discuss..." 
+                       class="flex-grow px-4 py-2.5 text-sm bg-stone-50 border-2 border-studio-ink rounded-2xl focus:outline-none focus:ring-2 focus:ring-studio-coral font-medium">
+                <button type="submit" class="px-4 py-2.5 art-gradient-1 text-studio-ink font-black text-sm rounded-2xl art-button flex items-center justify-center">
+                  <i data-lucide="plus" class="w-5 h-5"></i>
+                </button>
+              </div>
+            </form>
 
-        let supabaseClient = null;
+            <!-- Whiteboard Filter Tabs -->
+            <div class="flex items-center space-x-3 text-xs border-b-2 border-stone-200 pb-3 mb-4 font-bold">
+              <button onclick="filterWhiteboard('active')" id="wb-filter-active" class="text-studio-coral border-b-2 border-studio-coral pb-1">
+                Active Notes
+              </button>
+              <button onclick="filterWhiteboard('addressed')" id="wb-filter-addressed" class="text-stone-400 hover:text-stone-700 pb-1">
+                Addressed / Done
+              </button>
+            </div>
 
-        // ====================================================================
-        // 2. LIVE SYNCHRONIZED STATE
-        // ====================================================================
-        let state = {
-            teamMembers: [],
-            checkins: [],
-            projects: [],
-            brainstormNotes: [],
-            authorizedUsers: []
-        };
+            <!-- Whiteboard Sticky Cards List -->
+            <div id="whiteboard-container" class="space-y-4 max-h-[420px] overflow-y-auto pr-1">
+              <!-- Dynamically populated -->
+            </div>
 
-        const randomPrompts = [
-            "What do you need from the team this week?",
-            "What is your #1 focus today?",
-            "Got any micro-wins or positive developments?",
-            "What's blocking your momentum right now?",
-            "What skill/asset do you wish we had access to?",
-            "If you had to change one priority, what would it be?",
-            "How can we help make your tasks easier today?"
-        ];
+          </div>
+        </div>
 
-        // Active State variables
-        let currentUser = null;
-        let activeMember = null;
-        let currentPrompt = "";
-        let selectedStickyColor = 'yellow';
-        let projectFilter = 'all';
-        let showAllCheckins = false; // Flag to control history log display expansion
+      </div>
 
-        // Dragging state tracking variables
-        let draggingElement = null;
-        let dragOffset = { x: 0, y: 0 };
-        let confirmCallback = null;
+    </section>
 
-        // ====================================================================
-        // 3. INITIALIZATION & CONNECTION DETECTOR
-        // ====================================================================
-        window.addEventListener('DOMContentLoaded', async () => {
-            initApp();
+    <!-- ================================================================= -->
+    <!-- SECTION 2: BETTER OFFICE                                          -->
+    <!-- ================================================================= -->
+    <section id="section-ideas" class="hidden space-y-8">
+      
+      <!-- Better Office Hero Header -->
+      <div class="art-card rounded-3xl p-8 sm:p-10 bg-studio-plum text-white relative overflow-hidden">
+        <div class="max-w-3xl space-y-4 relative z-10">
+          <div class="inline-flex items-center space-x-2 bg-studio-sun text-studio-ink text-xs font-black px-3 py-1 rounded-full border border-studio-ink">
+            <i data-lucide="lightbulb" class="w-3.5 h-3.5"></i>
+            <span>Continuous Innovation Engine</span>
+          </div>
+          <h1 class="text-3xl sm:text-4xl font-serif font-bold tracking-tight text-white">
+            Better Office Studio
+          </h1>
+          <p class="text-stone-200 text-sm sm:text-base leading-relaxed font-medium">
+            Turn creative ideas into tangible improvements. Pitch your solutions for IR&P, vote on impactful ideas, and volunteer to bring them to life.
+          </p>
+          <div class="pt-2 flex flex-wrap gap-3">
+            <button onclick="openAddIdeaModal()" class="art-gradient-1 text-studio-ink font-black text-sm px-6 py-3 rounded-2xl art-button flex items-center space-x-2">
+              <i data-lucide="plus-circle" class="w-5 h-5"></i>
+              <span>Propose an Idea</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filters & Controls Bar -->
+      <div class="art-card p-5 rounded-3xl bg-white flex flex-col md:flex-row items-center justify-between gap-4">
+        
+        <!-- Search input -->
+        <div class="relative w-full md:w-72">
+          <i data-lucide="search" class="w-4 h-4 absolute left-3.5 top-3.5 text-stone-400"></i>
+          <input type="text" id="idea-search" oninput="renderIdeas()" placeholder="Search title or problem..." 
+                 class="w-full pl-10 pr-4 py-2.5 text-sm bg-stone-50 border-2 border-studio-ink rounded-2xl focus:outline-none focus:ring-2 focus:ring-studio-coral font-medium">
+        </div>
+
+        <!-- Filter Dropdowns -->
+        <div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
+          <!-- Area Filter -->
+          <select id="idea-area-filter" onchange="renderIdeas()" class="text-xs font-bold bg-stone-50 border-2 border-studio-ink text-studio-ink rounded-2xl px-3 py-2.5 focus:outline-none cursor-pointer">
+            <option value="ALL">All Areas</option>
+            <option value="Meetings">Meetings</option>
+            <option value="Technology">Technology</option>
+            <option value="Workspace">Workspace</option>
+            <option value="Communication">Communication</option>
+            <option value="Student Experience">Student Experience</option>
+            <option value="Process & Workflow">Process & Workflow</option>
+            <option value="Culture & Well-being">Culture & Well-being</option>
+          </select>
+
+          <!-- Status Filter -->
+          <select id="idea-status-filter" onchange="renderIdeas()" class="text-xs font-bold bg-stone-50 border-2 border-studio-ink text-studio-ink rounded-2xl px-3 py-2.5 focus:outline-none cursor-pointer">
+            <option value="ALL">All Statuses</option>
+            <option value="Idea">💡 Open Ideas</option>
+            <option value="In Progress">⚡ In Progress</option>
+            <option value="Implemented">✅ Implemented</option>
+          </select>
+
+          <!-- Sorting -->
+          <select id="idea-sort" onchange="renderIdeas()" class="text-xs font-bold bg-stone-50 border-2 border-studio-ink text-studio-ink rounded-2xl px-3 py-2.5 focus:outline-none cursor-pointer">
+            <option value="upvotes">Highest Upvoted</option>
+            <option value="newest">Newest First</option>
+            <option value="comments">Most Commented</option>
+          </select>
+        </div>
+
+      </div>
+
+      <!-- Ideas Cards Grid -->
+      <div id="ideas-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Dynamically populated -->
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- MODAL 1: PROPOSE IDEA MODAL -->
+  <div id="modal-add-idea" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-xl w-full p-6 sm:p-8 shadow-2xl border-2 border-studio-ink relative max-h-[90vh] overflow-y-auto">
+      
+      <button onclick="closeModal('modal-add-idea')" class="absolute top-6 right-6 text-stone-400 hover:text-stone-700">
+        <i data-lucide="x" class="w-6 h-6"></i>
+      </button>
+
+      <div class="space-y-1 mb-6">
+        <span class="text-xs font-bold text-studio-terracotta uppercase tracking-wider">Better Office Engine</span>
+        <h3 class="text-2xl font-serif font-bold text-studio-ink">Propose a Solution</h3>
+      </div>
+
+      <form onsubmit="handleCreateIdea(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-bold text-studio-ink uppercase tracking-wide mb-1">💡 Title</label>
+          <input type="text" id="idea-title" required placeholder="e.g. Weekly Automated Data Pipeline Digest" 
+                 class="w-full px-4 py-2.5 text-sm bg-stone-50 border-2 border-studio-ink rounded-xl focus:outline-none focus:ring-2 focus:ring-studio-coral font-medium">
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold text-studio-ink uppercase tracking-wide mb-1">Area</label>
+            <select id="idea-area" class="w-full px-4 py-2.5 text-sm bg-stone-50 border-2 border-studio-ink rounded-xl focus:outline-none focus:ring-2 focus:ring-studio-coral font-medium">
+              <option value="Meetings">Meetings</option>
+              <option value="Technology">Technology</option>
+              <option value="Workspace">Workspace</option>
+              <option value="Communication">Communication</option>
+              <option value="Student Experience">Student Experience</option>
+              <option value="Process & Workflow">Process & Workflow</option>
+              <option value="Culture & Well-being">Culture & Well-being</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-studio-ink uppercase tracking-wide mb-1">Estimated Effort</label>
+            <select id="idea-effort" class="w-full px-4 py-2.5 text-sm bg-stone-50 border-2 border-studio-ink rounded-xl focus:outline-none focus:ring-2 focus:ring-studio-coral font-medium">
+              <option value="5 min">5 min (Quick Win)</option>
+              <option value="1 hour">1 hour (Focused Sprint)</option>
+              <option value="1 day">1 day (Mini Project)</option>
+              <option value="Project">Project (Multi-day Effort)</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-studio-ink uppercase tracking-wide mb-1">Problem it's trying to solve</label>
+          <textarea id="idea-problem" required rows="3" placeholder="Describe the current bottleneck or friction point..." 
+                    class="w-full px-4 py-2.5 text-sm bg-stone-50 border-2 border-studio-ink rounded-xl focus:outline-none focus:ring-2 focus:ring-studio-coral font-medium"></textarea>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-studio-ink uppercase tracking-wide mb-1">Proposed Solution</label>
+          <textarea id="idea-solution" required rows="3" placeholder="What actionable steps can we take to solve this?" 
+                    class="w-full px-4 py-2.5 text-sm bg-stone-50 border-2 border-studio-ink rounded-xl focus:outline-none focus:ring-2 focus:ring-studio-coral font-medium"></textarea>
+        </div>
+
+        <div class="pt-4 flex justify-end space-x-3">
+          <button type="button" onclick="closeModal('modal-add-idea')" class="px-5 py-2.5 text-stone-600 font-semibold text-sm hover:bg-stone-100 rounded-xl">Cancel</button>
+          <button type="submit" class="px-6 py-2.5 art-gradient-1 text-studio-ink font-black text-sm rounded-xl art-button">Submit Idea</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- MODAL 2: MANAGE TEAMS MODAL -->
+  <div id="modal-manage-teams" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl border-2 border-studio-ink relative max-h-[90vh] overflow-y-auto">
+      
+      <button onclick="closeModal('modal-manage-teams')" class="absolute top-6 right-6 text-stone-400 hover:text-stone-700">
+        <i data-lucide="x" class="w-6 h-6"></i>
+      </button>
+
+      <div class="space-y-1 mb-6">
+        <span class="text-xs font-bold text-studio-terracotta uppercase tracking-wider">Team Management</span>
+        <h3 class="text-2xl font-serif font-bold text-studio-ink">Teams & Members</h3>
+      </div>
+
+      <!-- Add New Team Form -->
+      <form onsubmit="handleCreateTeam(event)" class="bg-stone-50 p-4 rounded-2xl border-2 border-studio-ink mb-6 flex flex-col sm:flex-row gap-3">
+        <input type="text" id="new-team-name" required placeholder="New Team Name (e.g. Analytics & Surveys)" 
+               class="flex-grow px-4 py-2 text-sm bg-white border border-stone-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-studio-coral font-medium">
+        <button type="submit" class="px-5 py-2 art-gradient-1 text-studio-ink font-black text-sm rounded-xl art-button flex-shrink-0">
+          Create Team
+        </button>
+      </form>
+
+      <!-- Current Selected Team Members List -->
+      <div class="space-y-4">
+        <h4 class="font-bold text-studio-ink text-sm border-b border-stone-200 pb-2">
+          Members in <span id="manage-team-active-name" class="text-studio-terracotta">Active Team</span>
+        </h4>
+
+        <!-- Add Member to current team form -->
+        <form onsubmit="handleAddMember(event)" class="grid grid-cols-1 sm:grid-cols-12 gap-2">
+          <input type="text" id="new-member-name" required placeholder="Full Name" 
+                 class="sm:col-span-5 px-3 py-2 text-xs bg-stone-50 border border-stone-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-studio-coral font-medium">
+          <input type="text" id="new-member-role" placeholder="Role (e.g. Senior Analyst)" 
+                 class="sm:col-span-4 px-3 py-2 text-xs bg-stone-50 border border-stone-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-studio-coral font-medium">
+          <button type="submit" class="sm:col-span-3 px-3 py-2 bg-studio-ink text-white font-semibold text-xs rounded-xl hover:bg-stone-800">
+            Add Person
+          </button>
+        </form>
+
+        <div id="manage-members-list" class="space-y-2 max-h-60 overflow-y-auto pt-2">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- MODAL 3: ACCESS CONTROL (Allowed Google Users) -->
+  <div id="modal-access-control" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border-2 border-studio-ink relative">
+      
+      <button onclick="closeModal('modal-access-control')" class="absolute top-6 right-6 text-stone-400 hover:text-stone-700">
+        <i data-lucide="x" class="w-6 h-6"></i>
+      </button>
+
+      <div class="space-y-1 mb-6">
+        <span class="text-xs font-bold text-studio-terracotta uppercase tracking-wider">Security & Whitelist</span>
+        <h3 class="text-2xl font-serif font-bold text-studio-ink">Allowed Google Users</h3>
+        <p class="text-xs text-stone-500">
+          When this list is empty, any Google user can access the app. Once at least 1 user email is added, access is strictly limited to users on this list.
+        </p>
+      </div>
+
+      <form onsubmit="handleAddAllowedUser(event)" class="flex gap-2 mb-4">
+        <input type="email" id="allowed-email-input" required placeholder="colleague@bc.edu" 
+               class="flex-grow px-4 py-2 text-sm bg-stone-50 border border-stone-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-studio-coral font-medium">
+        <button type="submit" class="px-4 py-2 art-gradient-1 text-studio-ink font-bold text-xs rounded-xl art-button">
+          Add User
+        </button>
+      </form>
+
+      <div id="allowed-users-list" class="space-y-2 max-h-60 overflow-y-auto divide-y divide-stone-100">
+        <!-- Dynamically populated -->
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- MODAL 4: FULLSCREEN PRESENTER MODE -->
+  <div id="modal-presenter" class="fixed inset-0 bg-studio-ink text-white z-50 hidden flex flex-col justify-between p-6 sm:p-12 overflow-hidden">
+    
+    <div class="flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl art-gradient-1 text-studio-ink flex items-center justify-center font-bold font-serif">
+          ✨
+        </div>
+        <div>
+          <h2 class="font-serif font-bold text-xl text-white">IR&P Team Check-in</h2>
+          <p id="presenter-team-subtitle" class="text-xs text-stone-400">Active Meeting Mode</p>
+        </div>
+      </div>
+
+      <button onclick="closeModal('modal-presenter')" class="px-4 py-2 bg-white/10 hover:bg-white/20 text-stone-200 text-xs font-bold rounded-xl transition-colors">
+        Exit Fullscreen
+      </button>
+    </div>
+
+    <!-- Center Carousel Card -->
+    <div class="max-w-4xl mx-auto w-full my-auto text-center space-y-8">
+      
+      <div id="presenter-card" class="bg-stone-900/90 border-2 border-stone-700 rounded-3xl p-8 sm:p-12 shadow-2xl backdrop-blur-md space-y-8">
+        
+        <div class="inline-flex items-center space-x-4 px-6 py-3 bg-white/10 border border-white/20 rounded-2xl">
+          <div id="presenter-avatar" class="w-14 h-14 rounded-xl art-gradient-2 text-white font-serif font-bold text-2xl flex items-center justify-center shadow-md border border-white/30">
+            --
+          </div>
+          <div class="text-left">
+            <h3 id="presenter-name" class="text-2xl sm:text-3xl font-serif font-bold text-white">Member Name</h3>
+            <p id="presenter-role" class="text-xs text-studio-sun uppercase tracking-widest font-semibold">Role</p>
+          </div>
+        </div>
+
+        <div class="space-y-3 max-w-2xl mx-auto">
+          <span class="text-xs font-bold uppercase tracking-widest text-studio-coral block">Today's Reflection Question</span>
+          <p id="presenter-question" class="text-2xl sm:text-4xl font-serif italic text-stone-100 leading-snug">
+            "What do you need from us?"
+          </p>
+        </div>
+
+      </div>
+
+      <!-- Presenter Navigation Controls -->
+      <div class="flex items-center justify-center space-x-4">
+        <button onclick="prevMember()" class="px-6 py-3 bg-stone-800 hover:bg-stone-700 text-white rounded-2xl font-bold text-sm transition-colors border border-stone-600">
+          Previous
+        </button>
+        <button onclick="rerollQuestion()" class="px-6 py-3 border border-studio-sun text-studio-sun hover:bg-studio-sun/10 rounded-2xl font-bold text-sm transition-colors">
+          New Question
+        </button>
+        <button onclick="nextMember()" class="px-8 py-3 art-gradient-1 text-studio-ink rounded-2xl font-black text-sm shadow-lg hover:brightness-105 transition-transform art-button">
+          Next Person →
+        </button>
+      </div>
+
+    </div>
+
+    <div class="text-center text-xs text-stone-500">
+      Press <kbd class="px-2 py-0.5 bg-stone-800 text-stone-300 rounded">ESC</kbd> or click Exit to return.
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-studio-ink text-stone-400 py-8 border-t-4 border-studio-coral text-xs mt-12 relative z-10">
+    <div class="max-w-7xl mx-auto px-4 text-center space-y-2">
+      <p class="font-bold text-stone-200">Office of Institutional Research & Planning • Boston College</p>
+      <p>Artistic collaborative workspace for team check-ins, reflection, and continuous improvement.</p>
+    </div>
+  </footer>
+
+  <script>
+    /* =====================================================================
+       SUPABASE CONFIGURATION & APPLICATION STATE
+       ===================================================================== */
+    let SUPABASE_URL = localStorage.getItem('bc_irp_supabase_url') || 'https://uqblyogrcsrbgxsncncu.supabase.co';
+    let SUPABASE_ANON_KEY = localStorage.getItem('bc_irp_supabase_key') || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVxYmx5b2dyY3NyYmd4c25jbmN1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIzMDEyNTMsImV4cCI6MjA5Nzg3NzI1M30.AKjE2io4qebY_jLHO5HakU6yZh1TdMne71F-muJGpLM';
+
+    let supabaseClient = null;
+
+    function isSupabaseConfigured() {
+      return SUPABASE_URL && 
+             !SUPABASE_URL.includes('YOUR_SUPABASE_PROJECT_ID') && 
+             SUPABASE_ANON_KEY && 
+             !SUPABASE_ANON_KEY.includes('YOUR_SUPABASE_ANON_KEY');
+    }
+
+    if (isSupabaseConfigured()) {
+      try {
+        supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      } catch (err) {
+        console.warn("Invalid Supabase URL format:", err);
+      }
+    }
+
+    // Global State Variables
+    let currentUser = null;
+    let allowedUsers = [];
+    let teams = [];
+    let activeTeamId = null;
+    let currentCarouselIndex = 0;
+    let ideas = [];
+    let whiteboardFilter = 'active';
+
+    // Creative Question Bank (30+ prompts)
+    const questions = [
+      "What do you need from us today to be successful?",
+      "What is one small win or accomplishment from this past week you're proud of?",
+      "If your current project had a theme song, what would it be?",
+      "What dataset or survey insight surprised you recently?",
+      "What is occupying most of your brain space today?",
+      "If you could automate one tedious task instantly, what would it be?",
+      "What energizes you most about your work right now?",
+      "What is one potential roadblock on your horizon we can help clear?",
+      "What's a piece of wisdom or advice you've been reflecting on lately?",
+      "If our office had a mascot, what would it be and why?",
+      "What's one tool, trick, or shortcut that saved you time this week?",
+      "What are you most excited to dive into over the next few days?",
+      "If you could swap roles with anyone on the team for one day, who and why?",
+      "What's a question you wish we asked students or faculty more often?",
+      "How are your energy levels today on a scale of 1 to 10, and why?",
+      "What's one thing outside of work that brought you joy this week?",
+      "If you had an unlimited budget for one office upgrade, what would it be?",
+      "What is a project or idea you've been secretly wanting to pitch?",
+      "What's a skill you're currently learning or want to build next?",
+      "What's one thing we should stop doing, start doing, or continue doing?",
+      "What's your favorite spot on campus when you need a moment of focus?",
+      "What's a piece of feedback or compliment that brightened your week?",
+      "If you were to write a headline about our team's work this month, what would it say?",
+      "What's your go-to coffee/tea order or afternoon pick-me-up?",
+      "What's one thing that would make today a 10/10 day for you?",
+      "What is a collaboration with another campus department you'd love to see?",
+      "Which chart or visualization type do you feel best represents your mood today?",
+      "What's a habit or routine that's keeping you grounded right now?",
+      "If our team wrote a book together, what would the title of your chapter be?",
+      "What's one thing you're looking forward to this upcoming weekend or holiday?",
+      "What's a boundary or priority you're intentionally protecting this week?",
+      "If you could instantly solve one data or workflow puzzle in IR&P, which one?"
+    ];
+
+    /* =====================================================================
+       INITIALIZATION & AUTHENTICATION HANDLERS
+       ===================================================================== */
+    window.addEventListener('DOMContentLoaded', async () => {
+      lucide.createIcons();
+
+      if (!isSupabaseConfigured() || !supabaseClient) {
+        renderUserProfile();
+        renderTeamSelect();
+        renderCarousel();
+        renderWhiteboard();
+        renderIdeas();
+        return;
+      }
+
+      try {
+        // Listen to Supabase auth state changes
+        supabaseClient.auth.onAuthStateChange(async (event, session) => {
+          currentUser = session?.user || null;
+          await fetchAllowedUsers();
+
+          // Check Whitelist Access
+          if (currentUser && allowedUsers.length > 0) {
+            const isAllowed = allowedUsers.some(u => u.email.toLowerCase() === currentUser.email.toLowerCase());
+            if (!isAllowed) {
+              alert(`Access Restricted: ${currentUser.email} is not on the allowed Google user list.`);
+              await supabaseClient.auth.signOut();
+              currentUser = null;
+            }
+          }
+
+          renderUserProfile();
+          await fetchTeams();
+          await fetchIdeas();
         });
+      } catch (e) {
+        console.error("Auth init error:", e);
+      }
 
-        async function initApp() {
-            // Check if placeholders are modified or unconfigured
-            const isPlaceholderUrl = SUPABASE_URL.includes("YOUR_PROJECT_ID") || !SUPABASE_URL.startsWith("http");
-            const isPlaceholderKey = SUPABASE_ANON_KEY.includes("YOUR_SUPABASE_ANON_KEY") || SUPABASE_ANON_KEY.length < 30;
+      // Keyboard shortcuts for presenter mode / modals
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          closeModal('modal-presenter');
+          closeModal('modal-add-idea');
+          closeModal('modal-manage-teams');
+          closeModal('modal-access-control');
+        }
+        if (!document.getElementById('modal-presenter').classList.contains('hidden')) {
+          if (e.key === 'ArrowRight') nextMember();
+          if (e.key === 'ArrowLeft') prevMember();
+        }
+      });
+    });
 
-            if (isPlaceholderUrl || isPlaceholderKey) {
-                console.error("⚠️ Supabase Credentials Missing.");
-                showStatusBadge("Config Error", "bg-red-100", "text-red-800", "bg-red-500");
-                showToast("Setup Required", "Please configure your live Supabase credentials inside the code.", "⚠️");
-                
-                // Show Config error immediately
-                document.getElementById("loading-overlay").classList.add("hidden");
-                document.getElementById("auth-gate-overlay").classList.remove("hidden");
-                document.getElementById("auth-gate-msg").textContent = "Please configure your live Supabase credentials inside the code to connect.";
-                return;
-            }
+    function toggleConfigInputs() {
+      const bar = document.getElementById('config-inputs-bar');
+      bar.classList.toggle('hidden');
+      if (!bar.classList.contains('hidden')) {
+        document.getElementById('input-supabase-url').value = isSupabaseConfigured() ? SUPABASE_URL : '';
+        document.getElementById('input-supabase-key').value = isSupabaseConfigured() ? SUPABASE_ANON_KEY : '';
+      }
+    }
 
-            try {
-                // Initialize Supabase Client with persistent configuration enabled
-                supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-                    auth: {
-                        persistSession: true,
-                        autoRefreshToken: true,
-                        detectSessionInUrl: true
-                    }
-                });
-                showStatusBadge("Database Connected", "bg-emerald-100", "text-emerald-800", "bg-emerald-500");
-                
-                // Instantly try to fetch session from local storage before establishing state listener (reduces flickering)
-                const { data: { session }, error: sessionErr } = await supabaseClient.auth.getSession();
-                
-                if (sessionErr) throw sessionErr;
+    function saveSupabaseCredentials() {
+      const url = document.getElementById('input-supabase-url').value.trim();
+      const key = document.getElementById('input-supabase-key').value.trim();
 
-                if (session) {
-                    await verifyAndSetSession(session.user);
-                } else {
-                    // No session retrieved, show standard login screen
-                    showLoginGate();
-                }
+      if (!url || !key) {
+        alert("Please enter both Supabase URL and Key.");
+        return;
+      }
 
-                // Track and react to real-time auth changes seamlessly
-                supabaseClient.auth.onAuthStateChange(async (event, newSession) => {
-                    if (event === 'SIGNED_IN' && newSession) {
-                        await verifyAndSetSession(newSession.user);
-                    } else if (event === 'SIGNED_OUT') {
-                        currentUser = null;
-                        showLoginGate();
-                    }
-                });
+      localStorage.setItem('bc_irp_supabase_url', url);
+      localStorage.setItem('bc_irp_supabase_key', key);
+      window.location.reload();
+    }
 
-            } catch (err) {
-                console.error("Supabase Database connection or recovery failed.", err);
-                showStatusBadge("Connection Lost", "bg-red-100", "text-red-800", "bg-red-500");
-                showToast("Connection Fail", err.message, "❌");
-                showLoginGate(err.message);
-            }
+    // Render User Profile / Login status in Header
+    function renderUserProfile() {
+      const container = document.getElementById('user-profile-container');
+      if (currentUser) {
+        const name = currentUser.user_metadata?.full_name || currentUser.email;
+        const avatar = currentUser.user_metadata?.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=FF6B6B&color=fff`;
+        
+        container.innerHTML = `
+          <div class="flex items-center space-x-2">
+            <img src="${avatar}" alt="${name}" class="w-8 h-8 rounded-full border-2 border-studio-ink shadow-sm" onerror="this.src='https://placehold.co/100x100/FF6B6B/FFFFFF?text=BC'">
+            <div class="hidden lg:block text-left pr-2">
+              <span class="block text-xs font-bold text-white leading-tight truncate max-w-[120px]">${escapeHtml(name)}</span>
+              <span class="block text-[10px] text-stone-300">Signed In</span>
+            </div>
+            <button onclick="logout()" title="Sign Out" class="p-1.5 hover:bg-white/10 rounded-xl transition-colors text-stone-200 hover:text-white">
+              <i data-lucide="log-out" class="w-4 h-4"></i>
+            </button>
+          </div>
+        `;
+      } else {
+        container.innerHTML = `
+          <button onclick="loginWithGoogle()" class="flex items-center space-x-2 px-3 py-1.5 bg-studio-coral text-white font-bold text-xs rounded-xl art-button">
+            <i data-lucide="log-in" class="w-3.5 h-3.5"></i>
+            <span>Google Sign In</span>
+          </button>
+        `;
+      }
+      lucide.createIcons();
+    }
+
+    async function loginWithGoogle() {
+      if (!supabaseClient) {
+        alert("Supabase client is not configured.");
+        return;
+      }
+      const { error } = await supabaseClient.auth.signInWithOAuth({
+        provider: 'google',
+        options: { redirectTo: window.location.href }
+      });
+      if (error) alert("Login Error: " + error.message);
+    }
+
+    async function logout() {
+      if (supabaseClient) {
+        await supabaseClient.auth.signOut();
+      }
+      currentUser = null;
+      renderUserProfile();
+    }
+
+    /* =====================================================================
+       SECTION SWITCHING NAVIGATION
+       ===================================================================== */
+    function switchSection(sectionId) {
+      const checkinsSec = document.getElementById('section-checkins');
+      const ideasSec = document.getElementById('section-ideas');
+      const navCheckinsBtn = document.getElementById('nav-checkins');
+      const navIdeasBtn = document.getElementById('nav-ideas');
+
+      if (sectionId === 'checkins') {
+        checkinsSec.classList.remove('hidden');
+        ideasSec.classList.add('hidden');
+
+        navCheckinsBtn.className = "flex items-center space-x-2 px-5 py-2.5 rounded-xl font-bold text-sm transition-all art-button bg-studio-sun text-studio-ink";
+        navIdeasBtn.className = "flex items-center space-x-2 px-5 py-2.5 rounded-xl font-bold text-sm transition-all text-white/90 hover:text-white hover:bg-white/15";
+      } else {
+        checkinsSec.classList.add('hidden');
+        ideasSec.classList.remove('hidden');
+
+        navIdeasBtn.className = "flex items-center space-x-2 px-5 py-2.5 rounded-xl font-bold text-sm transition-all art-button bg-studio-sun text-studio-ink";
+        navCheckinsBtn.className = "flex items-center space-x-2 px-5 py-2.5 rounded-xl font-bold text-sm transition-all text-white/90 hover:text-white hover:bg-white/15";
+        
+        renderIdeas();
+      }
+    }
+
+    /* =====================================================================
+       TEAMS & MEMBERS DATA HANDLERS
+       ===================================================================== */
+    async function fetchTeams() {
+      if (!supabaseClient) return;
+
+      try {
+        const { data: teamsData, error: tErr } = await supabaseClient.from('teams').select('*');
+        if (tErr) { console.error("Error fetching teams:", tErr); return; }
+
+        const { data: membersData } = await supabaseClient.from('team_members').select('*');
+        const { data: wbData } = await supabaseClient.from('whiteboard_points').select('*');
+
+        if (teamsData) {
+          teams = teamsData.map(t => ({
+            ...t,
+            members: (membersData || []).filter(m => m.team_id === t.id),
+            whiteboard: (wbData || []).filter(w => w.team_id === t.id)
+          }));
+
+          if (teams.length > 0 && !activeTeamId) {
+            activeTeamId = teams[0].id;
+          }
         }
 
-        // Show Sign-In overlay and clear active workspace states elegantly
-        function showLoginGate(errorMessage = null) {
-            document.getElementById("loading-overlay").classList.add("hidden");
-            document.getElementById("app-workspace").classList.add("hidden");
-            document.getElementById("auth-gate-overlay").classList.remove("hidden");
-            
-            document.getElementById("btn-login").classList.remove("hidden");
-            document.getElementById("user-profile").classList.add("hidden");
-            
-            if (errorMessage) {
-                document.getElementById("auth-gate-msg").innerHTML = `
-                    <span class="text-red-600 font-bold block mb-2">⚠️ Connection/Authentication Error</span>
-                    ${errorMessage}
-                `;
-            } else {
-                document.getElementById("auth-gate-msg").innerHTML = `
-                    Please log in with your Boston College Google account to view and update the board.
-                `;
-            }
+        renderTeamSelect();
+        renderCarousel();
+        renderWhiteboard();
+      } catch (err) {
+        console.error("Failed to connect to Supabase backend:", err);
+      }
+    }
+
+    function getCurrentTeam() {
+      return teams.find(t => t.id === activeTeamId) || null;
+    }
+
+    function renderTeamSelect() {
+      const select = document.getElementById('team-select');
+      const titleSpan = document.getElementById('current-team-title');
+      select.innerHTML = '';
+
+      if (teams.length === 0) {
+        select.innerHTML = `<option value="">No Teams Created</option>`;
+        titleSpan.textContent = "Create a Team in Settings";
+        return;
+      }
+
+      teams.forEach(t => {
+        const option = document.createElement('option');
+        option.value = t.id;
+        option.textContent = t.name;
+        if (t.id === activeTeamId) option.selected = true;
+        select.appendChild(option);
+      });
+
+      const activeTeam = getCurrentTeam();
+      if (activeTeam) {
+        titleSpan.textContent = activeTeam.name;
+      }
+    }
+
+    function handleTeamChange(teamId) {
+      activeTeamId = teamId;
+      currentCarouselIndex = 0;
+      const team = getCurrentTeam();
+      if (team) {
+        document.getElementById('current-team-title').textContent = team.name;
+      }
+      renderCarousel();
+      renderWhiteboard();
+    }
+
+    /* =====================================================================
+       MEETING CAROUSEL LOGIC
+       ===================================================================== */
+    function renderCarousel() {
+      const team = getCurrentTeam();
+      const emptyState = document.getElementById('carousel-empty-state');
+      const content = document.getElementById('carousel-content');
+      const controls = document.getElementById('carousel-controls');
+      const counter = document.getElementById('carousel-counter');
+
+      if (!team || !team.members || team.members.length === 0) {
+        emptyState.classList.remove('hidden');
+        content.classList.add('hidden');
+        controls.classList.add('hidden');
+        counter.textContent = "0 / 0 Members";
+        return;
+      }
+
+      emptyState.classList.add('hidden');
+      content.classList.remove('hidden');
+      controls.classList.remove('hidden');
+
+      if (currentCarouselIndex >= team.members.length) currentCarouselIndex = 0;
+      if (currentCarouselIndex < 0) currentCarouselIndex = team.members.length - 1;
+
+      const member = team.members[currentCarouselIndex];
+      counter.textContent = `${currentCarouselIndex + 1} / ${team.members.length} Members`;
+
+      // Update Card Details
+      document.getElementById('carousel-member-name').textContent = member.name;
+      document.getElementById('carousel-member-role').textContent = member.role || "Team Member";
+      document.getElementById('carousel-avatar').textContent = getInitials(member.name);
+
+      // Presenter Modal sync
+      document.getElementById('presenter-name').textContent = member.name;
+      document.getElementById('presenter-role').textContent = member.role || "Team Member";
+      document.getElementById('presenter-avatar').textContent = getInitials(member.name);
+      document.getElementById('presenter-team-subtitle').textContent = `${team.name} • Member ${currentCarouselIndex + 1} of ${team.members.length}`;
+
+      // Pick question if empty
+      if (!document.getElementById('carousel-question').textContent.trim() || document.getElementById('carousel-question').textContent.includes('What do you need')) {
+        rerollQuestion();
+      }
+    }
+
+    function getInitials(name) {
+      if (!name) return 'BC';
+      return name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+    }
+
+    function nextMember() {
+      const team = getCurrentTeam();
+      if (!team || !team.members || team.members.length === 0) return;
+      currentCarouselIndex = (currentCarouselIndex + 1) % team.members.length;
+      rerollQuestion();
+      renderCarousel();
+    }
+
+    function prevMember() {
+      const team = getCurrentTeam();
+      if (!team || !team.members || team.members.length === 0) return;
+      currentCarouselIndex = (currentCarouselIndex - 1 + team.members.length) % team.members.length;
+      rerollQuestion();
+      renderCarousel();
+    }
+
+    function shuffleMembers() {
+      const team = getCurrentTeam();
+      if (!team || !team.members) return;
+      // Fisher-Yates shuffle
+      for (let i = team.members.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [team.members[i], team.members[j]] = [team.members[j], team.members[i]];
+      }
+      currentCarouselIndex = 0;
+      rerollQuestion();
+      renderCarousel();
+    }
+
+    function rerollQuestion() {
+      const randomQ = questions[Math.floor(Math.random() * questions.length)];
+      document.getElementById('carousel-question').textContent = `"${randomQ}"`;
+      document.getElementById('presenter-question').textContent = `"${randomQ}"`;
+    }
+
+    /* =====================================================================
+       VIRTUAL WHITEBOARD HANDLERS
+       ===================================================================== */
+    function renderWhiteboard() {
+      const team = getCurrentTeam();
+      const container = document.getElementById('whiteboard-container');
+      const countLabel = document.getElementById('whiteboard-count');
+      container.innerHTML = '';
+
+      if (!team || !team.whiteboard) {
+        countLabel.textContent = '0 Topics';
+        return;
+      }
+
+      const points = team.whiteboard.filter(p => whiteboardFilter === 'active' ? !p.is_addressed : p.is_addressed);
+      countLabel.textContent = `${points.length} Topics`;
+
+      if (points.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-8 text-stone-400 text-xs italic font-medium">
+            No ${whiteboardFilter} topics found.
+          </div>
+        `;
+        return;
+      }
+
+      points.forEach(point => {
+        const div = document.createElement('div');
+        div.className = `p-5 rounded-2xl border-2 border-studio-ink relative transition-all flex items-start justify-between gap-3 ${
+          point.is_addressed 
+            ? 'bg-stone-100 opacity-60 line-through' 
+            : 'bg-amber-100/90 text-studio-ink shadow-sm'
+        }`;
+
+        div.innerHTML = `
+          <div class="washi-tape"></div>
+          <div class="space-y-1.5 pt-1">
+            <p class="text-sm font-serif font-semibold leading-snug">${escapeHtml(point.content)}</p>
+            <span class="text-[11px] font-hand font-bold text-studio-terracotta text-sm block">— ${escapeHtml(point.author_name)}</span>
+          </div>
+          <div class="flex items-center space-x-1 flex-shrink-0 pt-1">
+            <button onclick="toggleWhiteboardAddressed('${point.id}')" title="${point.is_addressed ? 'Mark Active' : 'Mark Done'}" 
+                    class="p-1.5 rounded-xl hover:bg-white/80 border border-studio-ink text-studio-ink bg-white transition-colors">
+              <i data-lucide="${point.is_addressed ? 'rotate-ccw' : 'check'}" class="w-4 h-4 text-emerald-600"></i>
+            </button>
+            <button onclick="deleteWhiteboardPoint('${point.id}')" title="Delete Point" 
+                    class="p-1.5 rounded-xl hover:bg-red-50 border border-studio-ink text-red-600 bg-white transition-colors">
+              <i data-lucide="trash-2" class="w-4 h-4"></i>
+            </button>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+      lucide.createIcons();
+    }
+
+    async function handleAddWhiteboardPoint(e) {
+      e.preventDefault();
+      if (!supabaseClient) { alert("Please configure Supabase credentials first."); return; }
+      const team = getCurrentTeam();
+      const input = document.getElementById('wb-input-content');
+      if (!team || !input.value.trim()) return;
+
+      const authorName = currentUser?.user_metadata?.full_name || currentUser?.email || 'Anonymous Colleague';
+
+      const { error } = await supabaseClient.from('whiteboard_points').insert([{
+        team_id: team.id,
+        content: input.value.trim(),
+        author_name: authorName,
+        is_addressed: false
+      }]);
+
+      if (error) alert("Error adding whiteboard point: " + error.message);
+      input.value = '';
+      await fetchTeams();
+    }
+
+    async function toggleWhiteboardAddressed(pointId) {
+      if (!supabaseClient) return;
+      const team = getCurrentTeam();
+      if (!team) return;
+      const point = team.whiteboard.find(p => p.id === pointId);
+      if (!point) return;
+
+      const { error } = await supabaseClient.from('whiteboard_points').update({ is_addressed: !point.is_addressed }).eq('id', pointId);
+      if (error) alert("Error updating whiteboard point: " + error.message);
+      await fetchTeams();
+    }
+
+    async function deleteWhiteboardPoint(pointId) {
+      if (!supabaseClient) return;
+      const { error } = await supabaseClient.from('whiteboard_points').delete().eq('id', pointId);
+      if (error) alert("Error deleting whiteboard point: " + error.message);
+      await fetchTeams();
+    }
+
+    function filterWhiteboard(filterType) {
+      whiteboardFilter = filterType;
+      const activeTab = document.getElementById('wb-filter-active');
+      const addressedTab = document.getElementById('wb-filter-addressed');
+
+      if (filterType === 'active') {
+        activeTab.className = "text-studio-coral border-b-2 border-studio-coral pb-1 font-bold";
+        addressedTab.className = "text-stone-400 hover:text-stone-700 pb-1 font-bold";
+      } else {
+        addressedTab.className = "text-studio-coral border-b-2 border-studio-coral pb-1 font-bold";
+        activeTab.className = "text-stone-400 hover:text-stone-700 pb-1 font-bold";
+      }
+      renderWhiteboard();
+    }
+
+    /* =====================================================================
+       BETTER OFFICE IDEAS ENGINE LOGIC
+       ===================================================================== */
+    async function fetchIdeas() {
+      if (!supabaseClient) return;
+
+      try {
+        const { data: ideasData, error: iErr } = await supabaseClient.from('ideas').select('*');
+        if (iErr) { console.error("Error fetching ideas:", iErr); return; }
+
+        const { data: upvotesData } = await supabaseClient.from('idea_upvotes').select('*');
+        const { data: volunteersData } = await supabaseClient.from('idea_volunteers').select('*');
+        const { data: commentsData } = await supabaseClient.from('idea_comments').select('*');
+
+        if (ideasData) {
+          ideas = ideasData.map(i => ({
+            ...i,
+            upvotes: (upvotesData || []).filter(u => u.idea_id === i.id).map(u => u.user_email),
+            volunteers: (volunteersData || []).filter(v => v.idea_id === i.id),
+            comments: (commentsData || []).filter(c => c.idea_id === i.id)
+          }));
         }
 
-        // Verify and authenticate user based on whitelist
-        async function verifyAndSetSession(user) {
-            try {
-                // Fetch authorized users directly
-                const { data: authUsers, error } = await supabaseClient.from('authorized_users').select('*');
-                if (error) throw error;
+        renderIdeas();
+      } catch (err) {
+        console.error("Failed to fetch ideas:", err);
+      }
+    }
 
-                state.authorizedUsers = authUsers || [];
+    function renderIdeas() {
+      const grid = document.getElementById('ideas-grid');
+      const areaFilter = document.getElementById('idea-area-filter').value;
+      const statusFilter = document.getElementById('idea-status-filter').value;
+      const sortBy = document.getElementById('idea-sort').value;
+      const searchQuery = document.getElementById('idea-search').value.toLowerCase();
 
-                // Access rules: 
-                // 1. If list is empty: anyone can join
-                // 2. If list contains users: must match one email on the list
-                if (state.authorizedUsers.length > 0) {
-                    const isAuthorized = state.authorizedUsers.some(u => u.email.trim().toLowerCase() === user.email.trim().toLowerCase());
-                    
-                    if (!isAuthorized) {
-                        showToast("Access Denied", "Your email is not on the workspace whitelist.", "🔒");
-                        
-                        // Clear session details / Sign Out
-                        await supabaseClient.auth.signOut();
-                        currentUser = null;
-                        
-                        document.getElementById("loading-overlay").classList.add("hidden");
-                        document.getElementById("btn-login").classList.remove("hidden");
-                        document.getElementById("user-profile").classList.add("hidden");
-                        document.getElementById("auth-gate-overlay").classList.remove("hidden");
-                        document.getElementById("app-workspace").classList.add("hidden");
-                        
-                        // Show custom block instructions inside Auth Gate
-                        document.getElementById("auth-gate-msg").innerHTML = `
-                            <span class="text-red-600 font-bold block text-base">⚠️ ACCESS RESTRICTED</span>
-                            Your Google account (<strong>${user.email}</strong>) is not on the authorized workspace access whitelist. 
-                            Contact your Lab Administrator or Project Manager to add you.
-                        `;
-                        return;
-                    }
-                }
+      grid.innerHTML = '';
 
-                // Authorized & verified
-                setUserSession(user);
-                document.getElementById("loading-overlay").classList.add("hidden");
-                document.getElementById("auth-gate-overlay").classList.add("hidden");
-                document.getElementById("app-workspace").classList.remove("hidden");
-                
-                setupCanvasMouseListeners();
-                await refreshUI();
+      let filtered = ideas.filter(idea => {
+        const matchesArea = areaFilter === 'ALL' || idea.area === areaFilter;
+        const matchesStatus = statusFilter === 'ALL' || idea.status === statusFilter;
+        const matchesSearch = idea.title.toLowerCase().includes(searchQuery) || idea.problem.toLowerCase().includes(searchQuery);
+        return matchesArea && matchesStatus && matchesSearch;
+      });
 
-            } catch (err) {
-                console.error("Failed to verify user whitelist status:", err);
-                showToast("Verification Error", err.message, "❌");
-                showLoginGate("Whitelist verification failed: " + err.message);
-            }
-        }
+      filtered.sort((a, b) => {
+        if (sortBy === 'upvotes') return (b.upvotes?.length || 0) - (a.upvotes?.length || 0);
+        if (sortBy === 'comments') return (b.comments?.length || 0) - (a.comments?.length || 0);
+        return new Date(b.created_at || 0) - new Date(a.created_at || 0);
+      });
 
-        // Update indicators
-        function showStatusBadge(msg, bgClass, textClass, indicatorClass) {
-            const parent = document.getElementById("status-indicator");
-            parent.className = `flex items-center gap-2 text-xs font-bold px-3 py-1.5 sketch-border ${bgClass} ${textClass} rounded`;
-            parent.innerHTML = `<span class="w-2.5 h-2.5 rounded-full ${indicatorClass} animate-pulse"></span><span>${msg}</span>`;
-        }
+      document.getElementById('idea-count-badge').textContent = ideas.length;
 
-        // ====================================================================
-        // 4. AUTHENTICATION OPERATIONS (GOOGLE OAUTH)
-        // ====================================================================
-        async function handleLogin() {
-            try {
-                // Standard Google Auth via Supabase URL scheme
-                const { error } = await supabaseClient.auth.signInWithOAuth({
-                    provider: 'google',
-                    options: {
-                        redirectTo: window.location.origin
-                    }
-                });
-                if (error) throw error;
-            } catch (err) {
-                showToast("Auth Error", err.message, "❌");
-            }
-        }
+      if (filtered.length === 0) {
+        grid.innerHTML = `
+          <div class="col-span-full py-16 text-center space-y-3 art-card bg-white rounded-3xl p-8">
+            <i data-lucide="lightbulb" class="w-12 h-12 mx-auto text-stone-300"></i>
+            <h3 class="font-bold text-stone-700 text-lg">No Ideas Found</h3>
+            <p class="text-xs text-stone-500">Propose a creative idea to improve the office!</p>
+            <button onclick="openAddIdeaModal()" class="px-5 py-2.5 art-gradient-1 text-studio-ink text-xs font-black rounded-2xl art-button">Propose Idea</button>
+          </div>
+        `;
+        lucide.createIcons();
+        return;
+      }
 
-        async function handleLogout() {
-            try {
-                const { error } = await supabaseClient.auth.signOut();
-                if (error) throw error;
-                currentUser = null;
-                document.getElementById("btn-login").classList.remove("hidden");
-                document.getElementById("user-profile").classList.add("hidden");
-                document.getElementById("auth-gate-overlay").classList.remove("hidden");
-                document.getElementById("app-workspace").classList.add("hidden");
-                showToast("Logged out", "Successfully signed out of Supabase.", "👋");
-            } catch (err) {
-                showToast("Signout error", err.message, "❌");
-            }
-        }
+      const userEmail = currentUser?.email || '';
 
-        function setUserSession(user) {
-            currentUser = user;
-            document.getElementById("btn-login").classList.add("hidden");
-            const profile = document.getElementById("user-profile");
-            profile.classList.remove("hidden");
-            
-            document.getElementById("user-email").textContent = user.email || "Team Account";
-            document.getElementById("user-avatar").textContent = (user.email || "U")[0].toUpperCase();
-        }
+      filtered.forEach(idea => {
+        const hasUpvoted = idea.upvotes?.includes(userEmail);
+        const isVolunteered = idea.volunteers?.some(v => v.user_email === userEmail);
 
-        // ====================================================================
-        // 5. RENDERING PIPELINE & DATABASE SYNC
-        // ====================================================================
-        async function refreshUI() {
-            if (supabaseClient) {
-                await fetchSupabaseUpdates();
-            }
+        const card = document.createElement('div');
+        card.className = "art-card rounded-3xl p-6 bg-white flex flex-col justify-between space-y-5 relative overflow-hidden";
 
-            renderTeamRoster();
-            renderProjectsList();
-            renderBrainstormCanvas();
-            renderCheckinHistory();
-            renderAuthorizedUsers();
-        }
+        let effortColor = "bg-emerald-100 text-emerald-900 border-emerald-300";
+        if (idea.effort === "1 hour") effortColor = "bg-sky-100 text-sky-900 border-sky-300";
+        if (idea.effort === "1 day") effortColor = "bg-amber-100 text-amber-900 border-amber-300";
+        if (idea.effort === "Project") effortColor = "bg-purple-100 text-purple-900 border-purple-300";
 
-        // Read all values from Supabase tables
-        async function fetchSupabaseUpdates() {
-            try {
-                // Team members fetch
-                let { data: members, error: mErr } = await supabaseClient.from('team_members').select('*');
-                if (!mErr && members) state.teamMembers = members;
+        let statusBadge = `<span class="px-2.5 py-1 text-[10px] font-black uppercase tracking-wider rounded-full bg-stone-100 text-stone-700 border border-studio-ink">💡 ${escapeHtml(idea.status)}</span>`;
+        if (idea.status === "In Progress") statusBadge = `<span class="px-2.5 py-1 text-[10px] font-black uppercase tracking-wider rounded-full bg-amber-200 text-amber-900 border border-studio-ink">⚡ In Progress</span>`;
+        if (idea.status === "Implemented") statusBadge = `<span class="px-2.5 py-1 text-[10px] font-black uppercase tracking-wider rounded-full bg-emerald-200 text-emerald-950 border border-studio-ink">✅ Implemented</span>`;
 
-                // Projects fetch
-                let { data: projects, error: pErr } = await supabaseClient.from('projects').select('*').order('created_at', { ascending: false });
-                if (!pErr && projects) state.projects = projects;
+        card.innerHTML = `
+          <div class="space-y-3">
+            <div class="flex items-center justify-between flex-wrap gap-2">
+              <span class="text-[10px] font-black uppercase tracking-wider px-2.5 py-1 bg-studio-lavender/20 text-studio-plum rounded-xl border border-studio-ink">
+                ${escapeHtml(idea.area)}
+              </span>
+              <div class="flex items-center space-x-1.5">
+                <span class="text-[10px] font-bold px-2 py-0.5 rounded-lg border ${effortColor}">
+                  ⏱️ ${escapeHtml(idea.effort)}
+                </span>
+                ${statusBadge}
+              </div>
+            </div>
 
-                // Brainstorm notes fetch
-                let { data: notes, error: nErr } = await supabaseClient.from('brainstorm_notes').select('*');
-                if (!nErr && notes) state.brainstormNotes = notes;
+            <h3 class="text-xl font-serif font-bold text-studio-ink leading-snug">
+              💡 ${escapeHtml(idea.title)}
+            </h3>
 
-                // Checkins history fetch
-                let { data: checkins, error: cErr } = await supabaseClient.from('checkins').select('*').order('created_at', { ascending: false });
-                if (!cErr && checkins) state.checkins = checkins;
+            <div class="space-y-2 text-xs text-stone-700 bg-amber-50/60 p-4 rounded-2xl border border-stone-200">
+              <div>
+                <strong class="text-studio-ink font-bold block mb-0.5">Problem:</strong>
+                <p class="leading-relaxed font-medium">${escapeHtml(idea.problem)}</p>
+              </div>
+              <div class="pt-2 border-t border-stone-200">
+                <strong class="text-studio-ink font-bold block mb-0.5">Proposed Solution:</strong>
+                <p class="leading-relaxed font-medium text-stone-800">${escapeHtml(idea.solution)}</p>
+              </div>
+            </div>
+          </div>
 
-                // Whitelisted users fetch
-                let { data: authUsers, error: aErr } = await supabaseClient.from('authorized_users').select('*').order('created_at', { ascending: false });
-                if (!aErr && authUsers) state.authorizedUsers = authUsers;
+          <div class="pt-3 border-t-2 border-stone-100 space-y-3">
+            <div class="flex items-center justify-between gap-2">
+              <button onclick="toggleUpvote('${idea.id}')" 
+                      class="flex items-center space-x-1.5 px-4 py-2 rounded-2xl text-xs font-black art-button transition-all ${
+                        hasUpvoted 
+                          ? 'bg-studio-coral text-white' 
+                          : 'bg-stone-100 text-studio-ink hover:bg-stone-200'
+                      }">
+                <i data-lucide="thumbs-up" class="w-3.5 h-3.5"></i>
+                <span>${idea.upvotes?.length || 0} Upvotes</span>
+              </button>
 
-            } catch (err) {
-                console.warn("Could not sync with live Supabase database:", err);
-            }
-        }
+              <button onclick="toggleVolunteer('${idea.id}')" 
+                      class="flex items-center space-x-1.5 px-4 py-2 rounded-2xl text-xs font-black art-button transition-all ${
+                        isVolunteered 
+                          ? 'bg-studio-mint text-white' 
+                          : 'bg-emerald-50 text-emerald-900 border-emerald-300 hover:bg-emerald-100'
+                      }">
+                <i data-lucide="hand-metal" class="w-3.5 h-3.5"></i>
+                <span>${isVolunteered ? 'Volunteered' : 'Volunteer'} (${idea.volunteers?.length || 0})</span>
+              </button>
+            </div>
 
-        // ====================================================================
-        // 6. MODULE: ROUND-ROBIN CAROUSEL
-        // ====================================================================
-        let availableDeck = [];
+            <div class="flex items-center justify-between text-[11px] text-stone-500 pt-1 font-medium">
+              <span>By <strong class="text-studio-ink">${escapeHtml(idea.author_name)}</strong></span>
+              
+              <select onchange="updateIdeaStatus('${idea.id}', this.value)" class="text-[10px] font-bold bg-stone-100 text-studio-ink border border-studio-ink rounded-lg px-2 py-0.5 focus:outline-none cursor-pointer">
+                <option value="Idea" ${idea.status === 'Idea' ? 'selected' : ''}>Status: Idea</option>
+                <option value="In Progress" ${idea.status === 'In Progress' ? 'selected' : ''}>Status: In Progress</option>
+                <option value="Implemented" ${idea.status === 'Implemented' ? 'selected' : ''}>Status: Implemented</option>
+              </select>
+            </div>
 
-        async function autoSaveCurrentIfAny() {
-            const answerInput = document.getElementById("pm-input-answer");
-            if (!answerInput) return;
-            const answerText = answerInput.value.trim();
-            
-            if (activeMember && answerText) {
-                const payload = {
-                    member_id: activeMember.id,
-                    member_name: activeMember.name,
-                    prompt: currentPrompt,
-                    answer: answerText,
-                    logged_by: currentUser ? currentUser.email : 'Project Manager',
-                    created_at: new Date().toISOString()
-                };
+            <details class="group text-xs pt-1">
+              <summary class="cursor-pointer font-bold text-studio-terracotta hover:underline flex items-center space-x-1">
+                <i data-lucide="message-square" class="w-3.5 h-3.5"></i>
+                <span>Comments (${idea.comments?.length || 0})</span>
+              </summary>
 
-                try {
-                    const { error } = await supabaseClient.from('checkins').insert(payload);
-                    if (error) throw error;
-                    showToast("Answer Logged", `${activeMember.name}'s response saved.`, "✅");
-                    answerInput.value = "";
-                    await refreshUI();
-                } catch (err) {
-                    showToast("Error auto-saving", err.message, "⚠️");
-                }
-            }
-        }
-
-        async function spinCarousel() {
-            if (state.teamMembers.length === 0) {
-                showToast("Empty Roster", "Please add at least one member to your team roster below first!", "👥");
-                return;
-            }
-
-            // Automatically save any typed response first
-            await autoSaveCurrentIfAny();
-
-            // If we are currently displaying the last person and user clicks "Spin Next",
-            // we automatically restart (clear) the carousel, since the deck is complete.
-            if (activeMember && availableDeck.length === 0) {
-                resetCarousel();
-                showToast("Round Complete", "All team members have been checked in!", "🎉");
-                return;
-            }
-
-            // Initialize or replenish pool of members (at absolute start)
-            if (availableDeck.length === 0) {
-                availableDeck = [...state.teamMembers];
-            }
-
-            // Draw a random index
-            const randomIndex = Math.floor(Math.random() * availableDeck.length);
-            activeMember = availableDeck.splice(randomIndex, 1)[0]; // Pull it out and keep it out
-            
-            // Draw a random question prompt
-            const randomPromptIdx = Math.floor(Math.random() * randomPrompts.length);
-            currentPrompt = randomPrompts[randomPromptIdx];
-
-            // Render view state
-            document.getElementById("carousel-empty").classList.add("hidden");
-            document.getElementById("carousel-active").classList.remove("hidden");
-
-            // Update DOM node details
-            document.getElementById("active-member-emoji").textContent = activeMember.avatar_emoji || "🧑‍💻";
-            document.getElementById("active-member-name").textContent = activeMember.name;
-            document.getElementById("active-prompt").textContent = `"${currentPrompt}"`;
-            document.getElementById("pm-input-answer").value = ""; // clear last PM text input
-            document.getElementById("pm-input-answer").focus();
-
-            showToast(`Drawn: ${activeMember.name}!`, "It is your turn to check-in with the team.", "✨");
-        }
-
-        async function skipMember() {
-            if (!activeMember) {
-                showToast("Whoops!", "There is no currently drawn team member to skip.", "⚠️");
-                return;
-            }
-            
-            showToast(`${activeMember.name} Skipped`, "Removed from pool until next restart.", "⏭️");
-            
-            // If skipping the last person emptied the pool, we automatically restart & clear the area
-            if (availableDeck.length === 0) {
-                resetCarousel();
-                showToast("Round Complete", "All team members checked in or skipped!", "🎉");
-            } else {
-                await spinCarousel();
-            }
-        }
-
-        async function resetCarousel() {
-            // Save any last typed entry before closing the carousel
-            await autoSaveCurrentIfAny();
-            availableDeck = [];
-            activeMember = null;
-            document.getElementById("carousel-empty").classList.remove("hidden");
-            document.getElementById("carousel-active").classList.add("hidden");
-            showToast("Deck Replenished", "Roster wheel selection pool restarted.", "🔄");
-        }
-
-        // TEAM ROSTER LOGIC
-        function toggleRosterView() {
-            const panel = document.getElementById("roster-editor");
-            panel.classList.toggle("hidden");
-        }
-
-        async function addTeamMember() {
-            const name = document.getElementById("new-member-name").value.trim();
-            const emoji = document.getElementById("new-member-emoji").value;
-            
-            if (!name) {
-                showToast("Missing Fields", "Please enter a name for the member", "🧩");
-                return;
-            }
-
-            const payload = { name, avatar_emoji: emoji };
-
-            try {
-                const { error } = await supabaseClient.from('team_members').insert(payload);
-                if (error) throw error;
-                showToast("Success", `${name} has been added to Supabase.`, "✅");
-                await refreshUI();
-            } catch (err) {
-                showToast("Failed to write member", err.message, "⚠️");
-            }
-
-            document.getElementById("new-member-name").value = "";
-        }
-
-        function renderTeamRoster() {
-            const container = document.getElementById("roster-chips");
-            const counter = document.getElementById("roster-count");
-            container.innerHTML = "";
-
-            counter.textContent = state.teamMembers.length;
-
-            if (state.teamMembers.length === 0) {
-                container.innerHTML = `<span class="text-xs text-stone-500 italic">No members yet. Hit 'Edit Roster' to populate!</span>`;
-                return;
-            }
-
-            state.teamMembers.forEach(m => {
-                const chip = document.createElement("div");
-                chip.className = "flex items-center gap-1.5 bg-white text-xs font-bold py-1 px-2.5 sketch-border shadow-neo-sm";
-                chip.innerHTML = `
-                    <span>${m.avatar_emoji || '🧑‍💻'}</span>
-                    <span>${m.name}</span>
-                    <button onclick="removeTeamMember('${m.id}')" class="text-red-500 hover:text-red-700 ml-1 font-extrabold" title="Remove Member">&times;</button>
-                `;
-                container.appendChild(chip);
-            });
-        }
-
-        async function removeTeamMember(id) {
-            try {
-                const { error } = await supabaseClient.from('team_members').delete().eq('id', id);
-                if (error) throw error;
-                showToast("Success", "Team member removed from DB.", "🗑️");
-                // Clear active carousel if the active member is deleted
-                if (activeMember && activeMember.id === id) {
-                    resetCarousel();
-                }
-                await refreshUI();
-            } catch (err) {
-                showToast("Removal failed", err.message, "⚠️");
-            }
-        }
-
-        // ====================================================================
-        // ACCESS CONTROL WHITELIST MANAGEMENT
-        // ====================================================================
-        function toggleAuthUsersView() {
-            const panel = document.getElementById("auth-users-editor");
-            panel.classList.toggle("hidden");
-        }
-
-        async function addAuthorizedUser() {
-            const email = document.getElementById("new-auth-email").value.trim().toLowerCase();
-            
-            if (!email || !email.includes("@")) {
-                showToast("Invalid Input", "Please type a valid email address.", "🧩");
-                return;
-            }
-
-            try {
-                const { error } = await supabaseClient.from('authorized_users').insert({ email });
-                if (error) throw error;
-                showToast("Access Added", `${email} was whitelisted!`, "🔐");
-                document.getElementById("new-auth-email").value = "";
-                await refreshUI();
-            } catch (err) {
-                showToast("Failed to authorize email", err.message, "⚠️");
-            }
-        }
-
-        async function removeAuthorizedUser(id, email) {
-            try {
-                const { error } = await supabaseClient.from('authorized_users').delete().eq('id', id);
-                if (error) throw error;
-                showToast("Access Removed", `${email} has been de-authorized.`, "🗑️");
-                await refreshUI();
-            } catch (err) {
-                showToast("Removal failed", err.message, "⚠️");
-            }
-        }
-
-        function renderAuthorizedUsers() {
-            const container = document.getElementById("auth-users-chips");
-            const counter = document.getElementById("auth-users-count");
-            container.innerHTML = "";
-
-            counter.textContent = state.authorizedUsers.length;
-
-            if (state.authorizedUsers.length === 0) {
-                container.innerHTML = `<span class="text-xs text-amber-800 font-bold bg-amber-100 p-2 border-2 border-dashed border-amber-300 rounded block w-full text-center">🌍 Open Access: Any Google account can log in</span>`;
-                return;
-            }
-
-            state.authorizedUsers.forEach(u => {
-                const chip = document.createElement("div");
-                chip.className = "flex items-center gap-1.5 bg-yellow-100 text-xs font-bold py-1 px-2.5 sketch-border shadow-neo-sm";
-                chip.innerHTML = `
-                    <span>📧</span>
-                    <span class="truncate max-w-[150px]" title="${u.email}">${u.email}</span>
-                    <button onclick="removeAuthorizedUser('${u.id}', '${u.email}')" class="text-red-500 hover:text-red-700 ml-1 font-extrabold" title="Revoke Whitelist Access">&times;</button>
-                `;
-                container.appendChild(chip);
-            });
-        }
-
-        // ====================================================================
-        // 7. MODULE: PROJECTS AND BUGS TRACKER
-        // ====================================================================
-        function filterProjects(filterVal) {
-            projectFilter = filterVal;
-            
-            // Set styles of buttons
-            const buttons = ['all', 'pending', 'completed'];
-            buttons.forEach(b => {
-                const btn = document.getElementById(`btn-filter-${b}`);
-                if (b === filterVal) {
-                    btn.className = "bg-black text-white px-2.5 py-1 sketch-border";
-                } else {
-                    btn.className = "bg-white text-stone-800 px-2.5 py-1 sketch-border shadow-neo";
-                }
-            });
-
-            renderProjectsList();
-        }
-
-        async function addProjectItem() {
-            const title = document.getElementById("new-project-title").value.trim();
-            const category = document.getElementById("new-project-cat").value;
-
-            if (!title) {
-                showToast("Missing Title", "Please detail the bug or task to create", "🧩");
-                return;
-            }
-
-            const payload = {
-                title,
-                category,
-                status: 'pending',
-                created_at: new Date().toISOString()
-            };
-
-            try {
-                const { error } = await supabaseClient.from('projects').insert(payload);
-                if (error) throw error;
-                showToast("Task Saved", "Project listed in Supabase database.", "✅");
-                await refreshUI();
-            } catch (err) {
-                showToast("Insert Error", err.message, "⚠️");
-            }
-
-            document.getElementById("new-project-title").value = "";
-        }
-
-        function renderProjectsList() {
-            const container = document.getElementById("projects-list-container");
-            container.innerHTML = "";
-
-            let list = [...state.projects];
-            
-            // Apply current active visual filter
-            if (projectFilter === 'pending') {
-                list = list.filter(p => p.status === 'pending');
-            } else if (projectFilter === 'completed') {
-                list = list.filter(p => p.status === 'completed');
-            }
-
-            document.getElementById("project-stats").textContent = `${list.length} Item(s)`;
-
-            if (list.length === 0) {
-                container.innerHTML = `
-                    <div class="text-center p-6 text-stone-400 bg-white sketch-border border-dashed">
-                        😴 Empty list for selection!
+              <div class="mt-3 space-y-2 pl-2 border-l-2 border-studio-terracotta/40 pt-1">
+                <div class="space-y-2 max-h-32 overflow-y-auto pr-1">
+                  ${(idea.comments || []).map(c => `
+                    <div class="bg-stone-50 p-2.5 rounded-xl border border-stone-200 text-[11px]">
+                      <span class="font-bold text-studio-ink">${escapeHtml(c.author_name)}:</span>
+                      <span class="text-stone-700 font-medium">${escapeHtml(c.comment)}</span>
                     </div>
-                `;
-                return;
-            }
+                  `).join('')}
+                </div>
 
-            list.forEach(p => {
-                const card = document.createElement("div");
-                const isDone = p.status === 'completed';
-                
-                // Set tag styling
-                let catBadge = "bg-[#ffcc80] text-amber-900"; // default
-                if (p.category === "Bug Fix") catBadge = "bg-rose-200 text-rose-800";
-                else if (p.category === "New Report") catBadge = "bg-violet-200 text-violet-800";
-                else if (p.category === "Small Project") catBadge = "bg-[#80deea] text-cyan-950";
+                <form onsubmit="handleAddComment(event, '${idea.id}')" class="flex gap-1.5 pt-1">
+                  <input type="text" placeholder="Write a comment..." required 
+                         class="flex-grow px-3 py-1.5 text-[11px] bg-stone-50 border border-studio-ink rounded-xl focus:outline-none font-medium">
+                  <button type="submit" class="px-3 py-1.5 art-gradient-1 text-studio-ink font-black text-[10px] rounded-xl art-button">Post</button>
+                </form>
+              </div>
+            </details>
+          </div>
+        `;
 
-                card.className = `flex items-center justify-between p-3 transition-all ${
-                    isDone ? 'bg-stone-50 border-stone-300 opacity-60' : 'bg-white shadow-neo border-black'
-                } sketch-border`;
+        grid.appendChild(card);
+      });
 
-                card.innerHTML = `
-                    <div class="flex items-start gap-2.5 flex-1 min-w-0 pr-2">
-                        <button onclick="toggleProjectStatus('${p.id}', '${p.status}')" class="mt-0.5 focus:outline-none flex-shrink-0">
-                            ${isDone ? '✅' : '⬜'}
-                        </button>
-                        <div class="min-w-0">
-                            <span class="text-xs font-bold uppercase ${catBadge} px-1.5 py-0.5 sketch-border-sm rounded-sm mr-2 inline-block">
-                                ${p.category}
-                            </span>
-                            <span class="text-xs font-semibold ${isDone ? 'line-through text-stone-500' : 'text-stone-900'} font-medium break-words">
-                                ${p.title}
-                            </span>
-                        </div>
-                    </div>
-                    <button onclick="deleteProject('${p.id}')" class="text-stone-400 hover:text-red-500 text-sm font-bold flex-shrink-0 ml-1">
-                        🗑️
-                    </button>
-                `;
-                container.appendChild(card);
-            });
+      lucide.createIcons();
+    }
+
+    async function handleCreateIdea(e) {
+      e.preventDefault();
+      if (!currentUser) {
+        alert("Please sign in with Google to propose an idea.");
+        return;
+      }
+
+      const title = document.getElementById('idea-title').value.trim();
+      const area = document.getElementById('idea-area').value;
+      const effort = document.getElementById('idea-effort').value;
+      const problem = document.getElementById('idea-problem').value.trim();
+      const solution = document.getElementById('idea-solution').value.trim();
+
+      const authorName = currentUser.user_metadata?.full_name || currentUser.email;
+
+      const { error } = await supabaseClient.from('ideas').insert([{
+        title,
+        area,
+        effort,
+        problem,
+        solution,
+        status: 'Idea',
+        author_name: authorName,
+        author_email: currentUser.email
+      }]);
+
+      if (error) {
+        alert("Error creating idea: " + error.message);
+        return;
+      }
+
+      closeModal('modal-add-idea');
+      document.getElementById('idea-title').value = '';
+      document.getElementById('idea-problem').value = '';
+      document.getElementById('idea-solution').value = '';
+
+      await fetchIdeas();
+    }
+
+    async function toggleUpvote(ideaId) {
+      if (!currentUser) {
+        alert("Please sign in with Google to vote.");
+        return;
+      }
+
+      const idea = ideas.find(i => i.id === ideaId);
+      if (!idea) return;
+
+      const hasUpvoted = idea.upvotes.includes(currentUser.email);
+
+      if (hasUpvoted) {
+        await supabaseClient.from('idea_upvotes').delete().match({ idea_id: ideaId, user_email: currentUser.email });
+      } else {
+        await supabaseClient.from('idea_upvotes').insert([{ idea_id: ideaId, user_email: currentUser.email }]);
+      }
+
+      await fetchIdeas();
+    }
+
+    async function toggleVolunteer(ideaId) {
+      if (!currentUser) {
+        alert("Please sign in with Google to volunteer.");
+        return;
+      }
+
+      const idea = ideas.find(i => i.id === ideaId);
+      if (!idea) return;
+
+      const isVolunteered = idea.volunteers.some(v => v.user_email === currentUser.email);
+      const userName = currentUser.user_metadata?.full_name || currentUser.email;
+
+      if (isVolunteered) {
+        await supabaseClient.from('idea_volunteers').delete().match({ idea_id: ideaId, user_email: currentUser.email });
+      } else {
+        await supabaseClient.from('idea_volunteers').insert([{ idea_id: ideaId, user_name: userName, user_email: currentUser.email }]);
+      }
+
+      await fetchIdeas();
+    }
+
+    async function updateIdeaStatus(ideaId, newStatus) {
+      const { error } = await supabaseClient.from('ideas').update({ status: newStatus }).eq('id', ideaId);
+      if (error) alert("Error updating status: " + error.message);
+      await fetchIdeas();
+    }
+
+    async function handleAddComment(e, ideaId) {
+      e.preventDefault();
+      if (!currentUser) {
+        alert("Please sign in with Google to comment.");
+        return;
+      }
+
+      const input = e.target.querySelector('input');
+      if (!input.value.trim()) return;
+
+      const authorName = currentUser.user_metadata?.full_name || currentUser.email;
+
+      const { error } = await supabaseClient.from('idea_comments').insert([{
+        idea_id: ideaId,
+        comment: input.value.trim(),
+        author_name: authorName
+      }]);
+
+      if (error) alert("Error posting comment: " + error.message);
+      input.value = '';
+      await fetchIdeas();
+    }
+
+    /* =====================================================================
+       MANAGE TEAMS & ACCESS CONTROL DIALOG LOGIC
+       ===================================================================== */
+    function openManageTeamsModal() {
+      const team = getCurrentTeam();
+      document.getElementById('manage-team-active-name').textContent = team ? team.name : "None";
+      renderManageMembersList();
+      openModal('modal-manage-teams');
+    }
+
+    function renderManageMembersList() {
+      const team = getCurrentTeam();
+      const list = document.getElementById('manage-members-list');
+      list.innerHTML = '';
+
+      if (!team || !team.members || team.members.length === 0) {
+        list.innerHTML = `<p class="text-xs text-stone-400 italic">No members in this team yet.</p>`;
+        return;
+      }
+
+      team.members.forEach((m) => {
+        const item = document.createElement('div');
+        item.className = "flex items-center justify-between bg-stone-50 p-2.5 rounded-xl border border-stone-200 text-xs";
+        item.innerHTML = `
+          <div>
+            <strong class="text-stone-800">${escapeHtml(m.name)}</strong>
+            <span class="text-stone-500 ml-2">(${escapeHtml(m.role || 'Member')})</span>
+          </div>
+          <button onclick="removeMember('${m.id}')" class="text-red-500 hover:text-red-700 font-bold px-2 py-1">Remove</button>
+        `;
+        list.appendChild(item);
+      });
+    }
+
+    async function handleCreateTeam(e) {
+      e.preventDefault();
+      const input = document.getElementById('new-team-name');
+      if (!input.value.trim()) return;
+
+      const { data, error } = await supabaseClient.from('teams').insert([{
+        name: input.value.trim()
+      }]).select('*');
+
+      if (error) {
+        alert("Error creating team: " + error.message);
+        return;
+      }
+
+      input.value = '';
+      if (data && data[0]) {
+        activeTeamId = data[0].id;
+      }
+      await fetchTeams();
+      openManageTeamsModal();
+    }
+
+    async function handleAddMember(e) {
+      e.preventDefault();
+      const nameInput = document.getElementById('new-member-name');
+      const roleInput = document.getElementById('new-member-role');
+      const team = getCurrentTeam();
+
+      if (!team || !nameInput.value.trim()) return;
+
+      const { error } = await supabaseClient.from('team_members').insert([{
+        team_id: team.id,
+        name: nameInput.value.trim(),
+        role: roleInput.value.trim() || 'Team Member'
+      }]);
+
+      if (error) {
+        alert("Error adding team member: " + error.message);
+        return;
+      }
+
+      nameInput.value = '';
+      roleInput.value = '';
+      await fetchTeams();
+      renderManageMembersList();
+    }
+
+    async function removeMember(memberId) {
+      const { error } = await supabaseClient.from('team_members').delete().eq('id', memberId);
+      if (error) alert("Error removing team member: " + error.message);
+      await fetchTeams();
+      renderManageMembersList();
+    }
+
+    /* --- ACCESS CONTROL WHITELIST --- */
+    function openAccessModal() {
+      renderAllowedUsersList();
+      openModal('modal-access-control');
+    }
+
+    async function fetchAllowedUsers() {
+      if (!supabaseClient) return;
+      try {
+        const { data, error } = await supabaseClient.from('allowed_users').select('*');
+        if (!error) {
+          allowedUsers = data || [];
         }
+      } catch (err) {
+        console.error("Error fetching allowed users:", err);
+      }
+    }
 
-        async function toggleProjectStatus(id, currentStatus) {
-            const nextStatus = currentStatus === 'pending' ? 'completed' : 'pending';
+    function renderAllowedUsersList() {
+      const list = document.getElementById('allowed-users-list');
+      list.innerHTML = '';
 
-            try {
-                const { error } = await supabaseClient.from('projects').update({ status: nextStatus }).eq('id', id);
-                if (error) throw error;
-                await refreshUI();
-            } catch (err) {
-                showToast("Update error", err.message, "⚠️");
-            }
-        }
+      if (allowedUsers.length === 0) {
+        list.innerHTML = `<p class="text-xs text-stone-400 italic py-2">No restriction active. Anyone with Google login can access.</p>`;
+        return;
+      }
 
-        async function deleteProject(id) {
-            try {
-                const { error } = await supabaseClient.from('projects').delete().eq('id', id);
-                if (error) throw error;
-                await refreshUI();
-            } catch (err) {
-                showToast("Delete error", err.message, "⚠️");
-            }
-        }
+      allowedUsers.forEach(u => {
+        const item = document.createElement('div');
+        item.className = "flex items-center justify-between py-2 text-xs";
+        item.innerHTML = `
+          <span class="font-semibold text-stone-700">${escapeHtml(u.email)}</span>
+          <button onclick="removeAllowedUser('${u.id}')" class="text-red-500 hover:text-red-700 text-xs font-bold">Remove</button>
+        `;
+        list.appendChild(item);
+      });
+    }
 
-        // ====================================================================
-        // 8. MODULE: THE CREATIVE CANVAS / BRAINSTORM BOARD
-        // ====================================================================
-        function setStickyColorChoice(color) {
-            selectedStickyColor = color;
-            showToast("Color Picker", `Next sticky note will spawn in ${color}!`, "🎨");
-        }
+    async function handleAddAllowedUser(e) {
+      e.preventDefault();
+      const input = document.getElementById('allowed-email-input');
+      if (!input.value.trim()) return;
 
-        async function spawnStickyNote() {
-            // Find a dynamic random center location
-            const board = document.getElementById("canvas-workspace");
-            const maxX = board.clientWidth - 160;
-            const maxY = board.clientHeight - 130;
-            const x = Math.floor(Math.random() * Math.max(maxX, 50)) + 15;
-            const y = Math.floor(Math.random() * Math.max(maxY, 50)) + 15;
+      const { error } = await supabaseClient.from('allowed_users').insert([{
+        email: input.value.trim().toLowerCase()
+      }]);
 
-            const payload = {
-                text: "Double-click me to edit note!",
-                color: selectedStickyColor,
-                x_pos: x,
-                y_pos: y,
-                created_at: new Date().toISOString()
-            };
+      if (error) {
+        alert("Error adding allowed user: " + error.message);
+        return;
+      }
 
-            try {
-                const { error } = await supabaseClient.from('brainstorm_notes').insert(payload);
-                if (error) throw error;
-                await refreshUI();
-            } catch (err) {
-                showToast("Error spawning sticky", err.message, "⚠️");
-            }
-        }
+      input.value = '';
+      await fetchAllowedUsers();
+      renderAllowedUsersList();
+    }
 
-        // Global lock mechanism to prevent dragging while editing text
-        let isEditingSticky = false;
+    async function removeAllowedUser(id) {
+      const { error } = await supabaseClient.from('allowed_users').delete().eq('id', id);
+      if (error) alert("Error removing user: " + error.message);
+      await fetchAllowedUsers();
+      renderAllowedUsersList();
+    }
 
-        function renderBrainstormCanvas() {
-            const workspace = document.getElementById("canvas-workspace");
-            
-            // Keep user elements only, clear old stickies
-            const stickies = workspace.querySelectorAll('.sticky-note-element');
-            stickies.forEach(s => s.remove());
+    /* =====================================================================
+       MODAL HELPERS
+       ===================================================================== */
+    function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
+    function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+    function openAddIdeaModal() { openModal('modal-add-idea'); }
+    function openPresenterModal() { openModal('modal-presenter'); renderCarousel(); }
 
-            state.brainstormNotes.forEach(note => {
-                const element = document.createElement("div");
-                element.id = `note-${note.id}`;
-                element.className = `absolute sticky-note-element w-40 h-40 sketch-border shadow-neo p-3 select-none flex flex-col justify-between sticky-${note.color} transition-shadow cursor-grab active:cursor-grabbing`;
-                
-                // Adjust for drag offsets
-                element.style.left = `${note.x_pos}px`;
-                element.style.top = `${note.y_pos}px`;
-
-                // Render inner components (Title area with trash icon & text body)
-                element.innerHTML = `
-                    <div class="flex items-center justify-between border-b border-black/20 pb-1 mb-1 pointer-events-none">
-                        <span class="text-[10px] uppercase font-bold tracking-wider text-black/50">📌 Idea</span>
-                        <button onclick="deleteStickyNote('${note.id}')" class="text-stone-500 hover:text-red-500 pointer-events-auto text-xs font-bold px-1">&times;</button>
-                    </div>
-                    <div class="flex-1 text-xs font-bold text-stone-800 break-words overflow-hidden leading-tight font-display pr-1" 
-                         ondblclick="makeStickyEditable(this, '${note.id}')">
-                        ${note.text || 'Empty Idea...'}
-                    </div>
-                    <div class="text-[9px] text-right text-stone-500 pointer-events-none font-mono">
-                        ${new Date(note.created_at || Date.now()).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
-                    </div>
-                `;
-
-                // Hook up dragging events to dynamic canvas elements
-                element.addEventListener('mousedown', (e) => startStickyDrag(e, note, element));
-                element.addEventListener('touchstart', (e) => startStickyDrag(e, note, element), { passive: true });
-
-                workspace.appendChild(element);
-            });
-        }
-
-        // Inline double-click sticky editing
-        function makeStickyEditable(domElement, id) {
-            isEditingSticky = true;
-            const prevText = domElement.innerText;
-            const container = domElement.parentElement;
-            
-            // Create mini editor area
-            const textarea = document.createElement("textarea");
-            textarea.className = "w-full h-24 p-1 text-xs font-bold bg-white/70 outline-none resize-none sketch-border-sm pointer-events-auto";
-            textarea.value = prevText === 'Double-click me to edit note!' ? '' : prevText;
-            
-            domElement.replaceWith(textarea);
-            textarea.focus();
-
-            // Finish edit event handler
-            const finishEdit = async () => {
-                isEditingSticky = false;
-                const cleanVal = textarea.value.trim() || 'Empty concept';
-                
-                // Recover UI element
-                const newBody = document.createElement("div");
-                newBody.className = "flex-1 text-xs font-bold text-stone-800 break-words overflow-hidden leading-tight font-display pr-1";
-                newBody.setAttribute('ondblclick', `makeStickyEditable(this, '${id}')`);
-                newBody.innerText = cleanVal;
-                textarea.replaceWith(newBody);
-
-                try {
-                    const { error } = await supabaseClient.from('brainstorm_notes').update({ text: cleanVal }).eq('id', id);
-                    if (error) throw error;
-                    await refreshUI();
-                } catch (err) {
-                    showToast("DB error", err.message, "⚠️");
-                }
-            };
-
-            textarea.addEventListener('blur', finishEdit);
-            textarea.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    textarea.blur();
-                }
-            });
-        }
-
-        // Mouse Drag Mechanics
-        function startStickyDrag(e, note, element) {
-            // Prevent dragging from internal trash button trigger, or during active editing
-            if (e.target.tagName === 'BUTTON' || e.target.tagName === 'TEXTAREA' || isEditingSticky) return;
-
-            draggingElement = { note, element };
-
-            // Handle touch vs mouse coordination points
-            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-
-            const rect = element.getBoundingClientRect();
-            dragOffset.x = clientX - rect.left;
-            dragOffset.y = clientY - rect.top;
-
-            element.style.zIndex = 30; // Bring card to foreground
-        }
-
-        function setupCanvasMouseListeners() {
-            const workspace = document.getElementById("canvas-workspace");
-
-            const onMove = (e) => {
-                if (!draggingElement) return;
-
-                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-
-                // Workspace positioning bounds calculation
-                const workspaceRect = workspace.getBoundingClientRect();
-                
-                let targetX = clientX - workspaceRect.left - dragOffset.x;
-                let targetY = clientY - workspaceRect.top - dragOffset.y;
-
-                // Contain element inside bounding box boundaries
-                const maxAllowedX = workspaceRect.width - draggingElement.element.clientWidth - 5;
-                const maxAllowedY = workspaceRect.height - draggingElement.element.clientHeight - 5;
-
-                targetX = Math.max(5, Math.min(targetX, maxAllowedX));
-                targetY = Math.max(5, Math.min(targetY, maxAllowedY));
-
-                // Instantly update UI element
-                draggingElement.element.style.left = `${targetX}px`;
-                draggingElement.element.style.top = `${targetY}px`;
-
-                // Write positions instantly to cache objects
-                draggingElement.note.x_pos = Math.round(targetX);
-                draggingElement.note.y_pos = Math.round(targetY);
-            };
-
-            const onEnd = async () => {
-                if (!draggingElement) return;
-
-                const note = draggingElement.note;
-                draggingElement.element.style.zIndex = 'auto'; // restore regular depth
-
-                try {
-                    await supabaseClient.from('brainstorm_notes').update({
-                        x_pos: note.x_pos,
-                        y_pos: note.y_pos
-                    }).eq('id', note.id);
-                } catch (err) {
-                    console.error("Position write failed", err);
-                }
-
-                draggingElement = null;
-            };
-
-            // Global move coordinates mapping
-            document.addEventListener('mousemove', onMove);
-            document.addEventListener('touchmove', onMove, { passive: false });
-            
-            document.addEventListener('mouseup', onEnd);
-            document.addEventListener('touchend', onEnd);
-        }
-
-        async function deleteStickyNote(id) {
-            // Stop immediate drag triggers
-            draggingElement = null;
-
-            try {
-                const { error } = await supabaseClient.from('brainstorm_notes').delete().eq('id', id);
-                if (error) throw error;
-                await refreshUI();
-            } catch (err) {
-                showToast("DB error", err.message, "⚠️");
-            }
-        }
-
-        async function clearCanvas() {
-            try {
-                // Clear brainstorm notes table completely
-                const { error } = await supabaseClient.from('brainstorm_notes').delete().neq('id', '00000000-0000-0000-0000-000000000000');
-                if (error) throw error;
-                await refreshUI();
-                showToast("Canvas Wiped", "Clean workspace slate initialized.", "🎨");
-            } catch (err) {
-                showToast("Clear error", err.message, "⚠️");
-            }
-        }
-
-        // ====================================================================
-        // 9. MODULE: CHECK-IN HISTORY LOGGER WITH 2-DAY FILTER & DELETION
-        // ====================================================================
-        function toggleHistoryExpansion() {
-            showAllCheckins = !showAllCheckins;
-            renderCheckinHistory();
-        }
-
-        // Custom Confirm modal callbacks
-        function showConfirm(title, msg, onConfirm) {
-            document.getElementById("confirm-title").textContent = title;
-            document.getElementById("confirm-msg").textContent = msg;
-            confirmCallback = onConfirm;
-            document.getElementById("confirm-modal").classList.remove("hidden");
-        }
-
-        function closeConfirmModal() {
-            document.getElementById("confirm-modal").classList.add("hidden");
-            confirmCallback = null;
-        }
-
-        // Bind Custom Yes action inside initializer
-        document.getElementById("confirm-yes-btn").onclick = () => {
-            if (confirmCallback) confirmCallback();
-            closeConfirmModal();
-        };
-
-        async function deleteCheckin(id) {
-            showConfirm(
-                "Delete Response?",
-                "Are you sure you want to permanently delete this logged check-in response?",
-                async () => {
-                    try {
-                        const { error } = await supabaseClient.from('checkins').delete().eq('id', id);
-                        if (error) throw error;
-                        showToast("Check-in Deleted", "The entry was removed from the log history.", "🗑️");
-                        await refreshUI();
-                    } catch (err) {
-                        showToast("Deletion Error", err.message, "❌");
-                    }
-                }
-            );
-        }
-
-        function renderCheckinHistory() {
-            const tbody = document.getElementById("checkins-table-body");
-            const filterIndicator = document.getElementById("history-filter-indicator");
-            const toggleBtn = document.getElementById("history-toggle-btn");
-            tbody.innerHTML = "";
-
-            if (state.checkins.length === 0) {
-                tbody.innerHTML = `
-                    <tr>
-                        <td colspan="5" class="p-4 text-center text-stone-500">No responses logged for this meeting session yet.</td>
-                    </tr>
-                `;
-                filterIndicator.textContent = "No logged entries yet";
-                toggleBtn.classList.add("hidden");
-                return;
-            }
-
-            // Identify dates for entries
-            const checkinsByDate = {};
-            state.checkins.forEach(item => {
-                // Get local date key representation (YYYY-MM-DD format)
-                const dObj = new Date(item.created_at);
-                const localDateKey = dObj.toLocaleDateString(undefined, { year: 'numeric', month: '2-digit', day: '2-digit' });
-                if (!checkinsByDate[localDateKey]) {
-                    checkinsByDate[localDateKey] = [];
-                }
-                checkinsByDate[localDateKey].push(item);
-            });
-
-            // Gather dates and sort them from newest down to oldest
-            const uniqueDatesSorted = Object.keys(checkinsByDate).map(dateStr => {
-                const representativeItem = checkinsByDate[dateStr][0];
-                return {
-                    dateStr: dateStr,
-                    epochTime: new Date(representativeItem.created_at).getTime()
-                };
-            }).sort((a, b) => b.epochTime - a.epochTime);
-
-            // Fetch top 2 dates
-            const topTwoDates = uniqueDatesSorted.slice(0, 2).map(d => d.dateStr);
-
-            let displayedCheckins = state.checkins;
-            const totalCount = state.checkins.length;
-
-            if (!showAllCheckins && topTwoDates.length > 0) {
-                displayedCheckins = state.checkins.filter(item => {
-                    const itemDateStr = new Date(item.created_at).toLocaleDateString(undefined, { year: 'numeric', month: '2-digit', day: '2-digit' });
-                    return topTwoDates.includes(itemDateStr);
-                });
-                
-                filterIndicator.textContent = `Showing 2 most recent active days (${displayedCheckins.length} of ${totalCount} entries)`;
-                filterIndicator.className = "text-xs font-bold text-stone-500 bg-amber-100 border-2 border-black px-2 py-1";
-            } else {
-                filterIndicator.textContent = `Showing complete history (${totalCount} entries)`;
-                filterIndicator.className = "text-xs font-bold text-white bg-black border-2 border-black px-2 py-1";
-            }
-
-            // Render Rows
-            displayedCheckins.forEach(log => {
-                const tr = document.createElement("tr");
-                tr.className = "hover:bg-amber-50/50 transition-colors";
-                
-                const dateObj = new Date(log.created_at);
-                const formattedDate = dateObj.toLocaleDateString(undefined, { 
-                    month: 'short', 
-                    day: 'numeric', 
-                    year: 'numeric' 
-                });
-                const formattedTime = dateObj.toLocaleTimeString([], { 
-                    hour: '2-digit', 
-                    minute: '2-digit' 
-                });
-
-                tr.innerHTML = `
-                    <td class="p-3 font-display font-bold text-stone-900">${log.member_name}</td>
-                    <td class="p-3 text-xs italic text-stone-600 max-w-xs truncate" title="${log.prompt}">"${log.prompt}"</td>
-                    <td class="p-3 font-medium text-stone-800 break-words">${log.answer}</td>
-                    <td class="p-3 text-xs text-stone-600 font-mono">
-                        <div class="font-bold">${formattedDate}</div>
-                        <div class="text-stone-400">${formattedTime}</div>
-                    </td>
-                    <td class="p-3 text-center">
-                        <button onclick="deleteCheckin('${log.id}')" class="text-stone-400 hover:text-red-500 text-sm font-bold transition-all p-1" title="Delete Response from Log">
-                            🗑️
-                        </button>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
-
-            // Setup Expand Control Button Visibility
-            if (totalCount > displayedCheckins.length || (showAllCheckins && totalCount > displayedCheckins.length)) {
-                toggleBtn.classList.remove("hidden");
-                toggleBtn.innerText = showAllCheckins 
-                    ? "Show Recent 2 Days Only" 
-                    : `Show All Logged History (${totalCount - displayedCheckins.length} more entries)`;
-            } else if (showAllCheckins && uniqueDatesSorted.length > 2) {
-                toggleBtn.classList.remove("hidden");
-                toggleBtn.innerText = "Show Recent 2 Days Only";
-            } else {
-                toggleBtn.classList.add("hidden");
-            }
-        }
-
-        // ====================================================================
-        // 10. HELPER NOTIFICATIONS UTILITY
-        // ====================================================================
-        let toastTimeout = null;
-        function showToast(title, msg, icon = "💡") {
-            const toast = document.getElementById("toast");
-            const tTitle = document.getElementById("toast-title");
-            const tMsg = document.getElementById("toast-msg");
-            const tIcon = document.getElementById("toast-icon");
-
-            tTitle.textContent = title;
-            tMsg.textContent = msg;
-            tIcon.textContent = icon;
-
-            // Trigger animation classes
-            toast.className = "fixed bottom-6 right-6 z-50 transition-all duration-300 pointer-events-auto max-w-sm transform translate-y-0 opacity-100";
-
-            clearTimeout(toastTimeout);
-            toastTimeout = setTimeout(() => {
-                toast.className = "fixed bottom-6 right-6 z-50 transition-all duration-300 pointer-events-none max-w-sm transform translate-y-20 opacity-0";
-            }, 5500);
-        }
-    </script>
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+  </script>
 </body>
 </html>
